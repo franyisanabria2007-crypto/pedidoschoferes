@@ -37,7 +37,7 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    #mapa-cliente { height: 200px; width: 100%; border-radius: 16px; z-index: 10; }
+    #mapa-cliente { height: 250px; width: 100%; border-radius: 16px; z-index: 10; }
   </style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-screen flex items-center justify-center p-0 sm:p-4">
@@ -168,11 +168,16 @@
       
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-base font-black text-white flex items-center gap-2">
-          <i data-lucide="map-pin" class="w-5 h-5 text-accent-cyan"></i> Ubicación y Detalles
+          <i data-lucide="map-pin" class="w-5 h-5 text-accent-cyan"></i> Ubicación del Pasajero y Ruta
         </h3>
         <button onclick="cerrarModalMapa()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
+      </div>
+
+      <!-- INSTRUCCIÓN INTERACTIVA DEL MAPA -->
+      <div class="bg-indigo-950/60 border border-indigo-500/30 p-2 rounded-xl text-[10px] text-indigo-200 text-center font-bold">
+        🟢 Origen (Ubicación actual del pasajero) | 🔴 Destino de la carrera
       </div>
 
       <!-- MAPA INTERACTIVO LEAFLET -->
@@ -181,7 +186,7 @@
       <!-- DATOS DEL CLIENTE Y RUTA -->
       <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2 text-xs">
         <div class="flex justify-between">
-          <span class="text-slate-400 font-bold">Cliente:</span>
+          <span class="text-slate-400 font-bold">Pasajero / Cliente:</span>
           <span id="mapa-nombre-cliente" class="text-white font-black"></span>
         </div>
         <div class="flex justify-between">
@@ -201,9 +206,9 @@
         </a>
       </div>
 
-      <!-- DETALLE DE PRODUCTOS -->
+      <!-- DETALLE DE PRODUCTOS / SERVICIOS -->
       <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2">
-        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Productos a Entregar:</h4>
+        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Detalle del Servicio:</h4>
         <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300"></div>
         <div class="flex justify-between items-center border-t border-slate-700 pt-2 font-black">
           <span class="text-xs text-slate-400">Total a Cobrar:</span>
@@ -215,7 +220,7 @@
         </div>
       </div>
 
-      <!-- BOTÓN DE ACCIÓN CAMBIO DE ESTADO -->
+      <!-- BOTÓN DE ACCIÓN Y COMUNICACIÓN -->
       <div id="accion-estado-contenedor"></div>
 
     </div>
@@ -224,11 +229,11 @@
   <script>
     // CONFIGURACIÓN DE FIREBASE
     const firebaseConfig = {
-      apiKey: "AIzaSy...", 
+      apiKey: "AIzaSyB19B9jLHPpgKxVvMH97D5VafgTp0CfnOc", 
       authDomain: "pedidosflash-c7bb7.firebaseapp.com",
       databaseURL: "https://pedidosflash-c7bb7-default-rtdb.firebaseio.com",
       projectId: "pedidosflash-c7bb7",
-      storageBucket: "pedidosflash-c7bb7.appspot.com",
+      storageBucket: "pedidosflash-c7bb7.firebasestorage.app",
       messagingSenderId: "191012880689",
       appId: "1:191012880689:web:a31697074c619b96a83010"
     };
@@ -236,17 +241,20 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const TARIFA_CHOFER = 0.70; // Ganancia fija de $0.70 por envío
-    const NUMERO_ADMIN_WHATSAPP = "584121234567"; // Reemplaza con tu número de teléfono de administración
+    const TARIFA_CHOFER = 0.70; 
+    const NUMERO_ADMIN_WHATSAPP = "584262566854";
 
     let choferActual = null;
     let todosLosPedidos = {};
     let tabActual = 'disponibles';
     let mapaInstance = null;
-    let markerInstance = null;
+    let marcadorOrigRef = null;
+    let marcadorDestRef = null;
+    let lineaTrayecto = null;
+    let origenPuntoMapa = [10.1500, -68.5667];
+    let destinoPuntoMapa = [10.1700, -68.2200];
     let totalGananciasAcumuladas = 0;
 
-    // COMPROBAR SESIÓN DE CHOFER
     window.onload = () => {
       const choferGuardado = localStorage.getItem('chofer_pedidosflash');
       if (choferGuardado) {
@@ -319,7 +327,6 @@
         }
       });
 
-      // Cálculo de ganancias acumuladas
       totalGananciasAcumuladas = cantHistorial * TARIFA_CHOFER;
 
       document.getElementById('cant-disponibles').innerText = cantDisponibles;
@@ -352,7 +359,7 @@
 
       pedidosFiltrados.forEach(id => {
         const p = todosLosPedidos[id];
-        const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente');
+        const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || 'Cliente') : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
         const monto = p.montoTotal || p.monto || 0;
         
@@ -360,7 +367,7 @@
         const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
         const badgePago = esPagoMovil 
           ? `<span class="bg-cyan-500/20 text-accent-cyan border border-accent-cyan/30 text-[10px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
-          : `<span class="bg-emerald-500/20 text-accent-emerald border border-accent-emerald/30 text-[10px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
+          : `<span class="bg-emerald-500/20 text-accent-emerald border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
 
         contenedor.innerHTML += `
           <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 space-y-3 shadow-lg">
@@ -384,7 +391,7 @@
 
             <div class="flex gap-2 pt-1 border-t border-slate-700/60">
               <button onclick="verMapaYDetalle('${id}')" class="flex-1 bg-slate-900 hover:bg-slate-950 text-indigo-300 font-bold py-2.5 rounded-xl text-xs border border-indigo-500/30 flex items-center justify-center gap-1.5">
-                <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Detalle
+                <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Ubicación y Ruta
               </button>
               ${p.estado === 'pendiente' ? `
                 <button onclick="cambiarEstado('${id}', 'aceptado')" class="bg-gradient-to-r from-accent-emerald to-emerald-600 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs glow-cyan">
@@ -399,7 +406,6 @@
       lucide.createIcons();
     }
 
-    // FUNCIÓN CAMBIA ESTADO CON ENVÍO AUTOMÁTICO A WHATSAPP DEL CLIENTE
     function cambiarEstado(id, nuevoEstado) {
       if (!choferActual) {
         alert("Por favor regístrate como chofer para aceptar pedidos.");
@@ -417,14 +423,11 @@
       }).then(() => {
         cerrarModalMapa();
 
-        // Si cambia a "en_camino", enviamos el WhatsApp al cliente
         if (nuevoEstado === 'en_camino' && pedido) {
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           
           if (telefonoCliente) {
-            let telLimpio = telefonoCliente.replace(/\D/g, ''); // Deja solo dígitos
-
-            // Si empieza por 0 (ej. 04121234567), se ajusta a código de Venezuela (58)
+            let telLimpio = telefonoCliente.replace(/\D/g, '');
             if (telLimpio.startsWith('0')) {
               telLimpio = '58' + telLimpio.substring(1);
             } else if (!telLimpio.startsWith('58') && telLimpio.length === 10) {
@@ -432,16 +435,36 @@
             }
 
             const mensaje = encodeURIComponent(
-              `🛵 *¡TU PEDIDO VA EN CAMINO!* 🛵\n\n` +
-              `Hola, te saluda tu repartidor *${choferActual.nombre}* de Pedidos Flash.\n\n` +
-              `Ya voy saliendo hacia tu dirección con tu pedido. ¡Alista el pago y mantente atento/a!`
+              `🛵 *¡TU PEDIDO / SERVICIO VA EN CAMINO!* 🛵\n\n` +
+              `Hola, te saluda tu chofer *${choferActual.nombre}* de Pedidos Flash.\n\n` +
+              `Ya voy saliendo hacia tu ubicación de origen. ¡Mantente atento/a!`
             );
 
-            // Abre WhatsApp directamente con el chat del cliente
             window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
           }
         }
       });
+    }
+
+    // BOTÓN DE COMUNICACIÓN DIRECTA CON EL CLIENTE POR WHATSAPP
+    function contactarClienteWhatsApp(telefonoCliente, nombreCliente) {
+      if (!telefonoCliente) {
+        alert("El cliente no proporcionó un número de teléfono válido.");
+        return;
+      }
+      let telLimpio = telefonoCliente.replace(/\D/g, '');
+      if (telLimpio.startsWith('0')) {
+        telLimpio = '58' + telLimpio.substring(1);
+      } else if (!telLimpio.startsWith('58') && telLimpio.length === 10) {
+        telLimpio = '58' + telLimpio;
+      }
+
+      const mensaje = encodeURIComponent(
+        `🛵 *Pedidos Flash - Atención al Pasajero* 🛵\n\n` +
+        `Hola *${nombreCliente}*, te contacta tu chofer *${choferActual ? choferActual.nombre : 'Asignado'}* respecto a tu servicio solicitado.`
+      );
+
+      window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
     }
 
     function abrirModalRetiro() {
@@ -488,8 +511,11 @@
       const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
 
       document.getElementById('mapa-nombre-cliente').innerText = nombreCliente;
-      document.getElementById('mapa-telefono-cliente').innerText = telefonoCliente;
-      document.getElementById('mapa-telefono-cliente').href = `tel:${telefonoCliente}`;
+      
+      const elTel = document.getElementById('mapa-telefono-cliente');
+      elTel.innerText = telefonoCliente;
+      elTel.href = `tel:${telefonoCliente}`;
+
       document.getElementById('mapa-direccion-cliente').innerText = direccionCliente;
       document.getElementById('mapa-total-cobrar').innerText = `$${parseFloat(monto).toFixed(2)}`;
 
@@ -504,70 +530,116 @@
         p.items.forEach(it => {
           listaItems.innerHTML += `
             <div class="flex justify-between">
-              <span>• ${it.cantidad}x ${it.nombre}</span>
-              <span class="font-bold">$${(it.cantidad * it.precio).toFixed(2)}</span>
+              <span>• ${it.cantidad || 1}x ${it.nombre}</span>
+              <span class="font-bold">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span>
             </div>
           `;
         });
       } else if (p.detalle || p.productos) {
         listaItems.innerHTML = `<p class="whitespace-pre-line">${p.detalle || p.productos}</p>`;
+      } else {
+        listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte o carrera solicitada.</p>`;
       }
 
-      let lat = 10.1700, lon = -68.2200;
-      
-      if (p.lat && p.lng) {
-        lat = parseFloat(p.lat);
-        lon = parseFloat(p.lng);
-        document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
-      } else if (p.cliente && p.cliente.gps && p.cliente.gps.includes('q=')) {
-        const coords = p.cliente.gps.split('q=')[1].split(',');
-        lat = parseFloat(coords[0]);
-        lon = parseFloat(coords[1]);
-        document.getElementById('btn-abrir-waze-google').href = p.cliente.gps;
-      } else {
-        document.getElementById('btn-abrir-waze-google').href = `https://maps.google.com/?q=${encodeURIComponent(direccionCliente)}`;
-      }
+      // Coordenadas de Origen (Donde está el pasajero) y Destino
+      let latOrigen = p.origenLat ? parseFloat(p.origenLat) : 10.1500;
+      let lonOrigen = p.origenLng ? parseFloat(p.origenLng) : -68.5667;
+
+      let latDestino = p.lat ? parseFloat(p.lat) : 10.1700;
+      let lonDestino = p.lng ? parseFloat(p.lng) : -68.2200;
+
+      origenPuntoMapa = [latOrigen, lonOrigen];
+      destinoPuntoMapa = [latDestino, lonDestino];
+
+      document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/search/?api=1&query=${latDestino},${lonDestino}`;
+
+      // Botón de comunicación rápida por WhatsApp integrado en la interfaz de gestión
+      let botonWhatsAppCliente = `
+        <button onclick="contactarClienteWhatsApp('${telefonoCliente}', '${nombreCliente}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-accent-emerald border border-emerald-500/40 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 mb-2 transition">
+          <i data-lucide="message-circle" class="w-4 h-4"></i> Escribir al Pasajero por WhatsApp
+        </button>
+      `;
 
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
-        contAccion.innerHTML = `
+        contAccion.innerHTML = botonWhatsAppCliente + `
           <button onclick="cambiarEstado('${id}', 'aceptado')" class="w-full bg-accent-emerald text-slate-950 font-black py-3 rounded-xl text-xs glow-cyan">
-            ACEPTAR ESTE PEDIDO ($0.70 GANANCIA)
+            ACEPTAR ESTE PEDIDO / CARRERA ($0.70)
           </button>
         `;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = `
+        contAccion.innerHTML = botonWhatsAppCliente + `
           <button onclick="cambiarEstado('${id}', 'en_camino')" class="w-full bg-accent-magenta text-white font-black py-3 rounded-xl text-xs glow-magenta">
-            MARCAR "EN CAMINO AL CLIENTE" 🛵
+            MARCAR "EN CAMINO AL PASAJERO" 🛵
           </button>
         `;
       } else if (p.estado === 'en_camino') {
-        contAccion.innerHTML = `
+        contAccion.innerHTML = botonWhatsAppCliente + `
           <button onclick="cambiarEstado('${id}', 'entregado')" class="w-full bg-emerald-500 text-slate-950 font-black py-3 rounded-xl text-xs">
             FINALIZAR Y MARCAR "ENTREGADO" ✅
           </button>
         `;
       } else {
-        contAccion.innerHTML = `<p class="text-center text-xs text-emerald-400 font-bold">✅ Pedido Entregado ($0.70 Ganado)</p>`;
+        contAccion.innerHTML = botonWhatsAppCliente + `<p class="text-center text-xs text-emerald-400 font-bold">✅ Servicio Finalizado</p>`;
       }
 
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
 
       setTimeout(() => {
         if (!mapaInstance) {
-          mapaInstance = L.map('mapa-cliente').setView([lat, lon], 15);
+          mapaInstance = L.map('mapa-cliente').setView(destinoPuntoMapa, 14);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
             attribution: 'OpenStreetMap'
           }).addTo(mapaInstance);
-          markerInstance = L.marker([lat, lon]).addTo(mapaInstance);
         } else {
           mapaInstance.invalidateSize();
-          mapaInstance.setView([lat, lon], 15);
-          markerInstance.setLatLng([lat, lon]);
         }
+
+        if (marcadorOrigRef) mapaInstance.removeLayer(marcadorOrigRef);
+        if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
+
+        // Marcador Verde: Ubicación actual del pasajero / origen
+        marcadorOrigRef = L.marker(origenPuntoMapa, {
+          icon: L.divIcon({ html: '<div style="background:#00e676; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#000;">🟢</div>', iconSize: [18, 18] })
+        }).addTo(mapaInstance).bindPopup('🟢 Ubicación Actual del Pasajero');
+
+        // Marcador Magenta/Rojo: Destino del pasajero
+        marcadorDestRef = L.marker(destinoPuntoMapa, {
+          icon: L.divIcon({ html: '<div style="background:#ff007a; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#fff;">🔴</div>', iconSize: [18, 18] })
+        }).addTo(mapaInstance).bindPopup('🔴 Destino de la Carrera').openPopup();
+
+        calcularRutaOSRMChofer();
+
       }, 200);
 
       lucide.createIcons();
+    }
+
+    function calcularRutaOSRMChofer() {
+      if (!mapaInstance) return;
+      if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
+
+      const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${origenPuntoMapa[1]},${origenPuntoMapa[0]};${destinoPuntoMapa[1]},${destinoPuntoMapa[0]}?overview=full&geometries=geojson`;
+
+      fetch(urlOSRM)
+        .then(res => res.json())
+        .then(data => {
+          if (data.routes && data.routes.length > 0) {
+            const coordsGeoJSON = data.routes[0].geometry.coordinates;
+            const latLngs = coordsGeoJSON.map(coord => [coord[1], coord[0]]);
+            
+            lineaTrayecto = L.polyline(latLngs, { color: '#00f2fe', weight: 5, opacity: 0.85 }).addTo(mapaInstance);
+            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
+          } else {
+            lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
+            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
+          }
+        })
+        .catch(() => {
+          lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
+          mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
+        });
     }
 
     function cerrarModalMapa() {
