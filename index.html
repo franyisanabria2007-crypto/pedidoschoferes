@@ -37,23 +37,22 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    #mapa-cliente { height: 250px; width: 100%; border-radius: 16px; z-index: 10; }
   </style>
 </head>
 <body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-screen flex items-center justify-center p-0 sm:p-4">
 
-  <!-- MODAL DE REGISTRO / LOGIN DEL CHOFER -->
+  <!-- MODAL DE REGISTRO / ACCESO DEL CHOFER -->
   <div id="modal-registro-chofer" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-3xl p-6 space-y-5 shadow-2xl">
       <div class="text-center space-y-2">
         <div class="w-14 h-14 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-2xl flex items-center justify-center mx-auto text-2xl">
           🛵
         </div>
-        <h2 class="text-xl font-black text-white">Registro de Chofer</h2>
-        <p class="text-xs text-slate-400">Ingresa tus datos para empezar a tomar carreras</p>
+        <h2 class="text-xl font-black text-white">Acceso de Chofer</h2>
+        <p class="text-xs text-slate-400">Ingresa tus datos o regístrate para comenzar</p>
       </div>
 
-      <form onsubmit="guardarChofer(event)" class="space-y-4">
+      <form onsubmit="procesarChofer(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">Nombre Completo:</label>
           <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
@@ -62,8 +61,15 @@
           <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono de contacto:</label>
           <input type="tel" id="reg-telefono" required placeholder="Ej: 04121234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
         </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition">
-          Ingresar al Panel
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña de Chofer:</label>
+          <input type="password" id="reg-clave" required placeholder="Crea o ingresa tu clave secret" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div id="msg-chofer-estado" class="text-xs text-center hidden"></div>
+
+        <button type="submit" id="btn-submit-chofer" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition">
+          Ingresar / Registrarse
         </button>
       </form>
     </div>
@@ -156,7 +162,7 @@
           <textarea id="retiro-datos" required rows="2" placeholder="Ej: Banco Banesco / C.I: 12345678 / Tel: 04121234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"></textarea>
         </div>
         <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-xl text-xs shadow-lg transition">
-          Enviar Solicitud por WhatsApp
+          Enviar Solicitud al Administrador
         </button>
       </form>
     </div>
@@ -175,15 +181,12 @@
         </button>
       </div>
 
-      <!-- INSTRUCCIÓN INTERACTIVA DEL MAPA -->
       <div class="bg-indigo-950/60 border border-indigo-500/30 p-2 rounded-xl text-[10px] text-indigo-200 text-center font-bold">
         🟢 Origen (Ubicación actual del pasajero) | 🔴 Destino de la carrera
       </div>
 
-      <!-- MAPA INTERACTIVO LEAFLET -->
-      <div id="mapa-cliente" class="shadow-inner border border-slate-700"></div>
+      <div id="mapa-cliente" style="height: 250px; min-height: 250px; width: 100%; display: block;" class="shadow-inner border border-slate-700 rounded-2xl"></div>
 
-      <!-- DATOS DEL CLIENTE Y RUTA -->
       <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2 text-xs">
         <div class="flex justify-between">
           <span class="text-slate-400 font-bold">Pasajero / Cliente:</span>
@@ -206,7 +209,6 @@
         </a>
       </div>
 
-      <!-- DETALLE DE PRODUCTOS / SERVICIOS -->
       <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2">
         <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Detalle del Servicio:</h4>
         <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300"></div>
@@ -220,7 +222,6 @@
         </div>
       </div>
 
-      <!-- BOTÓN DE ACCIÓN Y COMUNICACIÓN -->
       <div id="accion-estado-contenedor"></div>
 
     </div>
@@ -242,7 +243,6 @@
     const db = firebase.database();
 
     const TARIFA_CHOFER = 0.70; 
-    const NUMERO_ADMIN_WHATSAPP = "584262566854";
 
     let choferActual = null;
     let todosLosPedidos = {};
@@ -258,9 +258,8 @@
     window.onload = () => {
       const choferGuardado = localStorage.getItem('chofer_pedidosflash');
       if (choferGuardado) {
-        choferActual = JSON.parse(choferGuardado);
-        document.getElementById('modal-registro-chofer').classList.add('hidden');
-        document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
+        const datosLocal = JSON.parse(choferGuardado);
+        verificarAutorizacionFirebase(datosLocal.telefono, datosLocal.clave, false);
       }
 
       db.ref('pedidos').on('value', (snapshot) => {
@@ -269,18 +268,81 @@
       });
     };
 
-    function guardarChofer(e) {
+    function procesarChofer(e) {
       e.preventDefault();
       const nombre = document.getElementById('reg-nombre').value.trim();
       const telefono = document.getElementById('reg-telefono').value.trim();
+      const clave = document.getElementById('reg-clave').value.trim();
 
-      if (!nombre || !telefono) return;
+      if (!nombre || !telefono || !clave) return;
 
-      choferActual = { nombre, telefono };
+      const elMsg = document.getElementById('msg-chofer-estado');
+      elMsg.className = "text-xs text-center font-bold text-amber-400 block";
+      elMsg.innerText = "Verificando cuenta en el servidor...";
+
+      // Buscar si el chofer ya existe en Firebase
+      db.ref(`choferes/${telefono}`).once('value', (snapshot) => {
+        const cBD = snapshot.val();
+
+        if (cBD) {
+          // El chofer ya existe, verificar clave
+          if (cBD.clave && cBD.clave !== clave) {
+            elMsg.className = "text-xs text-center font-bold text-rose-400 block";
+            elMsg.innerText = "Contraseña incorrecta para este teléfono.";
+            return;
+          }
+
+          if (cBD.estado !== 'autorizado') {
+            elMsg.className = "text-xs text-center font-bold text-amber-400 block";
+            elMsg.innerText = "⏳ Tu cuenta está registrada pero PENDIENTE por aprobación del Administrador.";
+            return;
+          }
+
+          // Aprobado exitosamente
+          activarSesionChofer({ nombre: cBD.nombre || nombre, telefono, clave, estado: 'autorizado' });
+        } else {
+          // Es un chofer nuevo, lo registramos en Firebase con estado pendiente
+          const nuevoChoferObj = {
+            nombre,
+            telefono,
+            clave,
+            estado: 'pendiente',
+            fechaRegistro: new Date().toISOString()
+          };
+
+          db.ref(`choferes/${telefono}`).set(nuevoChoferObj).then(() => {
+            elMsg.className = "text-xs text-center font-bold text-amber-400 block";
+            elMsg.innerText = "⏳ Registro exitoso. El administrador debe AUTORIZAR tu cuenta para poder aceptar pedidos.";
+          });
+        }
+      });
+    }
+
+    function verificarAutorizacionFirebase(telefono, clave, esIntentoModal) {
+      db.ref(`choferes/${telefono}`).on('value', (snapshot) => {
+        const cBD = snapshot.val();
+        const elMsg = document.getElementById('msg-chofer-estado');
+
+        if (cBD && cBD.estado === 'autorizado') {
+          activarSesionChofer({ nombre: cBD.nombre, telefono, clave, estado: 'autorizado' });
+        } else {
+          choferActual = null;
+          localStorage.removeItem('chofer_pedidosflash');
+          document.getElementById('modal-registro-chofer').classList.remove('hidden');
+          
+          if (elMsg) {
+            elMsg.className = "text-xs text-center font-bold text-amber-400 block";
+            elMsg.innerText = "⏳ Cuenta pendiente por autorización del administrador.";
+          }
+        }
+      });
+    }
+
+    function activarSesionChofer(objChofer) {
+      choferActual = objChofer;
       localStorage.setItem('chofer_pedidosflash', JSON.stringify(choferActual));
-
       document.getElementById('modal-registro-chofer').classList.add('hidden');
-      document.getElementById('header-nombre-chofer').innerText = nombre;
+      document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
       renderizarPedidos();
     }
 
@@ -361,7 +423,7 @@
         const p = todosLosPedidos[id];
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || 'Cliente') : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
-        const monto = p.montoTotal || p.monto || 0;
+        const monto = p.montoTotal || p.monto || p.total || 0;
         
         const metodoPago = p.metodoPago || p.pago || 'Efectivo';
         const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
@@ -407,8 +469,8 @@
     }
 
     function cambiarEstado(id, nuevoEstado) {
-      if (!choferActual) {
-        alert("Por favor regístrate como chofer para aceptar pedidos.");
+      if (!choferActual || choferActual.estado !== 'autorizado') {
+        alert("Tu cuenta aún no está AUTORIZADA por el administrador.");
         document.getElementById('modal-registro-chofer').classList.remove('hidden');
         return;
       }
@@ -437,7 +499,7 @@
             const mensaje = encodeURIComponent(
               `🛵 *¡TU PEDIDO / SERVICIO VA EN CAMINO!* 🛵\n\n` +
               `Hola, te saluda tu chofer *${choferActual.nombre}* de Pedidos Flash.\n\n` +
-              `Ya voy saliendo hacia tu ubicación de origen. ¡Mantente atento/a!`
+              `Ya voy saliendo hacia tu ubicación. ¡Mantente atento/a!`
             );
 
             window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
@@ -446,7 +508,6 @@
       });
     }
 
-    // BOTÓN DE COMUNICACIÓN DIRECTA CON EL CLIENTE POR WHATSAPP
     function contactarClienteWhatsApp(telefonoCliente, nombreCliente) {
       if (!telefonoCliente) {
         alert("El cliente no proporcionó un número de teléfono válido.");
@@ -485,17 +546,19 @@
       const metodo = document.getElementById('retiro-metodo').value;
       const datos = document.getElementById('retiro-datos').value;
 
-      const mensaje = encodeURIComponent(
-        `💸 *SOLICITUD DE RETIRO DE GANANCIAS* 💸\n\n` +
-        `👤 *Chofer:* ${choferActual.nombre}\n` +
-        `📞 *Teléfono:* ${choferActual.telefono}\n` +
-        `💰 *Monto a Retirar:* $${totalGananciasAcumuladas.toFixed(2)}\n` +
-        `🏦 *Método:* ${metodo}\n` +
-        `📄 *Datos de Pago:* ${datos}`
-      );
+      if (!choferActual) return;
 
-      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
-      cerrarModalRetiro();
+      // Registrar solicitud de retiro en Firebase para que le salga la notificación al Administrador
+      db.ref(`choferes/${choferActual.telefono}/solicitudRetiro`).set({
+        monto: totalGananciasAcumuladas,
+        metodo: metodo,
+        datos: datos,
+        estado: 'pendiente',
+        fecha: new Date().toISOString()
+      }).then(() => {
+        alert("¡Solicitud de retiro enviada al Administrador con éxito!");
+        cerrarModalRetiro();
+      });
     }
 
     function verMapaYDetalle(id) {
@@ -505,7 +568,7 @@
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
       const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin especificación');
-      const monto = p.montoTotal || p.monto || 0;
+      const monto = p.montoTotal || p.monto || p.total || 0;
       
       const metodoPago = p.metodoPago || p.pago || 'Efectivo';
       const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
@@ -530,7 +593,7 @@
         p.items.forEach(it => {
           listaItems.innerHTML += `
             <div class="flex justify-between">
-              <span>• ${it.cantidad || 1}x ${it.nombre}</span>
+              <span>• ${it.cantidad || 1}x ${it.nombre || it.titulo || 'Producto'}</span>
               <span class="font-bold">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span>
             </div>
           `;
@@ -541,7 +604,6 @@
         listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte o carrera solicitada.</p>`;
       }
 
-      // Coordenadas de Origen (Donde está el pasajero) y Destino
       let latOrigen = p.origenLat ? parseFloat(p.origenLat) : 10.1500;
       let lonOrigen = p.origenLng ? parseFloat(p.origenLng) : -68.5667;
 
@@ -553,7 +615,6 @@
 
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/search/?api=1&query=${latDestino},${lonDestino}`;
 
-      // Botón de comunicación rápida por WhatsApp integrado en la interfaz de gestión
       let botonWhatsAppCliente = `
         <button onclick="contactarClienteWhatsApp('${telefonoCliente}', '${nombreCliente}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-accent-emerald border border-emerald-500/40 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 mb-2 transition">
           <i data-lucide="message-circle" class="w-4 h-4"></i> Escribir al Pasajero por WhatsApp
@@ -587,7 +648,7 @@
 
       setTimeout(() => {
         if (!mapaInstance) {
-          mapaInstance = L.map('mapa-cliente').setView(destinoPuntoMapa, 14);
+          mapaInstance = L.map('mapa-cliente', { zoomControl: true }).setView(destinoPuntoMapa, 14);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: 'OpenStreetMap'
@@ -599,19 +660,18 @@
         if (marcadorOrigRef) mapaInstance.removeLayer(marcadorOrigRef);
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
 
-        // Marcador Verde: Ubicación actual del pasajero / origen
         marcadorOrigRef = L.marker(origenPuntoMapa, {
           icon: L.divIcon({ html: '<div style="background:#00e676; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#000;">🟢</div>', iconSize: [18, 18] })
         }).addTo(mapaInstance).bindPopup('🟢 Ubicación Actual del Pasajero');
 
-        // Marcador Magenta/Rojo: Destino del pasajero
         marcadorDestRef = L.marker(destinoPuntoMapa, {
           icon: L.divIcon({ html: '<div style="background:#ff007a; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#fff;">🔴</div>', iconSize: [18, 18] })
         }).addTo(mapaInstance).bindPopup('🔴 Destino de la Carrera').openPopup();
 
+        mapaInstance.invalidateSize();
         calcularRutaOSRMChofer();
 
-      }, 200);
+      }, 300);
 
       lucide.createIcons();
     }
