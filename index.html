@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Pedidos Flash - Panel de Choferes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#030712">
+  <title>Pedidos Flash - App Choferes Nirgua</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,21 +15,29 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Leaflet CSS y JS (Mapa) -->
+  <!-- Leaflet CSS y JS (Mapas Libres) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
           colors: {
-            brand: { 500: '#6366f1', 600: '#4f46e5' },
+            brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
             accent: { magenta: '#ff007a', cyan: '#00f2fe', orange: '#ff5e00', yellow: '#ffb800', emerald: '#00e676' }
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 25px rgba(0, 242, 254, 0.45)',
+            'glow-emerald': '0 0 25px rgba(0, 230, 118, 0.45)',
+            'glow-magenta': '0 0 25px rgba(255, 0, 122, 0.45)',
+            'glow-yellow': '0 0 25px rgba(255, 184, 0, 0.45)',
           }
         }
       }
@@ -37,87 +46,178 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .anim-pulse-ring { animation: pulse-ring 2s infinite ease-in-out; }
+    
+    .btn-tactil { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-tactil:active { transform: scale(0.96); filter: brightness(0.92); }
+
+    .safe-top { padding-top: max(env(safe-area-inset-top, 0px), 8px); }
+    .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px); }
   </style>
 </head>
-<body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-screen flex items-center justify-center p-0 sm:p-4">
+<body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-[100dvh] flex items-center justify-center p-0 sm:p-4 selection:bg-accent-emerald selection:text-slate-950 overflow-x-hidden">
 
-  <!-- MODAL DE REGISTRO / LOGIN DEL CHOFER -->
+  <!-- TOAST NOTIFICACIÓN FLOTANTE -->
+  <div id="toast-notificacion" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 opacity-0 pointer-events-none -translate-y-4 max-w-xs w-[90%] px-2">
+    <div class="bg-slate-900/95 border border-emerald-500/50 backdrop-blur-2xl shadow-2xl rounded-2xl p-3 flex items-center gap-3">
+      <div id="toast-icono-bg" class="w-8 h-8 rounded-xl bg-accent-emerald/20 text-accent-emerald flex items-center justify-center shrink-0">
+        <i id="toast-icono" data-lucide="bell" class="w-4 h-4"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p id="toast-titulo" class="text-xs font-black text-white">Pedidos Flash</p>
+        <p id="toast-mensaje" class="text-[11px] font-semibold text-slate-300 truncate">Nueva notificación</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE REGISTRO / PERFIL DEL CHOFER -->
   <div id="modal-registro-chofer" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-3xl p-6 space-y-5 shadow-2xl">
-      <div class="text-center space-y-2">
-        <div class="w-14 h-14 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-2xl">
+      <div class="text-center space-y-1.5">
+        <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-accent-cyan text-slate-950 border-2 border-white/20 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-glow-cyan">
           🛵
         </div>
-        <h2 class="text-xl font-black text-white">Registro de Chofer</h2>
-        <p class="text-xs text-slate-400">Ingresa tus datos para empezar a tomar carreras</p>
+        <h2 class="text-xl font-black text-white tracking-tight">Registro de Repartidor</h2>
+        <p class="text-xs text-slate-400">Ingresa tus datos para recibir pedidos y carreras en Nirgua</p>
       </div>
 
-      <form onsubmit="guardarChofer(event)" class="space-y-4">
+      <form onsubmit="guardarChofer(event)" class="space-y-3 pt-2">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Nombre Completo:</label>
-          <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Nombre Completo:</label>
+          <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
         </div>
+        
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono de contacto:</label>
-          <input type="tel" id="reg-telefono" required placeholder="Ej: 04121234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teléfono (WhatsApp activo):</label>
+          <input type="tel" id="reg-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          <p class="text-[10px] text-accent-yellow mt-1">📲 Aquí recibirás alertas por WhatsApp si la app no está abierta.</p>
         </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition">
-          Ingresar al Panel
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">Vehículo:</label>
+            <select id="reg-vehiculo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-accent-cyan">
+              <option value="Moto">🛵 Moto</option>
+              <option value="Carro">🚗 Carro</option>
+              <option value="Bicicleta">🚲 Bici</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">Placa / Color:</label>
+            <input type="text" id="reg-placa" placeholder="Ej: AA1B22 / Roja" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-brand-600 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-cyan border-t border-white/30 mt-2">
+          ¡Comenzar a Trabajar!
         </button>
       </form>
     </div>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL -->
-  <div class="w-full max-w-md bg-slate-900 min-h-screen sm:min-h-[92vh] sm:rounded-[38px] shadow-[0_0_50px_rgba(79,70,229,0.3)] overflow-hidden flex flex-col border-2 border-slate-800 relative">
+  <!-- CONTENEDOR PRINCIPAL TAMAÑO DISPOSITIVO MÓVIL -->
+  <div class="w-full max-w-md bg-slate-900 min-h-[100dvh] sm:min-h-[92vh] sm:max-h-[890px] sm:rounded-[42px] shadow-[0_0_60px_rgba(79,70,229,0.25)] overflow-hidden flex flex-col border sm:border-2 border-slate-800 relative">
     
-    <!-- ENCABEZADO PANEL CHOFER -->
-    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-b border-indigo-500/20 p-4 pt-5 shadow-lg flex justify-between items-center shrink-0">
-      <div>
-        <span class="inline-flex items-center gap-1 bg-amber-500/20 text-accent-yellow border border-accent-yellow/30 text-[9px] uppercase tracking-wider font-black px-2.5 py-0.5 rounded-full">
-          <i data-lucide="shield-check" class="w-3 h-3"></i> CHOFER: <span id="header-nombre-chofer" class="text-white ml-1">---</span>
-        </span>
-        <h1 class="text-xl font-black text-white flex items-center gap-2 mt-1">
-          🛵 PEDIDOS FLASH
-        </h1>
+    <!-- ENCABEZADO CON SWITCH EN LÍNEA / FUERA DE LÍNEA -->
+    <header class="bg-slate-900/95 border-b border-indigo-500/20 p-3.5 shadow-lg shrink-0 backdrop-blur-xl safe-top space-y-2.5">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-black text-white tracking-wider flex items-center gap-1">
+              🛵 PEDIDOS FLASH <span class="text-[10px] text-accent-cyan bg-cyan-950/60 border border-cyan-800/40 px-1.5 py-0.2 rounded font-black">DRIVER PRO</span>
+            </span>
+          </div>
+          <p id="header-nombre-chofer" class="text-sm font-black text-slate-200 mt-0.5">Carlos Pérez</p>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN: AUDIO Y SALIR -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Alerta Sonora" class="btn-tactil p-2 rounded-xl bg-slate-800 text-accent-yellow border border-slate-700 flex items-center justify-center">
+            <i data-lucide="volume-2" id="icono-audio-header" class="w-4 h-4"></i>
+          </button>
+          <button onclick="cerrarSesionChofer()" title="Cerrar Sesión" class="btn-tactil p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
       </div>
-      <button onclick="cerrarSesionChofer()" class="text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 font-bold">
-        Salir
-      </button>
+
+      <!-- SWITCH CONECTADO / DESCONECTADO -->
+      <div class="bg-slate-950 p-2 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 pl-1">
+          <span id="indicador-estado-ping" class="w-3 h-3 rounded-full bg-accent-emerald animate-ping"></span>
+          <div>
+            <span id="txt-estado-conexion" class="text-xs font-black text-accent-emerald block leading-tight">🟢 EN LÍNEA (Recibiendo pedidos)</span>
+            <span id="sub-estado-conexion" class="text-[9px] text-slate-400">Sonido y despacho activo</span>
+          </div>
+        </div>
+
+        <button onclick="toggleEstadoEnLinea()" id="btn-switch-conexion" class="btn-tactil bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[11px] shadow-glow-emerald flex items-center gap-1">
+          <span>Activo</span>
+        </button>
+      </div>
     </header>
 
-    <!-- BANNER DE GANANCIAS DEL CHOFER Y RETIRO -->
-    <div class="bg-gradient-to-r from-emerald-950/80 via-slate-900 to-emerald-950/80 border-b border-emerald-500/30 p-3 px-4 flex justify-between items-center">
-      <div>
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tus Ganancias acumuladas:</span>
-        <span id="total-ganancias-chofer" class="text-lg font-black text-accent-emerald">$0.00</span>
+    <!-- BANNER DE ALERTA SI ESTÁ DESCONECTADO (NOTIFICACIÓN WS) -->
+    <div id="banner-desconectado" class="bg-amber-950/80 border-b border-amber-500/40 p-2.5 px-3 flex items-center justify-between hidden">
+      <div class="flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-accent-yellow shrink-0"></i>
+        <div class="text-[10px] text-amber-200">
+          <p class="font-bold leading-tight">Estás Fuera de Línea</p>
+          <p class="text-slate-300">Si cae un pedido, te avisaremos directo a tu WhatsApp.</p>
+        </div>
       </div>
-      <button onclick="abrirModalRetiro()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-2 rounded-xl text-xs flex items-center gap-1 shadow-lg transition">
-        <i data-lucide="wallet" class="w-4 h-4"></i> Retirar
+      <button onclick="probarNotificacionWhatsApp()" class="btn-tactil bg-accent-yellow text-slate-950 font-black px-2 py-1 rounded-lg text-[9px] whitespace-nowrap shadow">
+        Probar WS 📲
       </button>
     </div>
 
-    <!-- LISTA DE PEDIDOS -->
-    <main class="flex-1 p-3.5 space-y-4 overflow-y-auto no-scrollbar pb-10">
+    <!-- BANNER RESUMEN DE GANANCIAS & RETIRO -->
+    <div class="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border-b border-emerald-500/30 p-3 px-4 flex justify-between items-center shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-accent-emerald/15 border border-accent-emerald/30 flex items-center justify-center text-accent-emerald shadow-inner">
+          <i data-lucide="wallet" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block leading-none">Ganancias acumuladas</span>
+          <span id="total-ganancias-chofer" class="text-xl font-black text-accent-emerald">$0.00</span>
+        </div>
+      </div>
+      <button onclick="abrirModalRetiro()" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-glow-emerald border-t border-white/30">
+        <i data-lucide="banknote" class="w-4 h-4"></i> Retirar
+      </button>
+    </div>
+
+    <!-- CUERPO PRINCIPAL CON PEDIDOS -->
+    <main class="flex-1 p-3.5 space-y-3.5 overflow-y-auto no-scrollbar pb-16">
       
       <!-- PESTAÑAS DE FILTRO -->
-      <div class="flex gap-1.5 border-b border-slate-800 pb-2">
-        <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="flex-1 py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white transition">
-          Disponibles (<span id="cant-disponibles">0</span>)
+      <div class="grid grid-cols-3 gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+        <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white shadow-md transition flex items-center justify-center gap-1">
+          <span>Nuevos</span>
+          <span id="badge-disponibles" class="bg-accent-magenta text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">0</span>
         </button>
-        <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="flex-1 py-2 text-center rounded-xl text-[11px] font-bold bg-slate-800 text-slate-400 transition">
-          En Curso (<span id="cant-activos">0</span>)
+        <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
+          <span>En Curso</span>
+          <span id="badge-activos" class="bg-slate-800 text-slate-300 font-bold text-[9px] px-1.5 py-0.2 rounded-full">0</span>
         </button>
-        <button onclick="filtrarTab('historial')" id="tab-historial" class="flex-1 py-2 text-center rounded-xl text-[11px] font-bold bg-slate-800 text-slate-400 transition">
-          Finalizados (<span id="cant-historial">0</span>)
+        <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
+          <span>Historial</span>
+          <span id="badge-historial" class="bg-slate-800 text-slate-300 font-bold text-[9px] px-1.5 py-0.2 rounded-full">0</span>
         </button>
       </div>
 
       <!-- CONTENEDOR DE TARJETAS DE PEDIDOS -->
-      <div id="contenedor-pedidos" class="space-y-4">
-        <div class="text-center py-10 text-slate-500 text-xs">
+      <div id="contenedor-pedidos" class="space-y-3">
+        <div class="text-center py-14 text-slate-500 text-xs">
           <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-indigo-400"></i>
-          Cargando carreras...
+          Sincronizando carreras con Firebase...
         </div>
       </div>
 
@@ -126,114 +226,137 @@
 
   <!-- MODAL DE SOLICITUD DE RETIRO -->
   <div id="modal-retiro" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border-2 border-emerald-500/40 w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl">
+    <div class="bg-slate-900 border-2 border-emerald-500/40 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-2xl">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2">
         <h3 class="text-base font-black text-white flex items-center gap-2">
           <i data-lucide="banknote" class="w-5 h-5 text-accent-emerald"></i> Solicitar Retiro
         </h3>
-        <button onclick="cerrarModalRetiro()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
+        <button onclick="cerrarModalRetiro()" class="btn-tactil w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/60 text-center">
-        <span class="text-xs text-slate-400 font-bold block">Monto a Retirar:</span>
+      <div class="bg-slate-950 p-3.5 rounded-2xl border border-emerald-500/30 text-center shadow-inner">
+        <span class="text-xs text-slate-400 font-bold block">Saldo acumulado disponible:</span>
         <span id="monto-modal-retiro" class="text-2xl font-black text-accent-emerald">$0.00</span>
       </div>
 
       <form onsubmit="enviarSolicitudRetiro(event)" class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">Método de Cobro:</label>
-          <select id="retiro-metodo" required class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-            <option value="Pago Móvil">📲 Pago Móvil</option>
-            <option value="Efectivo (Oficina)">💵 Efectivo en Persona</option>
+          <select id="retiro-metodo" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-accent-emerald">
+            <option value="Pago Móvil">📲 Pago Móvil (Bs a tasa del día)</option>
+            <option value="Efectivo en Persona">💵 Efectivo ($ o Bs en Base Flash)</option>
             <option value="Zelle / USDT">💲 Zelle / Binance USDT</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Datos de Cuenta / Pago Móvil:</label>
-          <textarea id="retiro-datos" required rows="2" placeholder="Ej: Banco Banesco / C.I: 12345678 / Tel: 04121234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"></textarea>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Datos de Pago Móvil o Cuenta:</label>
+          <textarea id="retiro-datos" required rows="2" placeholder="Ej: Banesco • C.I: 28.123.456 • 0426-2566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-emerald"></textarea>
         </div>
-        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-xl text-xs shadow-lg transition">
-          Enviar Solicitud por WhatsApp
+        <button type="submit" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 text-slate-950 font-black py-3 rounded-xl text-xs shadow-glow-emerald transition border-t border-white/20">
+          Enviar Solicitud a la Administración
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL CON MAPA Y DETALLE COMPLETO -->
+  <!-- MODAL DE DETALLE COMPLETO Y MAPA CON GPS -->
   <div id="modal-detalle-pedido" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-    <div class="bg-slate-900 border-t sm:border-2 border-indigo-500/40 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 shadow-2xl max-h-[90vh] flex flex-col overflow-y-auto">
+    <div class="bg-slate-900 border-t sm:border-2 border-indigo-500/40 w-full max-w-md rounded-t-[32px] sm:rounded-3xl p-5 space-y-3.5 shadow-2xl max-h-[92vh] flex flex-col overflow-y-auto">
       
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-base font-black text-white flex items-center gap-2">
-          <i data-lucide="map-pin" class="w-5 h-5 text-accent-cyan"></i> Ubicación del Pasajero y Ruta
-        </h3>
-        <button onclick="cerrarModalMapa()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
-          <i data-lucide="x" class="w-5 h-5"></i>
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2">
+          <div class="p-2 bg-accent-cyan/15 text-accent-cyan rounded-xl border border-accent-cyan/30">
+            <i data-lucide="map-pin" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-white leading-tight">Detalle de la Carrera</h3>
+            <span id="modal-num-orden" class="text-[10px] text-accent-cyan font-bold">#FLASH-0000</span>
+          </div>
+        </div>
+        <button onclick="cerrarModalMapa()" class="btn-tactil w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- ALERTA SI TIENE RETIRO EN LOCAL/COMERCIO (EJ: MORAVOS CAFÉ) -->
-      <div id="mapa-alerta-comercio" class="bg-amber-950/40 border border-amber-500/40 p-2.5 rounded-xl text-xs space-y-1 hidden">
+      <!-- ALERTA SI TIENE RETIRO EN TIENDA / LOCAL (EJ: MORAVOS CAFÉ) -->
+      <div id="mapa-alerta-comercio" class="bg-amber-950/50 border border-amber-500/40 p-3 rounded-2xl text-xs space-y-1 hidden">
         <div class="flex items-center gap-1.5 text-accent-yellow font-black">
           <i data-lucide="store" class="w-4 h-4"></i>
           <span>PUNTO DE RETIRO: <span id="mapa-txt-tienda">Moravos Café</span></span>
         </div>
-        <p class="text-[10px] text-slate-300">Debes pasar por este local a retirar el producto antes de entregarlo al cliente.</p>
+        <p class="text-[10px] text-slate-300">Pasa por este local a retirar el pedido antes de llevarlo al cliente.</p>
       </div>
 
-      <div class="bg-indigo-950/60 border border-indigo-500/30 p-2 rounded-xl text-[10px] text-indigo-200 text-center font-bold">
-        🟢 Origen / Retiro | 🔴 Destino de la entrega
+      <!-- MAPA INTERACTIVO -->
+      <div class="space-y-1">
+        <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-semibold">
+          <span>🟢 Salida/Retiro | 🔴 Entrega | 🛵 Tu GPS</span>
+          <button onclick="centrarGpsChoferEnMapa()" class="text-accent-cyan hover:underline font-bold flex items-center gap-1">
+            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi GPS
+          </button>
+        </div>
+        <div id="mapa-cliente" style="height: 220px; min-height: 220px; width: 100%; display: block;" class="shadow-inner border border-slate-700/80 rounded-2xl overflow-hidden"></div>
       </div>
 
-      <div id="mapa-cliente" style="height: 250px; min-height: 250px; width: 100%; display: block;" class="shadow-inner border border-slate-700 rounded-2xl"></div>
+      <!-- BOTÓN DE NAVEGACIÓN DIRECTA GOOGLE MAPS / WAZE -->
+      <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan via-indigo-600 to-brand-600 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-cyan border-t border-white/20">
+        <i data-lucide="navigation" class="w-4 h-4 fill-white"></i> Iniciar Ruta en Google Maps (GPS)
+      </a>
 
-      <!-- DATOS DEL CLIENTE Y RUTA -->
-      <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2 text-xs">
-        <div class="flex justify-between">
-          <span class="text-slate-400 font-bold">Pasajero / Cliente:</span>
+      <!-- DATOS DEL CLIENTE Y CONTACTO -->
+      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="text-slate-400 font-bold">Cliente / Pasajero:</span>
           <span id="mapa-nombre-cliente" class="text-white font-black"></span>
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <span class="text-slate-400 font-bold">Teléfono:</span>
-          <a id="mapa-telefono-cliente" href="#" class="text-accent-cyan font-bold underline"></a>
+          <div class="flex items-center gap-2">
+            <a id="mapa-btn-llamar" href="#" class="btn-tactil bg-slate-800 text-accent-cyan font-black px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 border border-slate-700">
+              <i data-lucide="phone" class="w-3 h-3"></i> Llamar
+            </a>
+            <button id="mapa-btn-wa" onclick="" class="btn-tactil bg-emerald-600/30 text-accent-emerald font-black px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 border border-emerald-500/40">
+              <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp
+            </button>
+          </div>
         </div>
-        <div class="flex justify-between items-center border-t border-b border-slate-700/60 py-1.5">
+        <div class="flex justify-between items-center border-t border-slate-800 pt-1.5">
           <span class="text-slate-400 font-bold">Método de Pago:</span>
           <span id="mapa-metodo-pago" class="font-black"></span>
         </div>
+        <div id="caja-detalle-pago-cliente" class="hidden text-[10px] text-accent-yellow bg-slate-900 p-2 rounded-xl border border-slate-800"></div>
         <div>
-          <span class="text-slate-400 font-bold block mb-1">Dirección / Referencia de Entrega:</span>
-          <p id="mapa-direccion-cliente" class="text-slate-200 bg-slate-900 p-2 rounded-xl border border-slate-700/60"></p>
+          <span class="text-slate-400 font-bold block mb-1">Dirección de Entrega:</span>
+          <p id="mapa-direccion-cliente" class="text-slate-200 bg-slate-900 p-2 rounded-xl border border-slate-800 text-[11px]"></p>
         </div>
-        <a id="btn-abrir-waze-google" href="#" target="_blank" class="w-full bg-gradient-to-r from-accent-cyan to-indigo-600 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2">
-          <i data-lucide="navigation-2" class="w-4 h-4 fill-slate-950"></i> Abrir Navegación GPS (Google Maps)
-        </a>
       </div>
 
-      <!-- DETALLE DE PRODUCTOS / SERVICIOS -->
-      <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2">
-        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Detalle del Pedido / Artículos:</h4>
-        <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300"></div>
-        <div class="flex justify-between items-center border-t border-slate-700 pt-2 font-black">
+      <!-- DETALLE DE ARTÍCULOS O CARRERA -->
+      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
+        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-800 pb-1">Artículos a Entregar:</h4>
+        <div id="mapa-lista-items" class="space-y-1 text-xs text-slate-300 max-h-28 overflow-y-auto no-scrollbar pr-1"></div>
+        
+        <div class="flex justify-between items-center border-t border-slate-800 pt-2 font-black">
           <span class="text-xs text-slate-400">Total a Cobrar al Cliente:</span>
-          <span id="mapa-total-cobrar" class="text-base text-accent-yellow"></span>
+          <span id="mapa-total-cobrar" class="text-base text-accent-yellow">$0.00</span>
         </div>
-        <div class="flex justify-between items-center bg-emerald-950/40 p-2 rounded-xl border border-emerald-500/20 text-xs">
-          <span class="text-emerald-400 font-bold">Tu ganancia por este envío:</span>
-          <span class="text-accent-emerald font-black">$0.70</span>
+
+        <div class="flex justify-between items-center bg-emerald-950/50 p-2.5 rounded-xl border border-emerald-500/30 text-xs">
+          <span class="text-emerald-300 font-bold">Tu ganancia por este envío:</span>
+          <span class="text-accent-emerald font-black text-sm">$0.70</span>
         </div>
       </div>
 
-      <!-- BOTÓN DE ACCIÓN Y COMUNICACIÓN -->
-      <div id="accion-estado-contenedor"></div>
+      <!-- BOTONES DE ACCIÓN DE ESTADO -->
+      <div id="accion-estado-contenedor" class="pt-1"></div>
 
     </div>
   </div>
 
   <script>
-    // CONFIGURACIÓN DE FIREBASE
+    // ================= CONFIGURACIÓN DE FIREBASE =================
     const firebaseConfig = {
       apiKey: "AIzaSyB19B9jLHPpgKxVvMH97D5VafgTp0CfnOc", 
       authDomain: "pedidosflash-c7bb7.firebaseapp.com",
@@ -256,45 +379,264 @@
     let mapaInstance = null;
     let marcadorOrigRef = null;
     let marcadorDestRef = null;
+    let marcadorChoferGpsRef = null;
     let lineaTrayecto = null;
     let origenPuntoMapa = [10.1500, -68.5667];
     let destinoPuntoMapa = [10.1700, -68.2200];
+    let choferGpsPunto = [10.1500, -68.5667];
     let totalGananciasAcumuladas = 0;
+    let audioHabilitado = true;
+    let audioCtx = null;
+    let ultimoPedidoVistoId = null;
 
+    // ================= INICIALIZACIÓN =================
     window.onload = () => {
-      const choferGuardado = localStorage.getItem('chofer_pedidosflash');
+      const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
         choferActual = JSON.parse(choferGuardado);
         document.getElementById('modal-registro-chofer').classList.add('hidden');
-        document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
+        document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
+        iniciarConexionChoferFirebase();
       }
 
+      // Escuchar pedidos en Firebase
       db.ref('pedidos').on('value', (snapshot) => {
-        todosLosPedidos = snapshot.val() || {};
+        const nuevosPedidos = snapshot.val() || {};
+        detectarNuevosPedidosYAlertar(nuevosPedidos);
+        todosLosPedidos = nuevosPedidos;
         renderizarPedidos();
       });
+
+      // Solicitar permiso de notificaciones push del navegador si está soportado
+      if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+      }
+
+      iniciarSeguimientoGps();
     };
 
+    // ================= SISTEMA DE AUDIO DE ALERTA =================
+    function emitirAlertaSonoraNuevoPedido() {
+      if (!audioHabilitado) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Generar sonido de timbre de despacho: Ding - Dong - Ding
+        const tocarTono = (freq, inicio, duracion) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + inicio);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime + inicio);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + inicio + duracion);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + inicio);
+          osc.stop(audioCtx.currentTime + inicio + duracion);
+        };
+
+        tocarTono(880, 0, 0.25);   // La
+        tocarTono(1174, 0.22, 0.4); // Re alto
+        tocarTono(1318, 0.5, 0.6);  // Mi alto
+
+        if (navigator.vibrate) {
+          navigator.vibrate([400, 200, 400, 200, 800]);
+        }
+      } catch(e) {
+        console.warn("Audio Context bloqueado o no disponible:", e);
+      }
+    }
+
+    function toggleAudioAlertas() {
+      audioHabilitado = !audioHabilitado;
+      const icono = document.getElementById('icono-audio-header');
+      if (audioHabilitado) {
+        icono.setAttribute('data-lucide', 'volume-2');
+        mostrarToast("Alertas sonoras activadas", "Sonido", "success");
+        emitirAlertaSonoraNuevoPedido();
+      } else {
+        icono.setAttribute('data-lucide', 'volume-x');
+        mostrarToast("Alertas silenciadas", "Sonido", "info");
+      }
+      lucide.createIcons();
+    }
+
+    // ================= DETECTAR PEDIDOS Y ALERTA POR WHATSAPP =================
+    function detectarNuevosPedidosYAlertar(nuevos) {
+      if (!choferActual) return;
+      const keys = Object.keys(nuevos);
+      const pendientes = keys.filter(k => nuevos[k].estado === 'pendiente');
+
+      if (pendientes.length > 0) {
+        const masRecienteId = pendientes[pendientes.length - 1];
+        if (ultimoPedidoVistoId && ultimoPedidoVistoId !== masRecienteId) {
+          // Es un pedido nuevo en tiempo real
+          emitirAlertaSonoraNuevoPedido();
+          mostrarToast("¡Nueva carrera disponible! Toca para verla.", "🚨 ¡NUEVO PEDIDO FLASH!", "success");
+
+          // Notificación Push del navegador si la app está en segundo plano
+          if ("Notification" in window && Notification.permission === "granted") {
+            const p = nuevos[masRecienteId];
+            new Notification("🚨 ¡NUEVO PEDIDO FLASH DISPONIBLE!", {
+              body: `Carrera para entregar en: ${p.direccion || 'Nirgua'}. Ganancia: $0.70.`,
+              icon: "img/logo.jfif"
+            });
+          }
+        }
+        ultimoPedidoVistoId = masRecienteId;
+      }
+    }
+
+    // ================= GESTIÓN DE ESTADO EN LÍNEA / FUERA DE LÍNEA =================
+    function iniciarConexionChoferFirebase() {
+      if (!choferActual || !choferActual.telefono) return;
+      const tel = choferActual.telefono.replace(/\D/g, '');
+
+      const choferRef = db.ref(`choferes/${tel}`);
+      
+      // Registrar presencia y datos del chofer
+      choferRef.update({
+        nombre: choferActual.nombre,
+        telefono: choferActual.telefono,
+        vehiculo: choferActual.vehiculo || 'Moto',
+        placa: choferActual.placa || '',
+        enLinea: choferActual.enLinea !== false,
+        ultimaConexion: new Date().toISOString()
+      });
+
+      // Si se cierra la conexión o la pestaña se desconecta en Firebase
+      choferRef.onDisconnect().update({
+        enLinea: false,
+        desconectadoAt: new Date().toISOString()
+      });
+
+      actualizarVistaEstadoConexion();
+    }
+
+    function toggleEstadoEnLinea() {
+      if (!choferActual) return;
+      choferActual.enLinea = !choferActual.enLinea;
+      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+
+      const tel = choferActual.telefono.replace(/\D/g, '');
+      db.ref(`choferes/${tel}`).update({
+        enLinea: choferActual.enLinea,
+        ultimaConexion: new Date().toISOString()
+      });
+
+      actualizarVistaEstadoConexion();
+
+      if (choferActual.enLinea) {
+        mostrarToast("¡Estás en línea! Recibirás alertas con sonido en vivo.", "Conectado", "success");
+      } else {
+        mostrarToast("Estás fuera de línea. Si entra un pedido, te avisaremos al WhatsApp.", "Desconectado", "info");
+      }
+    }
+
+    function actualizarVistaEstadoConexion() {
+      const estaEnLinea = choferActual && choferActual.enLinea !== false;
+      const txt = document.getElementById('txt-estado-conexion');
+      const sub = document.getElementById('sub-estado-conexion');
+      const btn = document.getElementById('btn-switch-conexion');
+      const ping = document.getElementById('indicador-estado-ping');
+      const bannerDesconectado = document.getElementById('banner-desconectado');
+
+      if (estaEnLinea) {
+        txt.innerText = "🟢 EN LÍNEA (Recibiendo pedidos)";
+        txt.className = "text-xs font-black text-accent-emerald block leading-tight";
+        sub.innerText = "Sonido y despacho activo en Nirgua";
+        btn.innerHTML = `<span>Activo</span>`;
+        btn.className = "btn-tactil bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[11px] shadow-glow-emerald flex items-center gap-1";
+        ping.className = "w-3 h-3 rounded-full bg-accent-emerald animate-ping";
+        bannerDesconectado.classList.add('hidden');
+      } else {
+        txt.innerText = "🔴 FUERA DE LÍNEA (Pausado)";
+        txt.className = "text-xs font-black text-slate-400 block leading-tight";
+        sub.innerText = "Alertas enviadas a tu WhatsApp";
+        btn.innerHTML = `<span>Conectar</span>`;
+        btn.className = "btn-tactil bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-[11px] border border-slate-700 flex items-center gap-1";
+        ping.className = "w-3 h-3 rounded-full bg-slate-600";
+        bannerDesconectado.classList.remove('hidden');
+      }
+    }
+
+    // ================= ENVÍO DE NOTIFICACIÓN POR WHATSAPP CUANDO NO ESTÁ EN LÍNEA =================
+    function probarNotificacionWhatsApp() {
+      if (!choferActual || !choferActual.telefono) return;
+      let telLimpio = choferActual.telefono.replace(/\D/g, '');
+      if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
+      if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
+
+      const mensaje = encodeURIComponent(
+        `🚨 *¡NOTIFICACIÓN PEDIDOS FLASH - NUEVA CARRERA!* 🛵\n\n` +
+        `Hola *${choferActual.nombre}*, tienes un nuevo pedido disponible en Nirgua.\n\n` +
+        `💰 *Tu ganancia:* $0.70\n` +
+        `📍 *Zona:* Nirgua Centro / Domicilio\n\n` +
+        `👉 *Entra aquí a la app para aceptarla antes de que otro chofer la tome:* \n` +
+        `${window.location.href}`
+      );
+
+      window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
+    }
+
+    // ================= SEGUIMIENTO GPS DEL CHOFER =================
+    function iniciarSeguimientoGps() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((pos) => {
+          choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+          if (choferActual && choferActual.telefono) {
+            const tel = choferActual.telefono.replace(/\D/g, '');
+            db.ref(`choferes/${tel}/gps`).set({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+              actualizado: new Date().toISOString()
+            });
+          }
+        }, () => {}, { enableHighAccuracy: true });
+      }
+    }
+
+    function centrarGpsChoferEnMapa() {
+      if (mapaInstance && choferGpsPunto) {
+        mapaInstance.setView(choferGpsPunto, 16);
+        if (marcadorChoferGpsRef) marcadorChoferGpsRef.openPopup();
+        mostrarToast("Centrado en tu ubicación GPS", "GPS Chofer", "info");
+      }
+    }
+
+    // ================= REGISTRO / PERFIL =================
     function guardarChofer(e) {
       e.preventDefault();
       const nombre = document.getElementById('reg-nombre').value.trim();
       const telefono = document.getElementById('reg-telefono').value.trim();
+      const vehiculo = document.getElementById('reg-vehiculo').value;
+      const placa = document.getElementById('reg-placa').value.trim();
 
       if (!nombre || !telefono) return;
 
-      choferActual = { nombre, telefono };
-      localStorage.setItem('chofer_pedidosflash', JSON.stringify(choferActual));
+      choferActual = { nombre, telefono, vehiculo, placa, enLinea: true };
+      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
 
       document.getElementById('modal-registro-chofer').classList.add('hidden');
-      document.getElementById('header-nombre-chofer').innerText = nombre;
+      document.getElementById('header-nombre-chofer').innerText = `${nombre} (${vehiculo})`;
+      
+      iniciarConexionChoferFirebase();
       renderizarPedidos();
+      mostrarToast(`¡Bienvenido ${nombre}! Panel listo.`, "Registro Exitoso", "success");
     }
 
     function cerrarSesionChofer() {
-      localStorage.removeItem('chofer_pedidosflash');
-      location.reload();
+      if (confirm("¿Deseas cerrar tu sesión como chofer?")) {
+        if (choferActual && choferActual.telefono) {
+          const tel = choferActual.telefono.replace(/\D/g, '');
+          db.ref(`choferes/${tel}`).update({ enLinea: false });
+        }
+        localStorage.removeItem('chofer_pedidosflash_v2');
+        location.reload();
+      }
     }
 
+    // ================= FILTROS Y TABS =================
     function filtrarTab(tab) {
       tabActual = tab;
       const idsTabs = ['disponibles', 'mis-pedidos', 'historial'];
@@ -302,15 +644,16 @@
       idsTabs.forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
         if (t === tab) {
-          btn.className = "flex-1 py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white transition";
+          btn.className = "btn-tactil py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white shadow-md transition flex items-center justify-center gap-1";
         } else {
-          btn.className = "flex-1 py-2 text-center rounded-xl text-[11px] font-bold bg-slate-800 text-slate-400 transition";
+          btn.className = "btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1";
         }
       });
 
       renderizarPedidos();
     }
 
+    // ================= RENDERIZADO DE PEDIDOS =================
     function renderizarPedidos() {
       const contenedor = document.getElementById('contenedor-pedidos');
       contenedor.innerHTML = "";
@@ -335,9 +678,9 @@
 
       totalGananciasAcumuladas = cantHistorial * TARIFA_CHOFER;
 
-      document.getElementById('cant-disponibles').innerText = cantDisponibles;
-      document.getElementById('cant-activos').innerText = cantActivos;
-      document.getElementById('cant-historial').innerText = cantHistorial;
+      document.getElementById('badge-disponibles').innerText = cantDisponibles;
+      document.getElementById('badge-activos').innerText = cantActivos;
+      document.getElementById('badge-historial').innerText = cantHistorial;
       document.getElementById('total-ganancias-chofer').innerText = `$${totalGananciasAcumuladas.toFixed(2)}`;
 
       const pedidosFiltrados = keys.filter(id => {
@@ -350,13 +693,14 @@
           return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
         }
         return false;
-      });
+      }).reverse(); // Más recientes arriba
 
       if (pedidosFiltrados.length === 0) {
         contenedor.innerHTML = `
-          <div class="text-center py-12 text-slate-500 text-xs">
-            <i data-lucide="package-open" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
-            No hay registros en esta sección.
+          <div class="text-center py-14 bg-slate-950/60 rounded-3xl border border-slate-800 p-6 space-y-2">
+            <i data-lucide="package-open" class="w-10 h-10 mx-auto text-slate-600 opacity-60"></i>
+            <h4 class="text-xs font-bold text-slate-400">No hay registros en esta sección</h4>
+            <p class="text-[11px] text-slate-500">Mantente en línea para recibir los nuevos pedidos en tiempo real.</p>
           </div>
         `;
         lucide.createIcons();
@@ -365,50 +709,67 @@
 
       pedidosFiltrados.forEach(id => {
         const p = todosLosPedidos[id];
-        const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || 'Cliente') : (p.nombre || 'Cliente');
-        const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
+        const numOrden = p.orden || `#FLASH-${id.substring(id.length - 4)}`;
+        const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
+        const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección especificada');
         const monto = p.total || p.montoTotal || p.monto || 0;
         
         const metodoPago = p.metodoPago || p.pago || 'Efectivo';
         const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
         const badgePago = esPagoMovil 
-          ? `<span class="bg-cyan-500/20 text-accent-cyan border border-accent-cyan/30 text-[10px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
-          : `<span class="bg-emerald-500/20 text-accent-emerald border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
+          ? `<span class="bg-cyan-500/15 text-accent-cyan border border-accent-cyan/30 text-[9px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
+          : `<span class="bg-emerald-500/15 text-accent-emerald border border-emerald-500/30 text-[9px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
 
-        // Identificar si tiene tienda de retiro (ej. Moravos Café)
+        // Tienda de retiro si aplica (ej. Moravos Café, Zirus Pizza)
         const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
         const badgeTienda = tiendaNombre 
-          ? `<span class="bg-amber-500/20 text-accent-yellow border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-md flex items-center gap-1">🏪 Retiro: ${tiendaNombre}</span>`
-          : '';
+          ? `<span class="bg-amber-500/20 text-accent-yellow border border-amber-500/40 text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1">🏪 Retiro: ${tiendaNombre}</span>`
+          : `<span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[9px] font-black px-2 py-0.5 rounded-md">📦 Víveres Flash</span>`;
 
         contenedor.innerHTML += `
-          <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 space-y-3 shadow-lg">
-            <div class="flex justify-between items-start">
-              <div>
+          <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-3.5 space-y-3 shadow-lg hover:border-slate-700 transition">
+            <div class="flex justify-between items-start gap-2">
+              <div class="min-w-0 flex-1">
                 <div class="flex flex-wrap items-center gap-1.5 mb-1">
-                  <span class="text-[10px] font-black uppercase tracking-wider ${p.estado === 'entregado' ? 'bg-emerald-950 text-accent-emerald border-emerald-500/30' : 'bg-slate-900 text-accent-cyan'} px-2 py-0.5 rounded-md border">
-                    ${p.estado.toUpperCase()}
+                  <span class="text-[9px] font-black uppercase tracking-wider ${p.estado === 'entregado' ? 'bg-emerald-950 text-accent-emerald border-emerald-500/30' : 'bg-slate-950 text-accent-cyan border-slate-800'} px-2 py-0.5 rounded-md border">
+                    ${numOrden} • ${p.estado.toUpperCase()}
                   </span>
                   ${badgePago}
                   ${badgeTienda}
                 </div>
-                <h3 class="text-sm font-black text-white mt-1">${nombreCliente}</h3>
+                <h3 class="text-xs font-black text-white truncate">${nombreCliente}</h3>
               </div>
-              <div class="text-right">
-                <span class="text-base font-black text-accent-yellow block">$${parseFloat(monto).toFixed(2)}</span>
-                <span class="text-[10px] font-bold text-emerald-400">+ $0.70 tu ganancia</span>
+              
+              <div class="text-right shrink-0">
+                <span class="text-sm font-black text-accent-yellow block leading-tight">$${parseFloat(monto).toFixed(2)}</span>
+                <span class="text-[9px] font-bold text-accent-emerald bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/40">+$0.70 Ganancia</span>
               </div>
             </div>
 
-            <p class="text-xs text-slate-300 line-clamp-2">📍 ${direccionCliente}</p>
+            <p class="text-[11px] text-slate-300 line-clamp-2 bg-slate-950/70 p-2 rounded-xl border border-slate-800/80">
+              📍 <span class="text-slate-400 font-semibold">Entrega:</span> ${direccionCliente}
+            </p>
 
-            <div class="flex gap-2 pt-1 border-t border-slate-700/60">
-              <button onclick="verMapaYDetalle('${id}')" class="flex-1 bg-slate-900 hover:bg-slate-950 text-indigo-300 font-bold py-2.5 rounded-xl text-xs border border-indigo-500/30 flex items-center justify-center gap-1.5">
-                <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Ubicación y Ruta
+            <div class="flex gap-2 pt-1 border-t border-slate-800">
+              <button onclick="verMapaYDetalle('${id}')" class="btn-tactil flex-1 bg-slate-950 hover:bg-slate-800 text-indigo-300 font-bold py-2.5 rounded-xl text-xs border border-indigo-500/30 flex items-center justify-center gap-1.5">
+                <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Ruta y Mapa
               </button>
+              
               ${p.estado === 'pendiente' ? `
-                <button onclick="cambiarEstado('${id}', 'aceptado')" class="bg-gradient-to-r from-accent-emerald to-emerald-600 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs glow-cyan">
+                <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs shadow-glow-emerald border-t border-white/20 whitespace-nowrap">
                   Aceptar ($0.70)
+                </button>
+              ` : ''}
+
+              ${p.estado === 'aceptado' ? `
+                <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-tactil bg-gradient-to-r from-accent-magenta to-indigo-600 hover:brightness-110 text-white font-black px-3.5 py-2.5 rounded-xl text-xs shadow-glow-magenta whitespace-nowrap">
+                  🛵 En Camino
+                </button>
+              ` : ''}
+
+              ${p.estado === 'en_camino' ? `
+                <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-3.5 py-2.5 rounded-xl text-xs shadow-glow-emerald whitespace-nowrap">
+                  ✅ Entregar
                 </button>
               ` : ''}
             </div>
@@ -419,9 +780,9 @@
       lucide.createIcons();
     }
 
+    // ================= CAMBIO DE ESTADO DE PEDIDOS =================
     function cambiarEstado(id, nuevoEstado) {
       if (!choferActual) {
-        alert("Por favor regístrate como chofer para aceptar pedidos.");
         document.getElementById('modal-registro-chofer').classList.remove('hidden');
         return;
       }
@@ -432,56 +793,58 @@
         estado: nuevoEstado,
         chofer: choferActual.nombre,
         choferTelefono: choferActual.telefono,
-        gananciaChofer: TARIFA_CHOFER
+        gananciaChofer: TARIFA_CHOFER,
+        fechaActualizacion: new Date().toISOString()
       }).then(() => {
         cerrarModalMapa();
 
-        if (nuevoEstado === 'en_camino' && pedido) {
-          const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
+        if (nuevoEstado === 'aceptado') {
+          mostrarToast("¡Carrera aceptada! Ya está en tu pestaña 'En Curso'.", "Aceptado", "success");
+        } else if (nuevoEstado === 'en_camino') {
+          mostrarToast("Marcado 'En Camino'. Abriendo WhatsApp al cliente...", "En Camino", "info");
           
+          // Notificar automáticamente al cliente por WhatsApp
+          const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
             let telLimpio = telefonoCliente.replace(/\D/g, '');
-            if (telLimpio.startsWith('0')) {
-              telLimpio = '58' + telLimpio.substring(1);
-            } else if (!telLimpio.startsWith('58') && telLimpio.length === 10) {
-              telLimpio = '58' + telLimpio;
-            }
+            if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
+            if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
 
             const mensaje = encodeURIComponent(
               `🛵 *¡TU PEDIDO DE PEDIDOS FLASH VA EN CAMINO!* 🛵\n\n` +
-              `Hola, te saluda tu chofer *${choferActual.nombre}*.\n\n` +
-              `Ya retiré tu pedido y voy en camino a tu dirección. ¡Mantente atento/a!`
+              `Hola, te saluda tu repartidor *${choferActual.nombre}* (${choferActual.vehiculo || 'Moto'}).\n\n` +
+              `Ya retiré tu pedido y voy en camino a tu dirección. ¡Por favor mantente atento/a al teléfono!`
             );
-
             window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
           }
+        } else if (nuevoEstado === 'entregado') {
+          mostrarToast("¡Entrega finalizada con éxito! +$0.70 sumado a tus ganancias.", "¡Completado!", "success");
         }
       });
     }
 
+    // ================= CONTACTO CON CLIENTE POR WHATSAPP =================
     function contactarClienteWhatsApp(telefonoCliente, nombreCliente) {
       if (!telefonoCliente) {
-        alert("El cliente no proporcionó un número de teléfono válido.");
+        mostrarToast("No hay número de teléfono registrado", "Aviso", "error");
         return;
       }
       let telLimpio = telefonoCliente.replace(/\D/g, '');
-      if (telLimpio.startsWith('0')) {
-        telLimpio = '58' + telLimpio.substring(1);
-      } else if (!telLimpio.startsWith('58') && telLimpio.length === 10) {
-        telLimpio = '58' + telLimpio;
-      }
+      if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
+      if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
 
       const mensaje = encodeURIComponent(
-        `🛵 *Pedidos Flash - Chofer en Contacto* 🛵\n\n` +
-        `Hola *${nombreCliente}*, te contacta tu chofer *${choferActual ? choferActual.nombre : 'Asignado'}* sobre tu pedido.`
+        `🛵 *Pedidos Flash Nirgua - Chofer en Contacto*\n\n` +
+        `Hola *${nombreCliente}*, te saluda *${choferActual ? choferActual.nombre : 'tu chofer'}* de Pedidos Flash con respecto a tu orden.`
       );
 
       window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
     }
 
+    // ================= SOLICITUD DE RETIRO DE GANANCIAS =================
     function abrirModalRetiro() {
       if (totalGananciasAcumuladas <= 0) {
-        alert("Aún no tienes ganancias acumuladas para retirar.");
+        mostrarToast("Aún no tienes ganancias acumuladas para retirar.", "Saldo $0.00", "info");
         return;
       }
       document.getElementById('monto-modal-retiro').innerText = `$${totalGananciasAcumuladas.toFixed(2)}`;
@@ -497,9 +860,9 @@
       const metodo = document.getElementById('retiro-metodo').value;
       const datos = document.getElementById('retiro-datos').value;
 
-      // Registrar en Firebase para que el Admin lo vea en vivo
       if (choferActual && choferActual.telefono) {
-        db.ref(`choferes/${choferActual.telefono}/solicitudRetiro`).set({
+        const tel = choferActual.telefono.replace(/\D/g, '');
+        db.ref(`choferes/${tel}/solicitudesRetiro`).push({
           monto: totalGananciasAcumuladas,
           metodo: metodo,
           datos: datos,
@@ -509,44 +872,62 @@
       }
 
       const mensaje = encodeURIComponent(
-        `💸 *SOLICITUD DE RETIRO DE GANANCIAS* 💸\n\n` +
+        `💸 *SOLICITUD DE RETIRO DE GANANCIAS - CHOFER* 💸\n\n` +
         `👤 *Chofer:* ${choferActual.nombre}\n` +
         `📞 *Teléfono:* ${choferActual.telefono}\n` +
-        `💰 *Monto a Retirar:* $${totalGananciasAcumuladas.toFixed(2)}\n` +
-        `🏦 *Método:* ${metodo}\n` +
-        `📄 *Datos de Pago:* ${datos}`
+        `💰 *Monto Solicitado:* $${totalGananciasAcumuladas.toFixed(2)}\n` +
+        `🏦 *Método de Cobro:* ${metodo}\n` +
+        `📄 *Datos de Cuenta:* ${datos}`
       );
 
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
       cerrarModalRetiro();
+      mostrarToast("Solicitud enviada a la Administración por WhatsApp", "Retiro Solicitado", "success");
     }
 
+    // ================= DETALLE CON MAPA Y RUTA =================
     function verMapaYDetalle(id) {
       const p = todosLosPedidos[id];
       if (!p) return;
 
-      const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente');
+      const numOrden = p.orden || `#FLASH-${id.substring(id.length - 4)}`;
+      const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
-      const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin especificación');
+      const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección especificada');
       const monto = p.total || p.montoTotal || p.monto || 0;
       
       const metodoPago = p.metodoPago || p.pago || 'Efectivo';
       const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
 
+      document.getElementById('modal-num-orden').innerText = numOrden;
       document.getElementById('mapa-nombre-cliente').innerText = nombreCliente;
-      
-      const elTel = document.getElementById('mapa-telefono-cliente');
-      elTel.innerText = telefonoCliente;
-      elTel.href = `tel:${telefonoCliente}`;
-
       document.getElementById('mapa-direccion-cliente').innerText = direccionCliente;
       document.getElementById('mapa-total-cobrar').innerText = `$${parseFloat(monto).toFixed(2)}`;
+
+      // Botón llamar y WhatsApp
+      const btnLlamar = document.getElementById('mapa-btn-llamar');
+      btnLlamar.href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
+
+      const btnWa = document.getElementById('mapa-btn-wa');
+      btnWa.onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
 
       const elMetodo = document.getElementById('mapa-metodo-pago');
       elMetodo.innerText = esPagoMovil ? '📲 Pago Móvil' : '💵 Efectivo';
       elMetodo.className = esPagoMovil ? 'font-black text-accent-cyan' : 'font-black text-accent-emerald';
 
-      // Mostrar alerta de retiro en tienda si aplica
+      // Detalle de pago (Referencia o vuelto)
+      const cajaDetallePago = document.getElementById('caja-detalle-pago-cliente');
+      if (esPagoMovil && p.referenciaPago) {
+        cajaDetallePago.innerText = `🔢 Ref Pago Móvil: ${p.referenciaPago}`;
+        cajaDetallePago.classList.remove('hidden');
+      } else if (!esPagoMovil && p.pagaCon) {
+        cajaDetallePago.innerText = `💵 Paga con: ${p.pagaCon} (Llevar vuelto exacto)`;
+        cajaDetallePago.classList.remove('hidden');
+      } else {
+        cajaDetallePago.classList.add('hidden');
+      }
+
+      // Alerta de retiro en local comercial si aplica
       const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
       const alertaTienda = document.getElementById('mapa-alerta-comercio');
       if (tiendaNombre) {
@@ -556,24 +937,24 @@
         alertaTienda.classList.add('hidden');
       }
 
+      // Lista de artículos
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
 
       if (p.items && Array.isArray(p.items)) {
         p.items.forEach(it => {
           listaItems.innerHTML += `
-            <div class="flex justify-between">
-              <span>• ${it.cantidad || 1}x ${it.nombre}</span>
-              <span class="font-bold">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span>
+            <div class="flex justify-between items-center py-0.5">
+              <span class="truncate pr-2">• ${it.cantidad || 1}x ${it.nombre}</span>
+              <span class="font-bold text-accent-yellow shrink-0">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span>
             </div>
           `;
         });
-      } else if (p.detalle || p.productos) {
-        listaItems.innerHTML = `<p class="whitespace-pre-line">${p.detalle || p.productos}</p>`;
       } else {
-        listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte o carrera solicitada.</p>`;
+        listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte directo solicitado.</p>`;
       }
 
+      // Coordenadas
       let latOrigen = p.origenLat ? parseFloat(p.origenLat) : 10.1500;
       let lonOrigen = p.origenLng ? parseFloat(p.origenLng) : -68.5667;
 
@@ -583,65 +964,76 @@
       origenPuntoMapa = [latOrigen, lonOrigen];
       destinoPuntoMapa = [latDestino, lonDestino];
 
-      document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/search/?api=1&query=${latDestino},${lonDestino}`;
+      document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${latDestino},${lonDestino}`;
 
-      let botonWhatsAppCliente = `
-        <button onclick="contactarClienteWhatsApp('${telefonoCliente}', '${nombreCliente}')" class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-accent-emerald border border-emerald-500/40 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 mb-2 transition">
-          <i data-lucide="message-circle" class="w-4 h-4"></i> Escribir al Pasajero por WhatsApp
-        </button>
-      `;
-
+      // Botón de acción de estado
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
-        contAccion.innerHTML = botonWhatsAppCliente + `
-          <button onclick="cambiarEstado('${id}', 'aceptado')" class="w-full bg-accent-emerald text-slate-950 font-black py-3 rounded-xl text-xs glow-cyan">
+        contAccion.innerHTML = `
+          <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-glow-emerald border-t border-white/20">
             ACEPTAR ESTE PEDIDO / CARRERA ($0.70)
           </button>
         `;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = botonWhatsAppCliente + `
-          <button onclick="cambiarEstado('${id}', 'en_camino')" class="w-full bg-accent-magenta text-white font-black py-3 rounded-xl text-xs glow-magenta">
+        contAccion.innerHTML = `
+          <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-tactil w-full bg-gradient-to-r from-accent-magenta to-indigo-600 hover:brightness-110 text-white font-black py-3 rounded-2xl text-xs shadow-glow-magenta border-t border-white/20">
             MARCAR "EN CAMINO" 🛵
           </button>
         `;
       } else if (p.estado === 'en_camino') {
-        contAccion.innerHTML = botonWhatsAppCliente + `
-          <button onclick="cambiarEstado('${id}', 'entregado')" class="w-full bg-emerald-500 text-slate-950 font-black py-3 rounded-xl text-xs">
+        contAccion.innerHTML = `
+          <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-glow-emerald border-t border-white/20">
             FINALIZAR Y MARCAR "ENTREGADO" ✅
           </button>
         `;
       } else {
-        contAccion.innerHTML = botonWhatsAppCliente + `<p class="text-center text-xs text-emerald-400 font-bold">✅ Servicio Finalizado</p>`;
+        contAccion.innerHTML = `<p class="text-center text-xs text-accent-emerald font-black py-2 bg-emerald-950/40 rounded-xl border border-emerald-500/20">✅ Servicio Entregado con Éxito</p>`;
       }
 
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
 
       setTimeout(() => {
         if (!mapaInstance) {
-          mapaInstance = L.map('mapa-cliente', { zoomControl: true }).setView(destinoPuntoMapa, 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: 'OpenStreetMap'
-          }).addTo(mapaInstance);
+          mapaInstance = L.map('mapa-cliente', { zoomControl: true, attributionControl: false }).setView(destinoPuntoMapa, 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaInstance);
         } else {
           mapaInstance.invalidateSize();
         }
 
         if (marcadorOrigRef) mapaInstance.removeLayer(marcadorOrigRef);
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
+        if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
+        // Marcador Origen / Retiro
         marcadorOrigRef = L.marker(origenPuntoMapa, {
-          icon: L.divIcon({ html: '<div style="background:#00e676; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#000;">🟢</div>', iconSize: [18, 18] })
-        }).addTo(mapaInstance).bindPopup(tiendaNombre ? `🏪 Retiro: ${tiendaNombre}` : '🟢 Origen');
+          icon: L.divIcon({ 
+            html: '<div style="background:#00e676; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:11px;">🟢</div>', 
+            iconSize: [22, 22] 
+          })
+        }).addTo(mapaInstance).bindPopup(tiendaNombre ? `🏪 Retiro en: ${tiendaNombre}` : '🟢 Salida');
 
+        // Marcador Destino Entrega
         marcadorDestRef = L.marker(destinoPuntoMapa, {
-          icon: L.divIcon({ html: '<div style="background:#ff007a; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#fff;">🔴</div>', iconSize: [18, 18] })
+          icon: L.divIcon({ 
+            html: '<div style="background:#ff007a; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:11px;">🔴</div>', 
+            iconSize: [22, 22] 
+          })
         }).addTo(mapaInstance).bindPopup('🔴 Entrega al Cliente').openPopup();
+
+        // Marcador GPS del Chofer
+        if (choferGpsPunto) {
+          marcadorChoferGpsRef = L.marker(choferGpsPunto, {
+            icon: L.divIcon({ 
+              html: '<div style="background:#00f2fe; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 12px #00f2fe; display:flex; align-items:center; justify-content:center; font-size:12px;">🛵</div>', 
+              iconSize: [22, 22] 
+            })
+          }).addTo(mapaInstance).bindPopup('🛵 Tu Ubicación Actual');
+        }
 
         mapaInstance.invalidateSize();
         calcularRutaOSRMChofer();
 
-      }, 300);
+      }, 250);
 
       lucide.createIcons();
     }
@@ -659,20 +1051,56 @@
             const coordsGeoJSON = data.routes[0].geometry.coordinates;
             const latLngs = coordsGeoJSON.map(coord => [coord[1], coord[0]]);
             lineaTrayecto = L.polyline(latLngs, { color: '#00f2fe', weight: 5, opacity: 0.85 }).addTo(mapaInstance);
-            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
+            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
           } else {
-            lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
-            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
+            trazarLineaDirecta();
           }
         })
-        .catch(() => {
-          lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
-          mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
-        });
+        .catch(() => trazarLineaDirecta());
+    }
+
+    function trazarLineaDirecta() {
+      if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
+      lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
+      mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
     }
 
     function cerrarModalMapa() {
       document.getElementById('modal-detalle-pedido').classList.add('hidden');
+    }
+
+    // ================= TOASTS MODERNOS =================
+    let toastTimeout = null;
+    function mostrarToast(mensaje, titulo = "Pedidos Flash", tipo = "info") {
+      const toast = document.getElementById('toast-notificacion');
+      const toastTit = document.getElementById('toast-titulo');
+      const toastMsj = document.getElementById('toast-mensaje');
+      const toastBg = document.getElementById('toast-icono-bg');
+      const toastIcon = document.getElementById('toast-icono');
+
+      toastTit.innerText = titulo;
+      toastMsj.innerText = mensaje;
+
+      if (tipo === 'success') {
+        toastBg.className = "w-8 h-8 rounded-xl bg-accent-emerald/20 text-accent-emerald flex items-center justify-center shrink-0";
+        toastIcon.setAttribute('data-lucide', 'check-circle');
+      } else if (tipo === 'error') {
+        toastBg.className = "w-8 h-8 rounded-xl bg-accent-magenta/20 text-accent-magenta flex items-center justify-center shrink-0";
+        toastIcon.setAttribute('data-lucide', 'alert-circle');
+      } else {
+        toastBg.className = "w-8 h-8 rounded-xl bg-accent-cyan/20 text-accent-cyan flex items-center justify-center shrink-0";
+        toastIcon.setAttribute('data-lucide', 'info');
+      }
+      lucide.createIcons();
+
+      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }, 3000);
     }
   </script>
 </body>
