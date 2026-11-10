@@ -49,7 +49,7 @@
           🛵
         </div>
         <h2 class="text-xl font-black text-white">Registro de Chofer</h2>
-        <p class="text-xs text-slate-400">Ingresa tus datos para registrarte y esperar aprobación</p>
+        <p class="text-xs text-slate-400">Ingresa tus datos para empezar a tomar carreras</p>
       </div>
 
       <form onsubmit="guardarChofer(event)" class="space-y-4">
@@ -58,36 +58,13 @@
           <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono / WhatsApp:</label>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono de contacto:</label>
           <input type="tel" id="reg-telefono" required placeholder="Ej: 04121234567" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
         </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Vehículo / Moto:</label>
-          <input type="text" id="reg-vehiculo" placeholder="Moto Empire Keeway" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-indigo-500">
-        </div>
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition shadow-lg">
-          Registrarme y Solicitar Acceso
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition">
+          Ingresar al Panel
         </button>
       </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE ESPERA DE APROBACIÓN -->
-  <div id="modal-espera-aprobacion" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border-2 border-amber-500/40 w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-16 h-16 bg-amber-500/20 text-accent-yellow border border-amber-500/30 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce">
-        ⏳
-      </div>
-      <h2 class="text-lg font-black text-white">Cuenta Pendiente de Aprobación</h2>
-      <p class="text-xs text-slate-300 leading-relaxed">
-        Tus datos han sido enviados al administrador de <b>Pedidos Flash</b>. En breve un administrador aceptará tu cuenta para que puedas tomar carreras.
-      </p>
-      <button onclick="verificarEstadoChofer()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-3 rounded-xl text-xs transition">
-        🔄 Verificar Si Ya Fui Aprobado
-      </button>
-      <button onclick="cerrarSesionChofer()" class="text-xs text-slate-400 hover:text-white underline block mx-auto pt-2">
-        Cambiar de cuenta / Salir
-      </button>
     </div>
   </div>
 
@@ -97,7 +74,7 @@
     <!-- ENCABEZADO PANEL CHOFER -->
     <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-b border-indigo-500/20 p-4 pt-5 shadow-lg flex justify-between items-center shrink-0">
       <div>
-        <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-accent-emerald border border-emerald-500/30 text-[9px] uppercase tracking-wider font-black px-2.5 py-0.5 rounded-full">
+        <span class="inline-flex items-center gap-1 bg-amber-500/20 text-accent-yellow border border-accent-yellow/30 text-[9px] uppercase tracking-wider font-black px-2.5 py-0.5 rounded-full">
           <i data-lucide="shield-check" class="w-3 h-3"></i> CHOFER: <span id="header-nombre-chofer" class="text-white ml-1">---</span>
         </span>
         <h1 class="text-xl font-black text-white flex items-center gap-2 mt-1">
@@ -197,12 +174,19 @@
         </button>
       </div>
 
-      <!-- INSTRUCCIÓN INTERACTIVA DEL MAPA -->
-      <div class="bg-indigo-950/60 border border-indigo-500/30 p-2 rounded-xl text-[10px] text-indigo-200 text-center font-bold">
-        🟢 Origen (Ubicación actual del pasajero) | 🔴 Destino de la carrera
+      <!-- ALERTA SI TIENE RETIRO EN LOCAL/COMERCIO (EJ: MORAVOS CAFÉ) -->
+      <div id="mapa-alerta-comercio" class="bg-amber-950/40 border border-amber-500/40 p-2.5 rounded-xl text-xs space-y-1 hidden">
+        <div class="flex items-center gap-1.5 text-accent-yellow font-black">
+          <i data-lucide="store" class="w-4 h-4"></i>
+          <span>PUNTO DE RETIRO: <span id="mapa-txt-tienda">Moravos Café</span></span>
+        </div>
+        <p class="text-[10px] text-slate-300">Debes pasar por este local a retirar el producto antes de entregarlo al cliente.</p>
       </div>
 
-      <!-- MAPA INTERACTIVO LEAFLET -->
+      <div class="bg-indigo-950/60 border border-indigo-500/30 p-2 rounded-xl text-[10px] text-indigo-200 text-center font-bold">
+        🟢 Origen / Retiro | 🔴 Destino de la entrega
+      </div>
+
       <div id="mapa-cliente" style="height: 250px; min-height: 250px; width: 100%; display: block;" class="shadow-inner border border-slate-700 rounded-2xl"></div>
 
       <!-- DATOS DEL CLIENTE Y RUTA -->
@@ -220,7 +204,7 @@
           <span id="mapa-metodo-pago" class="font-black"></span>
         </div>
         <div>
-          <span class="text-slate-400 font-bold block mb-1">Dirección / Referencia:</span>
+          <span class="text-slate-400 font-bold block mb-1">Dirección / Referencia de Entrega:</span>
           <p id="mapa-direccion-cliente" class="text-slate-200 bg-slate-900 p-2 rounded-xl border border-slate-700/60"></p>
         </div>
         <a id="btn-abrir-waze-google" href="#" target="_blank" class="w-full bg-gradient-to-r from-accent-cyan to-indigo-600 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 mt-2">
@@ -230,10 +214,10 @@
 
       <!-- DETALLE DE PRODUCTOS / SERVICIOS -->
       <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-2">
-        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Detalle del Servicio:</h4>
+        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-700 pb-1">Detalle del Pedido / Artículos:</h4>
         <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300"></div>
         <div class="flex justify-between items-center border-t border-slate-700 pt-2 font-black">
-          <span class="text-xs text-slate-400">Total a Cobrar:</span>
+          <span class="text-xs text-slate-400">Total a Cobrar al Cliente:</span>
           <span id="mapa-total-cobrar" class="text-base text-accent-yellow"></span>
         </div>
         <div class="flex justify-between items-center bg-emerald-950/40 p-2 rounded-xl border border-emerald-500/20 text-xs">
@@ -281,57 +265,29 @@
       const choferGuardado = localStorage.getItem('chofer_pedidosflash');
       if (choferGuardado) {
         choferActual = JSON.parse(choferGuardado);
-        verificarEstadoChofer();
-      } else {
-        document.getElementById('modal-registro-chofer').classList.remove('hidden');
+        document.getElementById('modal-registro-chofer').classList.add('hidden');
+        document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
       }
+
+      db.ref('pedidos').on('value', (snapshot) => {
+        todosLosPedidos = snapshot.val() || {};
+        renderizarPedidos();
+      });
     };
 
     function guardarChofer(e) {
       e.preventDefault();
       const nombre = document.getElementById('reg-nombre').value.trim();
       const telefono = document.getElementById('reg-telefono').value.trim();
-      const vehiculo = document.getElementById('reg-vehiculo').value.trim() || 'Moto';
 
       if (!nombre || !telefono) return;
-      const telLimpio = telefono.replace(/\D/g, '');
 
-      choferActual = { nombre, telefono: telLimpio, vehiculo, estado: 'pendiente' };
+      choferActual = { nombre, telefono };
+      localStorage.setItem('chofer_pedidosflash', JSON.stringify(choferActual));
 
-      // Guardar en Firebase como pendiente para que el admin lo apruebe
-      db.ref(`choferes/${telLimpio}`).set(choferActual).then(() => {
-        localStorage.setItem('chofer_pedidosflash', JSON.stringify(choferActual));
-        document.getElementById('modal-registro-chofer').classList.add('hidden');
-        document.getElementById('modal-espera-aprobacion').classList.remove('hidden');
-      });
-    }
-
-    function verificarEstadoChofer() {
-      if (!choferActual || !choferActual.telefono) return;
-
-      db.ref(`choferes/${choferActual.telefono}`).once('value').then((snapshot) => {
-        const datosServidor = snapshot.val();
-        if (datosServidor && datosServidor.estado === 'activo') {
-          choferActual = datosServidor;
-          localStorage.setItem('chofer_pedidosflash', JSON.stringify(choferActual));
-          
-          document.getElementById('modal-registro-chofer').classList.add('hidden');
-          document.getElementById('modal-espera-aprobacion').classList.add('hidden');
-          document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
-          
-          iniciarEscuchasPedidos();
-        } else {
-          document.getElementById('modal-registro-chofer').classList.add('hidden');
-          document.getElementById('modal-espera-aprobacion').classList.remove('hidden');
-        }
-      });
-    }
-
-    function iniciarEscuchasPedidos() {
-      db.ref('pedidos').on('value', (snapshot) => {
-        todosLosPedidos = snapshot.val() || {};
-        renderizarPedidos();
-      });
+      document.getElementById('modal-registro-chofer').classList.add('hidden');
+      document.getElementById('header-nombre-chofer').innerText = nombre;
+      renderizarPedidos();
     }
 
     function cerrarSesionChofer() {
@@ -411,7 +367,7 @@
         const p = todosLosPedidos[id];
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || 'Cliente') : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
-        const monto = p.montoTotal || p.monto || 0;
+        const monto = p.total || p.montoTotal || p.monto || 0;
         
         const metodoPago = p.metodoPago || p.pago || 'Efectivo';
         const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
@@ -419,21 +375,28 @@
           ? `<span class="bg-cyan-500/20 text-accent-cyan border border-accent-cyan/30 text-[10px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
           : `<span class="bg-emerald-500/20 text-accent-emerald border border-emerald-500/30 text-[10px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
 
+        // Identificar si tiene tienda de retiro (ej. Moravos Café)
+        const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
+        const badgeTienda = tiendaNombre 
+          ? `<span class="bg-amber-500/20 text-accent-yellow border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-md flex items-center gap-1">🏪 Retiro: ${tiendaNombre}</span>`
+          : '';
+
         contenedor.innerHTML += `
           <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 space-y-3 shadow-lg">
             <div class="flex justify-between items-start">
               <div>
-                <div class="flex items-center gap-2 mb-1">
+                <div class="flex flex-wrap items-center gap-1.5 mb-1">
                   <span class="text-[10px] font-black uppercase tracking-wider ${p.estado === 'entregado' ? 'bg-emerald-950 text-accent-emerald border-emerald-500/30' : 'bg-slate-900 text-accent-cyan'} px-2 py-0.5 rounded-md border">
                     ${p.estado.toUpperCase()}
                   </span>
                   ${badgePago}
+                  ${badgeTienda}
                 </div>
                 <h3 class="text-sm font-black text-white mt-1">${nombreCliente}</h3>
               </div>
               <div class="text-right">
                 <span class="text-base font-black text-accent-yellow block">$${parseFloat(monto).toFixed(2)}</span>
-                <span class="text-[10px] font-bold text-emerald-400">+ $0.70 envío</span>
+                <span class="text-[10px] font-bold text-emerald-400">+ $0.70 tu ganancia</span>
               </div>
             </div>
 
@@ -444,8 +407,8 @@
                 <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Ubicación y Ruta
               </button>
               ${p.estado === 'pendiente' ? `
-                <button onclick="cambiarEstado('${id}', 'aceptado')" class="bg-gradient-to-r from-accent-emerald to-emerald-600 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs shadow-md">
-                  Aceptar
+                <button onclick="cambiarEstado('${id}', 'aceptado')" class="bg-gradient-to-r from-accent-emerald to-emerald-600 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs glow-cyan">
+                  Aceptar ($0.70)
                 </button>
               ` : ''}
             </div>
@@ -459,6 +422,7 @@
     function cambiarEstado(id, nuevoEstado) {
       if (!choferActual) {
         alert("Por favor regístrate como chofer para aceptar pedidos.");
+        document.getElementById('modal-registro-chofer').classList.remove('hidden');
         return;
       }
 
@@ -484,9 +448,9 @@
             }
 
             const mensaje = encodeURIComponent(
-              `🛵 *¡TU PEDIDO / SERVICIO VA EN CAMINO!* 🛵\n\n` +
-              `Hola, te saluda tu chofer *${choferActual.nombre}* de Pedidos Flash.\n\n` +
-              `Ya voy saliendo hacia tu ubicación de origen. ¡Mantente atento/a!`
+              `🛵 *¡TU PEDIDO DE PEDIDOS FLASH VA EN CAMINO!* 🛵\n\n` +
+              `Hola, te saluda tu chofer *${choferActual.nombre}*.\n\n` +
+              `Ya retiré tu pedido y voy en camino a tu dirección. ¡Mantente atento/a!`
             );
 
             window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
@@ -508,8 +472,8 @@
       }
 
       const mensaje = encodeURIComponent(
-        `🛵 *Pedidos Flash - Atención al Pasajero* 🛵\n\n` +
-        `Hola *${nombreCliente}*, te contacta tu chofer *${choferActual ? choferActual.nombre : 'Asignado'}* respecto a tu servicio solicitado.`
+        `🛵 *Pedidos Flash - Chofer en Contacto* 🛵\n\n` +
+        `Hola *${nombreCliente}*, te contacta tu chofer *${choferActual ? choferActual.nombre : 'Asignado'}* sobre tu pedido.`
       );
 
       window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
@@ -533,6 +497,17 @@
       const metodo = document.getElementById('retiro-metodo').value;
       const datos = document.getElementById('retiro-datos').value;
 
+      // Registrar en Firebase para que el Admin lo vea en vivo
+      if (choferActual && choferActual.telefono) {
+        db.ref(`choferes/${choferActual.telefono}/solicitudRetiro`).set({
+          monto: totalGananciasAcumuladas,
+          metodo: metodo,
+          datos: datos,
+          estado: 'pendiente',
+          fecha: new Date().toISOString()
+        });
+      }
+
       const mensaje = encodeURIComponent(
         `💸 *SOLICITUD DE RETIRO DE GANANCIAS* 💸\n\n` +
         `👤 *Chofer:* ${choferActual.nombre}\n` +
@@ -553,7 +528,7 @@
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
       const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin especificación');
-      const monto = p.montoTotal || p.monto || 0;
+      const monto = p.total || p.montoTotal || p.monto || 0;
       
       const metodoPago = p.metodoPago || p.pago || 'Efectivo';
       const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
@@ -570,6 +545,16 @@
       const elMetodo = document.getElementById('mapa-metodo-pago');
       elMetodo.innerText = esPagoMovil ? '📲 Pago Móvil' : '💵 Efectivo';
       elMetodo.className = esPagoMovil ? 'font-black text-accent-cyan' : 'font-black text-accent-emerald';
+
+      // Mostrar alerta de retiro en tienda si aplica
+      const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
+      const alertaTienda = document.getElementById('mapa-alerta-comercio');
+      if (tiendaNombre) {
+        document.getElementById('mapa-txt-tienda').innerText = tiendaNombre;
+        alertaTienda.classList.remove('hidden');
+      } else {
+        alertaTienda.classList.add('hidden');
+      }
 
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
@@ -609,14 +594,14 @@
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
         contAccion.innerHTML = botonWhatsAppCliente + `
-          <button onclick="cambiarEstado('${id}', 'aceptado')" class="w-full bg-accent-emerald text-slate-950 font-black py-3 rounded-xl text-xs shadow-md">
+          <button onclick="cambiarEstado('${id}', 'aceptado')" class="w-full bg-accent-emerald text-slate-950 font-black py-3 rounded-xl text-xs glow-cyan">
             ACEPTAR ESTE PEDIDO / CARRERA ($0.70)
           </button>
         `;
       } else if (p.estado === 'aceptado') {
         contAccion.innerHTML = botonWhatsAppCliente + `
-          <button onclick="cambiarEstado('${id}', 'en_camino')" class="w-full bg-accent-magenta text-white font-black py-3 rounded-xl text-xs shadow-md">
-            MARCAR "EN CAMINO AL PASAJERO" 🛵
+          <button onclick="cambiarEstado('${id}', 'en_camino')" class="w-full bg-accent-magenta text-white font-black py-3 rounded-xl text-xs glow-magenta">
+            MARCAR "EN CAMINO" 🛵
           </button>
         `;
       } else if (p.estado === 'en_camino') {
@@ -647,11 +632,11 @@
 
         marcadorOrigRef = L.marker(origenPuntoMapa, {
           icon: L.divIcon({ html: '<div style="background:#00e676; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#000;">🟢</div>', iconSize: [18, 18] })
-        }).addTo(mapaInstance).bindPopup('🟢 Ubicación Actual del Pasajero');
+        }).addTo(mapaInstance).bindPopup(tiendaNombre ? `🏪 Retiro: ${tiendaNombre}` : '🟢 Origen');
 
         marcadorDestRef = L.marker(destinoPuntoMapa, {
           icon: L.divIcon({ html: '<div style="background:#ff007a; width:18px; height:18px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:bold; color:#fff;">🔴</div>', iconSize: [18, 18] })
-        }).addTo(mapaInstance).bindPopup('🔴 Destino de la Carrera').openPopup();
+        }).addTo(mapaInstance).bindPopup('🔴 Entrega al Cliente').openPopup();
 
         mapaInstance.invalidateSize();
         calcularRutaOSRMChofer();
@@ -673,7 +658,6 @@
           if (data.routes && data.routes.length > 0) {
             const coordsGeoJSON = data.routes[0].geometry.coordinates;
             const latLngs = coordsGeoJSON.map(coord => [coord[1], coord[0]]);
-            
             lineaTrayecto = L.polyline(latLngs, { color: '#00f2fe', weight: 5, opacity: 0.85 }).addTo(mapaInstance);
             mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [40, 40] });
           } else {
