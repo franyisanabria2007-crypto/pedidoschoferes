@@ -1,12 +1,19 @@
 {
-  "background_color": "#030712",
-  "description": "Panel de choferes y delivery para Nirgua",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "Pedidos Flash Choferes",
+  "short_name": "PedidosFlash",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "description": "Panel de choferes y delivery para Nirgua",
   "orientation": "any",
   "scope": "/",
-  "short_name": "Pedidos Flash",
-  "start_url": "./index.html",
-  "theme_color": "#030712"
+  "icons": [
+    {
+      "src": "https://franyisanabria2007-crypto.github.io/pedidoschoferes/img/logo.jfif",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
 }
