@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Pedidos Flash Choferes",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Pedidos Flash",
+  "start_url": "/",
+  "theme_color": "#030712",
+  "description": "Panel de choferes y delivery para Nirgua"
+}
