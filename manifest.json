@@ -11,6 +11,11 @@
   "id": "/index.html",
   "icons": [
     {
+      "src": "https://www.pwabuilder.com/assets/images/icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
       "src": "https://www.pwabuilder.com/assets/images/icon_512.png",
       "sizes": "512x512",
       "type": "image/png"
