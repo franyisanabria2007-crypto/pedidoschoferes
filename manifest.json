@@ -7,13 +7,5 @@
   "theme_color": "#030712",
   "description": "Panel de choferes y delivery para Nirgua",
   "orientation": "any",
-  "scope": "/",
-  "icons": [
-    {
-      "src": "https://franyisanabria2007-crypto.github.io/pedidoschoferes/img/logo.jfif",
-      "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
-    }
-  ]
+  "scope": "/"
 }
