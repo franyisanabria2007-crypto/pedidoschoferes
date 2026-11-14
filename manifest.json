@@ -8,5 +8,12 @@
   "description": "Panel de choferes y delivery para Nirgua",
   "orientation": "any",
   "scope": "/",
-  "id": "/index.html"
+  "id": "/index.html",
+  "icons": [
+    {
+      "src": "img/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
