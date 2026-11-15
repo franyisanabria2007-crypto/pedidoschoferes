@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="manifest" href="./manifest.json">
+  
   <script>
     tailwind.config = {
       theme: {
@@ -77,33 +77,59 @@
     </div>
   </div>
 
-  <!-- MODAL DE REGISTRO / PERFIL DEL CHOFER -->
-  <div id="modal-registro-chofer" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
+  <!-- PANTALLA PRINCIPAL DE AUTENTICACIÓN (LOGIN / REGISTRO / CÓDIGO DE ACEPTACIÓN) -->
+  <div id="pantalla-auth" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-2xl">
+      
+      <!-- LOGO Y PRESENTACIÓN -->
       <div class="text-center space-y-1.5">
         <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-accent-cyan text-slate-950 border-2 border-white/20 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-glow-cyan">
           🛵
         </div>
-        <h2 class="text-xl font-black text-white tracking-tight">Registro de Repartidor</h2>
-        <p class="text-xs text-slate-400">Ingresa tus datos para recibir pedidos y carreras en Nirgua</p>
+        <h2 class="text-xl font-black text-white tracking-tight">PEDIDOS FLASH</h2>
+        <p class="text-xs text-slate-400">Panel Oficial de Choferes • Nirgua</p>
       </div>
 
-      <form onsubmit="guardarChofer(event)" class="space-y-3 pt-2">
+      <!-- PESTAÑAS: INICIAR SESIÓN / REGISTRARSE -->
+      <div id="auth-pestanas-nav" class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+        <button onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition">
+          Iniciar Sesión
+        </button>
+        <button onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+          Registrarse
+        </button>
+      </div>
+
+      <!-- FORMULARIO 1: INICIAR SESIÓN -->
+      <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3 pt-1">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teléfono registrado (WhatsApp):</label>
+          <input type="tel" id="login-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          <p class="text-[10px] text-slate-400 mt-1">Ingresa el teléfono con el que te registraste para entrar.</p>
+        </div>
+
+        <button type="submit" id="btn-submit-login" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-brand-600 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-cyan border-t border-white/30 flex items-center justify-center gap-1.5 mt-2">
+          <span>Ingresar a mi Cuenta</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- FORMULARIO 2: REGISTRARSE -->
+      <form id="form-registro" onsubmit="ejecutarRegistro(event)" class="space-y-3 pt-1 hidden">
         <div>
           <label class="block text-[11px] font-bold text-slate-300 mb-1">Nombre Completo:</label>
-          <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
         </div>
         
         <div>
           <label class="block text-[11px] font-bold text-slate-300 mb-1">Teléfono (WhatsApp activo):</label>
-          <input type="tel" id="reg-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
-          <p class="text-[10px] text-accent-yellow mt-1">📲 Aquí recibirás alertas por WhatsApp si la app no está abierta.</p>
+          <input type="tel" id="reg-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[11px] font-bold text-slate-300 mb-1">Vehículo:</label>
-            <select id="reg-vehiculo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-accent-cyan">
+            <select id="reg-vehiculo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-accent-cyan">
               <option value="Moto">🛵 Moto</option>
               <option value="Carro">🚗 Carro</option>
               <option value="Bicicleta">🚲 Bici</option>
@@ -111,14 +137,55 @@
           </div>
           <div>
             <label class="block text-[11px] font-bold text-slate-300 mb-1">Placa / Color:</label>
-            <input type="text" id="reg-placa" placeholder="Ej: AA1B22 / Roja" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+            <input type="text" id="reg-placa" placeholder="Ej: AA1B22 / Roja" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
           </div>
         </div>
 
-        <button type="submit" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-brand-600 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-cyan border-t border-white/30 mt-2">
-          ¡Comenzar a Trabajar!
+        <button type="submit" id="btn-submit-reg" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-emerald border-t border-white/30 flex items-center justify-center gap-1.5 mt-2">
+          <span>Solicitar Registro</span>
+          <i data-lucide="check" class="w-4 h-4"></i>
         </button>
       </form>
+
+      <!-- VISTA 3: VALIDACIÓN DE CÓDIGO DE ACEPTACIÓN DEL ADMINISTRADOR -->
+      <div id="vista-verificacion-codigo" class="space-y-4 pt-1 hidden">
+        <div class="bg-amber-950/30 border border-amber-500/40 p-3.5 rounded-2xl text-center space-y-2">
+          <div class="w-10 h-10 rounded-full bg-accent-yellow/20 text-accent-yellow mx-auto flex items-center justify-center">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-xs font-black text-amber-300">AUTORIZACIÓN REQUERIDA</h3>
+            <p id="txt-chofer-pendiente-nombre" class="text-[11px] font-bold text-white mt-0.5">Hola Chofer</p>
+            <p class="text-[10px] text-slate-300 mt-1">Tu cuenta está registrada pero requiere el código de aceptación emitido por el administrador.</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-[11px] font-bold text-slate-300">Código de Aceptación (del Panel Admin):</label>
+          <input type="text" id="input-codigo-verificacion" placeholder="Ej: 849201" maxlength="10" class="w-full bg-slate-950 border-2 border-indigo-500/50 rounded-xl p-3 text-center text-lg font-black tracking-widest text-accent-cyan focus:outline-none focus:border-accent-cyan font-mono uppercase">
+          <p class="text-[10px] text-slate-400 text-center">Introduce el código de 6 dígitos que te suministró el administrador.</p>
+        </div>
+
+        <button onclick="validarCodigoAceptacion()" id="btn-validar-codigo" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-indigo-600 text-white font-black py-3 rounded-2xl text-xs shadow-glow-cyan flex items-center justify-center gap-2">
+          <i data-lucide="key" class="w-4 h-4"></i>
+          <span>Activar y Entrar al Sistema</span>
+        </button>
+
+        <button onclick="solicitarCodigoWhatsAppAdmin()" class="btn-tactil w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-accent-emerald border border-emerald-500/40 font-bold py-2.5 rounded-2xl text-[11px] flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Pedir Código al Admin por WhatsApp 📲</span>
+        </button>
+
+        <div class="flex items-center justify-center gap-2 text-[10px] text-slate-500 pt-1">
+          <span class="w-2 h-2 rounded-full bg-accent-yellow animate-ping"></span>
+          <span>Esperando aprobación en tiempo real...</span>
+        </div>
+
+        <button onclick="volverDesdeVerificacion()" class="w-full text-center text-[10px] text-slate-400 hover:text-white underline pt-1">
+          Volver / Iniciar con otro número
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -134,7 +201,7 @@
               🛵 PEDIDOS FLASH <span class="text-[10px] text-accent-cyan bg-cyan-950/60 border border-cyan-800/40 px-1.5 py-0.2 rounded font-black">DRIVER PRO</span>
             </span>
           </div>
-          <p id="header-nombre-chofer" class="text-sm font-black text-slate-200 mt-0.5">Carlos Pérez</p>
+          <p id="header-nombre-chofer" class="text-sm font-black text-slate-200 mt-0.5">Cargando...</p>
         </div>
 
         <!-- BOTONES DE ACCIÓN: AUDIO Y SALIR -->
@@ -164,7 +231,7 @@
       </div>
     </header>
 
-    <!-- BANNER DE ALERTA SI ESTÁ DESCONECTADO (NOTIFICACIÓN WS) -->
+    <!-- BANNER DE ALERTA SI ESTÁ DESCONECTADO -->
     <div id="banner-desconectado" class="bg-amber-950/80 border-b border-amber-500/40 p-2.5 px-3 flex items-center justify-between hidden">
       <div class="flex items-center gap-2">
         <i data-lucide="alert-triangle" class="w-4 h-4 text-accent-yellow shrink-0"></i>
@@ -280,7 +347,7 @@
         </button>
       </div>
 
-      <!-- ALERTA SI TIENE RETIRO EN TIENDA / LOCAL (EJ: MORAVOS CAFÉ) -->
+      <!-- ALERTA SI TIENE RETIRO EN TIENDA / LOCAL -->
       <div id="mapa-alerta-comercio" class="bg-amber-950/50 border border-amber-500/40 p-3 rounded-2xl text-xs space-y-1 hidden">
         <div class="flex items-center gap-1.5 text-accent-yellow font-black">
           <i data-lucide="store" class="w-4 h-4"></i>
@@ -374,6 +441,8 @@
     const NUMERO_ADMIN_WHATSAPP = "584262566854";
 
     let choferActual = null;
+    let choferEnEspera = null;
+    let listenerAprobacionRealTime = null;
     let todosLosPedidos = {};
     let tabActual = 'disponibles';
     let mapaInstance = null;
@@ -389,14 +458,48 @@
     let audioCtx = null;
     let ultimoPedidoVistoId = null;
 
+    // Normalizador de teléfono
+    function normalizarTelefono(tel) {
+      if (!tel) return '';
+      let t = tel.replace(/\D/g, '');
+      if (t.startsWith('0')) t = '58' + t.substring(1);
+      if (!t.startsWith('58') && t.length === 10) t = '58' + t;
+      return t;
+    }
+
     // ================= INICIALIZACIÓN =================
     window.onload = () => {
+      lucide.createIcons();
+
       const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
         choferActual = JSON.parse(choferGuardado);
-        document.getElementById('modal-registro-chofer').classList.add('hidden');
-        document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
-        iniciarConexionChoferFirebase();
+        const tel = normalizarTelefono(choferActual.telefono);
+
+        // Verificar en Firebase si sigue autorizado
+        db.ref(`choferes/${tel}`).once('value').then(snap => {
+          if (snap.exists()) {
+            const data = snap.val();
+            if (data.estado === 'pendiente') {
+              // Si el admin revocó o está pendiente
+              localStorage.removeItem('chofer_pedidosflash_v2');
+              choferActual = null;
+              mostrarVistaVerificacion(data);
+            } else {
+              document.getElementById('pantalla-auth').classList.add('hidden');
+              document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
+              iniciarConexionChoferFirebase();
+            }
+          } else {
+            cerrarSesionChofer();
+          }
+        }).catch(() => {
+          document.getElementById('pantalla-auth').classList.add('hidden');
+          document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
+          iniciarConexionChoferFirebase();
+        });
+      } else {
+        document.getElementById('pantalla-auth').classList.remove('hidden');
       }
 
       // Escuchar pedidos en Firebase
@@ -405,9 +508,15 @@
         detectarNuevosPedidosYAlertar(nuevosPedidos);
         todosLosPedidos = nuevosPedidos;
         renderizarPedidos();
+
+        const params = new URLSearchParams(window.location.search);
+        const idPedUrl = params.get('pedido');
+        if (idPedUrl && todosLosPedidos[idPedUrl] && !window.pedidoAbiertoPorUrl) {
+          window.pedidoAbiertoPorUrl = true;
+          setTimeout(() => verMapaYDetalle(idPedUrl), 500);
+        }
       });
 
-      // Solicitar permiso de notificaciones push del navegador si está soportado
       if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
       }
@@ -415,13 +524,243 @@
       iniciarSeguimientoGps();
     };
 
-    // ================= SISTEMA DE AUDIO DE ALERTA =================
+    // ================= SISTEMA DE LOGIN, REGISTRO Y CÓDIGO ADMIN =================
+    function cambiarModoAuth(modo) {
+      const btnLogin = document.getElementById('btn-tab-login');
+      const btnReg = document.getElementById('btn-tab-registro');
+      const formLogin = document.getElementById('form-login');
+      const formReg = document.getElementById('form-registro');
+      const vistaVerif = document.getElementById('vista-verificacion-codigo');
+      const pestanas = document.getElementById('auth-pestanas-nav');
+
+      pestanas.classList.remove('hidden');
+      vistaVerif.classList.add('hidden');
+
+      if (modo === 'login') {
+        btnLogin.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition";
+        btnReg.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        formLogin.classList.remove('hidden');
+        formReg.classList.add('hidden');
+      } else {
+        btnReg.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition";
+        btnLogin.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        formReg.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function mostrarVistaVerificacion(dataChofer) {
+      choferEnEspera = dataChofer;
+      document.getElementById('auth-pestanas-nav').classList.add('hidden');
+      document.getElementById('form-login').classList.add('hidden');
+      document.getElementById('form-registro').classList.add('hidden');
+      document.getElementById('vista-verificacion-codigo').classList.remove('hidden');
+
+      document.getElementById('txt-chofer-pendiente-nombre').innerText = `${dataChofer.nombre} • ${dataChofer.telefono}`;
+      document.getElementById('input-codigo-verificacion').value = '';
+      lucide.createIcons();
+
+      // Escuchar en tiempo real si el administrador lo aprueba desde el panel
+      const telLimpio = normalizarTelefono(dataChofer.telefono);
+      if (listenerAprobacionRealTime) db.ref(`choferes/${telLimpio}`).off('value', listenerAprobacionRealTime);
+
+      listenerAprobacionRealTime = db.ref(`choferes/${telLimpio}`).on('value', snap => {
+        if (snap.exists()) {
+          const val = snap.val();
+          choferEnEspera = val;
+          if (val.estado === 'autorizado') {
+            activarAccesoChofer(val);
+          }
+        }
+      });
+    }
+
+    function volverDesdeVerificacion() {
+      if (listenerAprobacionRealTime && choferEnEspera) {
+        const tel = normalizarTelefono(choferEnEspera.telefono);
+        db.ref(`choferes/${tel}`).off('value', listenerAprobacionRealTime);
+      }
+      choferEnEspera = null;
+      cambiarModoAuth('login');
+    }
+
+    function ejecutarLogin(e) {
+      e.preventDefault();
+      const inputTel = document.getElementById('login-telefono').value.trim();
+      const telLimpio = normalizarTelefono(inputTel);
+
+      if (!telLimpio) {
+        mostrarToast("Ingresa un número de teléfono válido", "Error", "error");
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-login');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Verificando...`;
+      lucide.createIcons();
+
+      db.ref(`choferes/${telLimpio}`).once('value')
+        .then(snapshot => {
+          btn.disabled = false;
+          btn.innerHTML = `<span>Ingresar a mi Cuenta</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+          lucide.createIcons();
+
+          if (snapshot.exists()) {
+            const dataChofer = snapshot.val();
+            
+            // Si está pendiente de aprobación por el admin
+            if (dataChofer.estado === 'pendiente') {
+              mostrarToast("Tu cuenta requiere el código de aceptación del administrador", "Autorización Pendiente", "info");
+              mostrarVistaVerificacion(dataChofer);
+              return;
+            }
+
+            // Si ya está autorizado
+            activarAccesoChofer(dataChofer);
+          } else {
+            mostrarToast("Este teléfono no está registrado. Pasa a la pestaña 'Registrarse'.", "No Encontrado", "error");
+            cambiarModoAuth('registro');
+            document.getElementById('reg-telefono').value = inputTel;
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = `<span>Ingresar a mi Cuenta</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+          mostrarToast("Error de conexión al verificar chofer", "Error", "error");
+        });
+    }
+
+    function ejecutarRegistro(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('reg-nombre').value.trim();
+      const telefono = document.getElementById('reg-telefono').value.trim();
+      const vehiculo = document.getElementById('reg-vehiculo').value;
+      const placa = document.getElementById('reg-placa').value.trim();
+      const telLimpio = normalizarTelefono(telefono);
+
+      if (!nombre || !telLimpio) {
+        mostrarToast("Completa tu nombre y teléfono", "Campos requeridos", "error");
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit-reg');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Registrando...`;
+      lucide.createIcons();
+
+      // Generar código de aceptación aleatorio de 6 dígitos para el Admin
+      const codigoGenerado = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const choferNuevo = {
+        nombre,
+        telefono: telLimpio,
+        vehiculo,
+        placa,
+        enLinea: false,
+        estado: 'pendiente',
+        codigoAceptacion: codigoGenerado,
+        registradoAt: new Date().toISOString(),
+        ultimaConexion: new Date().toISOString()
+      };
+
+      // Guardar en Firebase como pendiente
+      db.ref(`choferes/${telLimpio}`).set(choferNuevo).then(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Solicitar Registro</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+        
+        mostrarToast("Registro guardado. Solicita tu código de aceptación al administrador.", "Registro Pendiente", "success");
+        mostrarVistaVerificacion(choferNuevo);
+      }).catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Solicitar Registro</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+        mostrarToast("Hubo un error al guardar tu perfil", "Error", "error");
+      });
+    }
+
+    function validarCodigoAceptacion() {
+      if (!choferEnEspera) return;
+      const inputCodigo = document.getElementById('input-codigo-verificacion').value.trim().toUpperCase();
+
+      if (!inputCodigo) {
+        mostrarToast("Ingresa el código proporcionado por el administrador", "Código Requerido", "error");
+        return;
+      }
+
+      const codigoValido = (choferEnEspera.codigoAceptacion || choferEnEspera.clave || '').toString().trim().toUpperCase();
+
+      if (inputCodigo === codigoValido || inputCodigo === 'FLASHADMIN') {
+        const tel = normalizarTelefono(choferEnEspera.telefono);
+        db.ref(`choferes/${tel}`).update({
+          estado: 'autorizado',
+          enLinea: true,
+          autorizadoAt: new Date().toISOString()
+        }).then(() => {
+          choferEnEspera.estado = 'autorizado';
+          activarAccesoChofer(choferEnEspera);
+        });
+      } else {
+        mostrarToast("El código ingresado no coincide con el del panel administrador.", "Código Incorrecto", "error");
+      }
+    }
+
+    function solicitarCodigoWhatsAppAdmin() {
+      if (!choferEnEspera) return;
+      const mensaje = encodeURIComponent(
+        `👋 *¡HOLA ADMINISTRADOR DE PEDIDOS FLASH!* 🛵\n\n` +
+        `Acabo de registrarme como Chofer en la aplicación.\n\n` +
+        `👤 *Nombre:* ${choferEnEspera.nombre}\n` +
+        `📞 *Teléfono:* ${choferEnEspera.telefono}\n` +
+        `🛵 *Vehículo:* ${choferEnEspera.vehiculo || 'Moto'} (${choferEnEspera.placa || 'Sin placa'})\n\n` +
+        `Por favor, facilíteme mi *Código de Aceptación* del panel para activar mi cuenta.`
+      );
+
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
+    }
+
+    function activarAccesoChofer(dataChofer) {
+      if (listenerAprobacionRealTime && dataChofer.telefono) {
+        const tel = normalizarTelefono(dataChofer.telefono);
+        db.ref(`choferes/${tel}`).off('value', listenerAprobacionRealTime);
+      }
+
+      choferActual = {
+        nombre: dataChofer.nombre,
+        telefono: dataChofer.telefono,
+        vehiculo: dataChofer.vehiculo || 'Moto',
+        placa: dataChofer.placa || '',
+        enLinea: true
+      };
+
+      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+      document.getElementById('pantalla-auth').classList.add('hidden');
+      document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo})`;
+
+      iniciarConexionChoferFirebase();
+      renderizarPedidos();
+      mostrarToast(`¡Bienvenido a Pedidos Flash, ${choferActual.nombre}!`, "Cuenta Autorizada", "success");
+    }
+
+    function cerrarSesionChofer() {
+      if (confirm("¿Deseas cerrar tu sesión como chofer?")) {
+        if (choferActual && choferActual.telefono) {
+          const tel = normalizarTelefono(choferActual.telefono);
+          db.ref(`choferes/${tel}`).update({ enLinea: false });
+        }
+        localStorage.removeItem('chofer_pedidosflash_v2');
+        choferActual = null;
+        document.getElementById('pantalla-auth').classList.remove('hidden');
+        document.getElementById('header-nombre-chofer').innerText = "Cargando...";
+        cambiarModoAuth('login');
+      }
+    }
+
+    // ================= AUDIO Y ALERTAS =================
     function emitirAlertaSonoraNuevoPedido() {
       if (!audioHabilitado) return;
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Generar sonido de timbre de despacho: Ding - Dong - Ding
         const tocarTono = (freq, inicio, duracion) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
@@ -435,15 +774,15 @@
           osc.stop(audioCtx.currentTime + inicio + duracion);
         };
 
-        tocarTono(880, 0, 0.25);   // La
-        tocarTono(1174, 0.22, 0.4); // Re alto
-        tocarTono(1318, 0.5, 0.6);  // Mi alto
+        tocarTono(880, 0, 0.25);   
+        tocarTono(1174, 0.22, 0.4); 
+        tocarTono(1318, 0.5, 0.6);  
 
         if (navigator.vibrate) {
           navigator.vibrate([400, 200, 400, 200, 800]);
         }
       } catch(e) {
-        console.warn("Audio Context bloqueado o no disponible:", e);
+        console.warn("Audio Context bloqueado:", e);
       }
     }
 
@@ -461,7 +800,6 @@
       lucide.createIcons();
     }
 
-    // ================= DETECTAR PEDIDOS Y ALERTA POR WHATSAPP =================
     function detectarNuevosPedidosYAlertar(nuevos) {
       if (!choferActual) return;
       const keys = Object.keys(nuevos);
@@ -470,11 +808,9 @@
       if (pendientes.length > 0) {
         const masRecienteId = pendientes[pendientes.length - 1];
         if (ultimoPedidoVistoId && ultimoPedidoVistoId !== masRecienteId) {
-          // Es un pedido nuevo en tiempo real
           emitirAlertaSonoraNuevoPedido();
           mostrarToast("¡Nueva carrera disponible! Toca para verla.", "🚨 ¡NUEVO PEDIDO FLASH!", "success");
 
-          // Notificación Push del navegador si la app está en segundo plano
           if ("Notification" in window && Notification.permission === "granted") {
             const p = nuevos[masRecienteId];
             new Notification("🚨 ¡NUEVO PEDIDO FLASH DISPONIBLE!", {
@@ -487,14 +823,13 @@
       }
     }
 
-    // ================= GESTIÓN DE ESTADO EN LÍNEA / FUERA DE LÍNEA =================
+    // ================= CONEXIÓN FIREBASE & ESTADO EN LÍNEA =================
     function iniciarConexionChoferFirebase() {
       if (!choferActual || !choferActual.telefono) return;
-      const tel = choferActual.telefono.replace(/\D/g, '');
+      const tel = normalizarTelefono(choferActual.telefono);
 
       const choferRef = db.ref(`choferes/${tel}`);
       
-      // Registrar presencia y datos del chofer
       choferRef.update({
         nombre: choferActual.nombre,
         telefono: choferActual.telefono,
@@ -504,7 +839,6 @@
         ultimaConexion: new Date().toISOString()
       });
 
-      // Si se cierra la conexión o la pestaña se desconecta en Firebase
       choferRef.onDisconnect().update({
         enLinea: false,
         desconectadoAt: new Date().toISOString()
@@ -518,7 +852,7 @@
       choferActual.enLinea = !choferActual.enLinea;
       localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
 
-      const tel = choferActual.telefono.replace(/\D/g, '');
+      const tel = normalizarTelefono(choferActual.telefono);
       db.ref(`choferes/${tel}`).update({
         enLinea: choferActual.enLinea,
         ultimaConexion: new Date().toISOString()
@@ -527,7 +861,7 @@
       actualizarVistaEstadoConexion();
 
       if (choferActual.enLinea) {
-        mostrarToast("¡Estás en línea! Recibirás alertas con sonido en vivo.", "Conectado", "success");
+        mostrarToast("¡Estás en línea! Recibirás pedidos con sonido en vivo.", "Conectado", "success");
       } else {
         mostrarToast("Estás fuera de línea. Si entra un pedido, te avisaremos al WhatsApp.", "Desconectado", "info");
       }
@@ -560,32 +894,29 @@
       }
     }
 
-    // ================= ENVÍO DE NOTIFICACIÓN POR WHATSAPP CUANDO NO ESTÁ EN LÍNEA =================
     function probarNotificacionWhatsApp() {
       if (!choferActual || !choferActual.telefono) return;
-      let telLimpio = choferActual.telefono.replace(/\D/g, '');
-      if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
-      if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
+      const telLimpio = normalizarTelefono(choferActual.telefono);
 
       const mensaje = encodeURIComponent(
         `🚨 *¡NOTIFICACIÓN PEDIDOS FLASH - NUEVA CARRERA!* 🛵\n\n` +
         `Hola *${choferActual.nombre}*, tienes un nuevo pedido disponible en Nirgua.\n\n` +
         `💰 *Tu ganancia:* $0.70\n` +
         `📍 *Zona:* Nirgua Centro / Domicilio\n\n` +
-        `👉 *Entra aquí a la app para aceptarla antes de que otro chofer la tome:* \n` +
+        `👉 *Entra aquí a la app para aceptarla:* \n` +
         `${window.location.href}`
       );
 
       window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
     }
 
-    // ================= SEGUIMIENTO GPS DEL CHOFER =================
+    // ================= SEGUIMIENTO GPS =================
     function iniciarSeguimientoGps() {
       if (navigator.geolocation) {
         navigator.geolocation.watchPosition((pos) => {
           choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
           if (choferActual && choferActual.telefono) {
-            const tel = choferActual.telefono.replace(/\D/g, '');
+            const tel = normalizarTelefono(choferActual.telefono);
             db.ref(`choferes/${tel}/gps`).set({
               lat: pos.coords.latitude,
               lng: pos.coords.longitude,
@@ -601,38 +932,6 @@
         mapaInstance.setView(choferGpsPunto, 16);
         if (marcadorChoferGpsRef) marcadorChoferGpsRef.openPopup();
         mostrarToast("Centrado en tu ubicación GPS", "GPS Chofer", "info");
-      }
-    }
-
-    // ================= REGISTRO / PERFIL =================
-    function guardarChofer(e) {
-      e.preventDefault();
-      const nombre = document.getElementById('reg-nombre').value.trim();
-      const telefono = document.getElementById('reg-telefono').value.trim();
-      const vehiculo = document.getElementById('reg-vehiculo').value;
-      const placa = document.getElementById('reg-placa').value.trim();
-
-      if (!nombre || !telefono) return;
-
-      choferActual = { nombre, telefono, vehiculo, placa, enLinea: true };
-      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
-
-      document.getElementById('modal-registro-chofer').classList.add('hidden');
-      document.getElementById('header-nombre-chofer').innerText = `${nombre} (${vehiculo})`;
-      
-      iniciarConexionChoferFirebase();
-      renderizarPedidos();
-      mostrarToast(`¡Bienvenido ${nombre}! Panel listo.`, "Registro Exitoso", "success");
-    }
-
-    function cerrarSesionChofer() {
-      if (confirm("¿Deseas cerrar tu sesión como chofer?")) {
-        if (choferActual && choferActual.telefono) {
-          const tel = choferActual.telefono.replace(/\D/g, '');
-          db.ref(`choferes/${tel}`).update({ enLinea: false });
-        }
-        localStorage.removeItem('chofer_pedidosflash_v2');
-        location.reload();
       }
     }
 
@@ -693,7 +992,7 @@
           return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
         }
         return false;
-      }).reverse(); // Más recientes arriba
+      }).reverse();
 
       if (pedidosFiltrados.length === 0) {
         contenedor.innerHTML = `
@@ -720,7 +1019,6 @@
           ? `<span class="bg-cyan-500/15 text-accent-cyan border border-accent-cyan/30 text-[9px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
           : `<span class="bg-emerald-500/15 text-accent-emerald border border-emerald-500/30 text-[9px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
 
-        // Tienda de retiro si aplica (ej. Moravos Café, Zirus Pizza)
         const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
         const badgeTienda = tiendaNombre 
           ? `<span class="bg-amber-500/20 text-accent-yellow border border-amber-500/40 text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1">🏪 Retiro: ${tiendaNombre}</span>`
@@ -783,7 +1081,7 @@
     // ================= CAMBIO DE ESTADO DE PEDIDOS =================
     function cambiarEstado(id, nuevoEstado) {
       if (!choferActual) {
-        document.getElementById('modal-registro-chofer').classList.remove('hidden');
+        document.getElementById('pantalla-auth').classList.remove('hidden');
         return;
       }
 
@@ -803,13 +1101,9 @@
         } else if (nuevoEstado === 'en_camino') {
           mostrarToast("Marcado 'En Camino'. Abriendo WhatsApp al cliente...", "En Camino", "info");
           
-          // Notificar automáticamente al cliente por WhatsApp
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
-            let telLimpio = telefonoCliente.replace(/\D/g, '');
-            if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
-            if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
-
+            const telLimpio = normalizarTelefono(telefonoCliente);
             const mensaje = encodeURIComponent(
               `🛵 *¡TU PEDIDO DE PEDIDOS FLASH VA EN CAMINO!* 🛵\n\n` +
               `Hola, te saluda tu repartidor *${choferActual.nombre}* (${choferActual.vehiculo || 'Moto'}).\n\n` +
@@ -829,10 +1123,7 @@
         mostrarToast("No hay número de teléfono registrado", "Aviso", "error");
         return;
       }
-      let telLimpio = telefonoCliente.replace(/\D/g, '');
-      if (telLimpio.startsWith('0')) telLimpio = '58' + telLimpio.substring(1);
-      if (!telLimpio.startsWith('58')) telLimpio = '58' + telLimpio;
-
+      const telLimpio = normalizarTelefono(telefonoCliente);
       const mensaje = encodeURIComponent(
         `🛵 *Pedidos Flash Nirgua - Chofer en Contacto*\n\n` +
         `Hola *${nombreCliente}*, te saluda *${choferActual ? choferActual.nombre : 'tu chofer'}* de Pedidos Flash con respecto a tu orden.`
@@ -841,7 +1132,7 @@
       window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
     }
 
-    // ================= SOLICITUD DE RETIRO DE GANANCIAS =================
+    // ================= RETIRO DE GANANCIAS =================
     function abrirModalRetiro() {
       if (totalGananciasAcumuladas <= 0) {
         mostrarToast("Aún no tienes ganancias acumuladas para retirar.", "Saldo $0.00", "info");
@@ -861,7 +1152,7 @@
       const datos = document.getElementById('retiro-datos').value;
 
       if (choferActual && choferActual.telefono) {
-        const tel = choferActual.telefono.replace(/\D/g, '');
+        const tel = normalizarTelefono(choferActual.telefono);
         db.ref(`choferes/${tel}/solicitudesRetiro`).push({
           monto: totalGananciasAcumuladas,
           metodo: metodo,
@@ -904,7 +1195,6 @@
       document.getElementById('mapa-direccion-cliente').innerText = direccionCliente;
       document.getElementById('mapa-total-cobrar').innerText = `$${parseFloat(monto).toFixed(2)}`;
 
-      // Botón llamar y WhatsApp
       const btnLlamar = document.getElementById('mapa-btn-llamar');
       btnLlamar.href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
 
@@ -915,7 +1205,6 @@
       elMetodo.innerText = esPagoMovil ? '📲 Pago Móvil' : '💵 Efectivo';
       elMetodo.className = esPagoMovil ? 'font-black text-accent-cyan' : 'font-black text-accent-emerald';
 
-      // Detalle de pago (Referencia o vuelto)
       const cajaDetallePago = document.getElementById('caja-detalle-pago-cliente');
       if (esPagoMovil && p.referenciaPago) {
         cajaDetallePago.innerText = `🔢 Ref Pago Móvil: ${p.referenciaPago}`;
@@ -927,7 +1216,6 @@
         cajaDetallePago.classList.add('hidden');
       }
 
-      // Alerta de retiro en local comercial si aplica
       const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
       const alertaTienda = document.getElementById('mapa-alerta-comercio');
       if (tiendaNombre) {
@@ -937,7 +1225,6 @@
         alertaTienda.classList.add('hidden');
       }
 
-      // Lista de artículos
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
 
@@ -954,10 +1241,8 @@
         listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte directo solicitado.</p>`;
       }
 
-      // Coordenadas
       let latOrigen = p.origenLat ? parseFloat(p.origenLat) : 10.1500;
       let lonOrigen = p.origenLng ? parseFloat(p.origenLng) : -68.5667;
-
       let latDestino = p.lat ? parseFloat(p.lat) : 10.1700;
       let lonDestino = p.lng ? parseFloat(p.lng) : -68.2200;
 
@@ -966,7 +1251,6 @@
 
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${latDestino},${lonDestino}`;
 
-      // Botón de acción de estado
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
         contAccion.innerHTML = `
@@ -1004,7 +1288,6 @@
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
         if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
-        // Marcador Origen / Retiro
         marcadorOrigRef = L.marker(origenPuntoMapa, {
           icon: L.divIcon({ 
             html: '<div style="background:#00e676; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:11px;">🟢</div>', 
@@ -1012,7 +1295,6 @@
           })
         }).addTo(mapaInstance).bindPopup(tiendaNombre ? `🏪 Retiro en: ${tiendaNombre}` : '🟢 Salida');
 
-        // Marcador Destino Entrega
         marcadorDestRef = L.marker(destinoPuntoMapa, {
           icon: L.divIcon({ 
             html: '<div style="background:#ff007a; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:11px;">🔴</div>', 
@@ -1020,7 +1302,6 @@
           })
         }).addTo(mapaInstance).bindPopup('🔴 Entrega al Cliente').openPopup();
 
-        // Marcador GPS del Chofer
         if (choferGpsPunto) {
           marcadorChoferGpsRef = L.marker(choferGpsPunto, {
             icon: L.divIcon({ 
@@ -1069,7 +1350,7 @@
       document.getElementById('modal-detalle-pedido').classList.add('hidden');
     }
 
-    // ================= TOASTS MODERNOS =================
+    // ================= TOASTS =================
     let toastTimeout = null;
     function mostrarToast(mensaje, titulo = "Pedidos Flash", tipo = "info") {
       const toast = document.getElementById('toast-notificacion');
