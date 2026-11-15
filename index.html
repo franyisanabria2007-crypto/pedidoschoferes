@@ -11,11 +11,11 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (Compat v9) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Leaflet CSS y JS (Mapas Libres) -->
+  <!-- Leaflet CSS y JS (Mapas 100% Libres y Gratuitos) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -65,7 +65,7 @@
 <body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-[100dvh] flex items-center justify-center p-0 sm:p-4 selection:bg-accent-emerald selection:text-slate-950 overflow-x-hidden">
 
   <!-- TOAST NOTIFICACIÓN FLOTANTE -->
-  <div id="toast-notificacion" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 opacity-0 pointer-events-none -translate-y-4 max-w-xs w-[90%] px-2">
+  <div id="toast-notificacion" class="fixed top-4 left-1/2 -translate-x-1/2 z-[120] transition-all duration-300 opacity-0 pointer-events-none -translate-y-4 max-w-xs w-[90%] px-2">
     <div class="bg-slate-900/95 border border-emerald-500/50 backdrop-blur-2xl shadow-2xl rounded-2xl p-3 flex items-center gap-3">
       <div id="toast-icono-bg" class="w-8 h-8 rounded-xl bg-accent-emerald/20 text-accent-emerald flex items-center justify-center shrink-0">
         <i id="toast-icono" data-lucide="bell" class="w-4 h-4"></i>
@@ -77,9 +77,9 @@
     </div>
   </div>
 
-  <!-- PANTALLA PRINCIPAL DE AUTENTICACIÓN (LOGIN / REGISTRO / CÓDIGO DE ACEPTACIÓN) -->
-  <div id="pantalla-auth" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-2xl">
+  <!-- PANTALLA PRINCIPAL DE AUTENTICACIÓN (LOGIN / REGISTRO / CÓDIGO ADMIN) -->
+  <div id="pantalla-auth" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-2xl my-auto">
       
       <!-- LOGO Y PRESENTACIÓN -->
       <div class="text-center space-y-1.5">
@@ -141,8 +141,18 @@
           </div>
         </div>
 
+        <!-- PERMISOS DE PRIVACIDAD Y TÉRMINOS OBLIGATORIOS (BLINDAJE LEGAL) -->
+        <div class="bg-slate-950 p-3 rounded-2xl border border-indigo-500/30 space-y-2 pt-2.5">
+          <div class="flex items-start gap-2">
+            <input type="checkbox" id="reg-privacidad" required class="w-4 h-4 mt-0.5 accent-indigo-600 rounded cursor-pointer shrink-0">
+            <label for="reg-privacidad" class="cursor-pointer text-[10px] text-slate-300 leading-tight">
+              Otorgo mi <strong>consentimiento expreso</strong> para el uso de mi <button type="button" onclick="abrirModalPrivacidad(event)" class="text-accent-cyan font-bold underline">Ubicación GPS</button>, acepto la <button type="button" onclick="abrirModalPrivacidad(event)" class="text-accent-emerald font-bold underline">Política de Privacidad</button> y declaro operar como chofer independiente bajo mi propia responsabilidad vial.
+            </label>
+          </div>
+        </div>
+
         <button type="submit" id="btn-submit-reg" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-emerald border-t border-white/30 flex items-center justify-center gap-1.5 mt-2">
-          <span>Solicitar Registro</span>
+          <span>Crear Cuenta y Solicitar Código</span>
           <i data-lucide="check" class="w-4 h-4"></i>
         </button>
       </form>
@@ -186,6 +196,94 @@
         </button>
       </div>
 
+      <!-- ENLACE AL AVISO DE PRIVACIDAD EN EL PIE -->
+      <div class="pt-2 text-center border-t border-slate-800/80">
+        <button type="button" onclick="abrirModalPrivacidad(event)" class="text-[10px] text-slate-500 hover:text-indigo-400 transition flex items-center justify-center gap-1 mx-auto font-medium">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>Permisos de Privacidad y Términos Legales</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE PERMISOS, PRIVACIDAD Y CONDICIONES LEGALES (PROTECCIÓN CONTRA MULTAS Y RECLAMOS) -->
+  <div id="modal-privacidad" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[110] flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-lg rounded-3xl p-5 space-y-4 shadow-2xl max-h-[90vh] flex flex-col">
+      
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-indigo-500/20 text-accent-cyan rounded-xl border border-indigo-500/30">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-white">Permisos de Privacidad y Términos</h3>
+            <p class="text-[10px] text-slate-400">Pedidos Flash Nirgua • Cumplimiento Normativo</p>
+          </div>
+        </div>
+        <button onclick="cerrarModalPrivacidad()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- GESTOR RÁPIDO DE PERMISOS DEL DISPOSITIVO -->
+      <div class="bg-slate-950 p-3 rounded-2xl border border-cyan-500/30 space-y-2 shrink-0">
+        <p class="text-[10px] font-black uppercase text-accent-cyan tracking-wider">Permisos Técnicos del Dispositivo:</p>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="solicitarPermisoGpsManual()" id="btn-permiso-gps" class="btn-tactil bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-accent-cyan"></i>
+            <span id="txt-estado-permiso-gps">Activar GPS</span>
+          </button>
+          <button type="button" onclick="solicitarPermisoNotificacionesManual()" id="btn-permiso-notif" class="btn-tactil bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5">
+            <i data-lucide="bell" class="w-3.5 h-3.5 text-accent-yellow"></i>
+            <span id="txt-estado-permiso-notif">Activar Alertas</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto pr-2 space-y-3 text-[11px] text-slate-300 leading-relaxed font-normal">
+        <div class="bg-slate-950 p-3 rounded-2xl border border-indigo-500/30 space-y-1">
+          <h4 class="font-black text-accent-cyan flex items-center gap-1.5 uppercase text-xs">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> 1. Permiso de Ubicación Satelital (GPS en Tiempo Real)
+          </h4>
+          <p>El chofer otorga su <strong>consentimiento libre, expreso e informado</strong> para que Pedidos Flash capture sus coordenadas GPS únicamente mientras esté conectado ("En Línea"). Este permiso se utiliza exclusivamente para trazar rutas de despacho, confirmar entregas y brindar seguridad durante el trayecto.</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <h4 class="font-black text-accent-yellow flex items-center gap-1.5 uppercase text-xs">
+            <i data-lucide="user-check" class="w-3.5 h-3.5"></i> 2. Naturaleza del Chofer (Exoneración Laboral y Tránsito)
+          </h4>
+          <p>Pedidos Flash actúa exclusivamente como <strong>plataforma tecnológica de intermediación</strong>. El chofer opera como <strong>Prestador de Servicios Independiente</strong> por cuenta propia, sin relación de subordinación, patrono ni exclusividad bajo la LOTTT. El chofer es el único responsable civil y penal de portar casco de seguridad, licencia vigente, certificado médico vial, seguro (RCV) y cumplir la Ley de Transporte Terrestre de Venezuela.</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <h4 class="font-black text-accent-emerald flex items-center gap-1.5 uppercase text-xs">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> 3. Protección de Datos Personales (Hábeas Data)
+          </h4>
+          <p>Conforme al Artículo 28 de la Constitución de la República Bolivariana de Venezuela y la Ley Especial contra Delitos Informáticos, los datos recopilados (teléfono WhatsApp, nombre, vehículo y placas) se usan únicamente para coordinar entregas y jamás serán vendidos ni cedidos a terceros.</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <h4 class="font-black text-rose-400 flex items-center gap-1.5 uppercase text-xs">
+            <i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i> 4. Prohibición Absoluta de Mercancía Ilícita
+          </h4>
+          <p>Queda estrictamente prohibido transportar sustancias estupefacientes o psicotrópicas (Ley Orgánica de Drogas), armas, explosivos o mercancía ilegal. Ante cualquier requerimiento oficial, la plataforma cooperará con las autoridades competentes.</p>
+        </div>
+
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <h4 class="font-black text-indigo-300 flex items-center gap-1.5 uppercase text-xs">
+            <i data-lucide="wallet" class="w-3.5 h-3.5"></i> 5. Ganancias y Liquidación de Carreras
+          </h4>
+          <p>El chofer percibirá la tarifa neta acordada de $0.70 por entrega completada, liquidable por Pago Móvil a tasa BCV del día o efectivo en divisa según disponibilidad.</p>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end shrink-0">
+        <button onclick="cerrarModalPrivacidad()" class="btn-tactil bg-indigo-600 hover:bg-indigo-500 text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
+          Aceptar y Entendido
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -204,8 +302,11 @@
           <p id="header-nombre-chofer" class="text-sm font-black text-slate-200 mt-0.5">Cargando...</p>
         </div>
 
-        <!-- BOTONES DE ACCIÓN: AUDIO Y SALIR -->
+        <!-- BOTONES DE ACCIÓN: PRIVACIDAD/PERMISOS, AUDIO Y SALIR -->
         <div class="flex items-center gap-1.5">
+          <button onclick="abrirModalPrivacidad(event)" title="Permisos y Privacidad" class="btn-tactil p-2 rounded-xl bg-slate-800 text-accent-cyan border border-slate-700 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+          </button>
           <button onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Alerta Sonora" class="btn-tactil p-2 rounded-xl bg-slate-800 text-accent-yellow border border-slate-700 flex items-center justify-center">
             <i data-lucide="volume-2" id="icono-audio-header" class="w-4 h-4"></i>
           </button>
@@ -221,7 +322,7 @@
           <span id="indicador-estado-ping" class="w-3 h-3 rounded-full bg-accent-emerald animate-ping"></span>
           <div>
             <span id="txt-estado-conexion" class="text-xs font-black text-accent-emerald block leading-tight">🟢 EN LÍNEA (Recibiendo pedidos)</span>
-            <span id="sub-estado-conexion" class="text-[9px] text-slate-400">Sonido y despacho activo</span>
+            <span id="sub-estado-conexion" class="text-[9px] text-slate-400">GPS y Despacho activo en Nirgua</span>
           </div>
         </div>
 
@@ -230,6 +331,17 @@
         </button>
       </div>
     </header>
+
+    <!-- BANNER DE ALERTA SI EL GPS ESTÁ BLOQUEADO EN EL NAVEGADOR -->
+    <div id="banner-permiso-gps" class="bg-rose-950/80 border-b border-rose-500/40 p-2 px-3 flex items-center justify-between hidden">
+      <div class="flex items-center gap-2">
+        <i data-lucide="map-pin-off" class="w-4 h-4 text-rose-400 shrink-0"></i>
+        <p class="text-[10px] text-rose-200 font-semibold leading-tight">Permiso GPS desactivado. Actívalo para ver tu ruta exacta.</p>
+      </div>
+      <button onclick="solicitarPermisoGpsManual()" class="btn-tactil bg-rose-500 text-white font-black px-2.5 py-1 rounded-lg text-[9px] whitespace-nowrap shadow">
+        Activar GPS
+      </button>
+    </div>
 
     <!-- BANNER DE ALERTA SI ESTÁ DESCONECTADO -->
     <div id="banner-desconectado" class="bg-amber-950/80 border-b border-amber-500/40 p-2.5 px-3 flex items-center justify-between hidden">
@@ -367,7 +479,7 @@
         <div id="mapa-cliente" style="height: 220px; min-height: 220px; width: 100%; display: block;" class="shadow-inner border border-slate-700/80 rounded-2xl overflow-hidden"></div>
       </div>
 
-      <!-- BOTÓN DE NAVEGACIÓN DIRECTA GOOGLE MAPS / WAZE -->
+      <!-- BOTÓN DE NAVEGACIÓN DIRECTA GOOGLE MAPS (APP NATIVA GRATUITA) -->
       <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan via-indigo-600 to-brand-600 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-cyan border-t border-white/20">
         <i data-lucide="navigation" class="w-4 h-4 fill-white"></i> Iniciar Ruta en Google Maps (GPS)
       </a>
@@ -423,7 +535,7 @@
   </div>
 
   <script>
-    // ================= CONFIGURACIÓN DE FIREBASE =================
+    // ================= CONFIGURACIÓN DE FIREBASE (PLAN GRATUITO SPARK) =================
     const firebaseConfig = {
       apiKey: "AIzaSyB19B9jLHPpgKxVvMH97D5VafgTp0CfnOc", 
       authDomain: "pedidosflash-c7bb7.firebaseapp.com",
@@ -453,12 +565,14 @@
     let origenPuntoMapa = [10.1500, -68.5667];
     let destinoPuntoMapa = [10.1700, -68.2200];
     let choferGpsPunto = [10.1500, -68.5667];
+    let ultimoEnvioGpsTimestamp = 0;
+    let gpsWatchId = null;
     let totalGananciasAcumuladas = 0;
     let audioHabilitado = true;
     let audioCtx = null;
     let ultimoPedidoVistoId = null;
 
-    // Normalizador de teléfono
+    // Normalizador de teléfono Venezuela
     function normalizarTelefono(tel) {
       if (!tel) return '';
       let t = tel.replace(/\D/g, '');
@@ -467,9 +581,92 @@
       return t;
     }
 
+    // ================= GESTOR DE PERMISOS DEL NAVEGADOR (GPS Y NOTIFICACIONES) =================
+    function actualizarEstadoVisualPermisos() {
+      const txtNotif = document.getElementById('txt-estado-permiso-notif');
+      if ("Notification" in window && txtNotif) {
+        if (Notification.permission === "granted") {
+          txtNotif.innerText = "Alertas: Activas ✅";
+        } else if (Notification.permission === "denied") {
+          txtNotif.innerText = "Alertas: Bloqueadas ⚠️";
+        } else {
+          txtNotif.innerText = "Activar Alertas";
+        }
+      }
+
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' }).then(result => {
+          actualizarBadgeGps(result.state);
+          result.onchange = () => actualizarBadgeGps(result.state);
+        }).catch(() => {});
+      }
+    }
+
+    function actualizarBadgeGps(estado) {
+      const txtGps = document.getElementById('txt-estado-permiso-gps');
+      const bannerGps = document.getElementById('banner-permiso-gps');
+      if (estado === 'granted') {
+        if (txtGps) txtGps.innerText = "GPS: Activo ✅";
+        if (bannerGps) bannerGps.classList.add('hidden');
+      } else if (estado === 'denied') {
+        if (txtGps) txtGps.innerText = "GPS: Bloqueado ⚠️";
+        if (bannerGps && choferActual) bannerGps.classList.remove('hidden');
+      } else {
+        if (txtGps) txtGps.innerText = "Activar GPS";
+      }
+    }
+
+    function solicitarPermisoGpsManual() {
+      if (!navigator.geolocation) {
+        mostrarToast("Tu navegador no soporta GPS.", "No compatible", "error");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+          actualizarBadgeGps('granted');
+          iniciarSeguimientoGps();
+          mostrarToast("Ubicación GPS activada correctamente.", "GPS Listo", "success");
+        },
+        (err) => {
+          actualizarBadgeGps('denied');
+          mostrarToast("Activa la ubicación en los ajustes de tu navegador/teléfono.", "Permiso Denegado", "error");
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    function solicitarPermisoNotificacionesManual() {
+      if (!("Notification" in window)) {
+        mostrarToast("Este navegador no soporta notificaciones.", "Aviso", "info");
+        return;
+      }
+      Notification.requestPermission().then(perm => {
+        actualizarEstadoVisualPermisos();
+        if (perm === "granted") {
+          mostrarToast("Notificaciones activadas.", "Permiso Concedido", "success");
+        } else {
+          mostrarToast("Permiso de notificaciones denegado en el navegador.", "Bloqueado", "error");
+        }
+      });
+    }
+
+    // ================= CONTROL DEL MODAL DE PRIVACIDAD Y PERMISOS =================
+    function abrirModalPrivacidad(e) {
+      if (e) e.preventDefault();
+      actualizarEstadoVisualPermisos();
+      document.getElementById('modal-privacidad').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function cerrarModalPrivacidad() {
+      document.getElementById('modal-privacidad').classList.add('hidden');
+    }
+
     // ================= INICIALIZACIÓN =================
     window.onload = () => {
       lucide.createIcons();
+      actualizarEstadoVisualPermisos();
 
       const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
@@ -480,8 +677,7 @@
         db.ref(`choferes/${tel}`).once('value').then(snap => {
           if (snap.exists()) {
             const data = snap.val();
-            if (data.estado === 'pendiente') {
-              // Si el admin revocó o está pendiente
+            if (data.estado === 'pendiente' || !data.estado) {
               localStorage.removeItem('chofer_pedidosflash_v2');
               choferActual = null;
               mostrarVistaVerificacion(data);
@@ -518,13 +714,13 @@
       });
 
       if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission();
+        Notification.requestPermission().then(actualizarEstadoVisualPermisos);
       }
 
       iniciarSeguimientoGps();
     };
 
-    // ================= SISTEMA DE LOGIN, REGISTRO Y CÓDIGO ADMIN =================
+    // ================= SISTEMA DE LOGIN, REGISTRO Y AUTORIZACIÓN =================
     function cambiarModoAuth(modo) {
       const btnLogin = document.getElementById('btn-tab-login');
       const btnReg = document.getElementById('btn-tab-registro');
@@ -561,7 +757,6 @@
       document.getElementById('input-codigo-verificacion').value = '';
       lucide.createIcons();
 
-      // Escuchar en tiempo real si el administrador lo aprueba desde el panel
       const telLimpio = normalizarTelefono(dataChofer.telefono);
       if (listenerAprobacionRealTime) db.ref(`choferes/${telLimpio}`).off('value', listenerAprobacionRealTime);
 
@@ -610,7 +805,7 @@
             const dataChofer = snapshot.val();
             
             // Si está pendiente de aprobación por el admin
-            if (dataChofer.estado === 'pendiente') {
+            if (dataChofer.estado === 'pendiente' || !dataChofer.estado) {
               mostrarToast("Tu cuenta requiere el código de aceptación del administrador", "Autorización Pendiente", "info");
               mostrarVistaVerificacion(dataChofer);
               return;
@@ -619,12 +814,12 @@
             // Si ya está autorizado
             activarAccesoChofer(dataChofer);
           } else {
-            mostrarToast("Este teléfono no está registrado. Pasa a la pestaña 'Registrarse'.", "No Encontrado", "error");
+            mostrarToast("Este teléfono no está registrado. Pasa a 'Registrarse'.", "No Encontrado", "error");
             cambiarModoAuth('registro');
             document.getElementById('reg-telefono').value = inputTel;
           }
         })
-        .catch(err => {
+        .catch(() => {
           btn.disabled = false;
           btn.innerHTML = `<span>Ingresar a mi Cuenta</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
           mostrarToast("Error de conexión al verificar chofer", "Error", "error");
@@ -637,10 +832,17 @@
       const telefono = document.getElementById('reg-telefono').value.trim();
       const vehiculo = document.getElementById('reg-vehiculo').value;
       const placa = document.getElementById('reg-placa').value.trim();
+      const aceptoPrivacidad = document.getElementById('reg-privacidad').checked;
       const telLimpio = normalizarTelefono(telefono);
 
       if (!nombre || !telLimpio) {
         mostrarToast("Completa tu nombre y teléfono", "Campos requeridos", "error");
+        return;
+      }
+
+      // Validar obligatoriedad legal del consentimiento
+      if (!aceptoPrivacidad) {
+        mostrarToast("Debes aceptar los permisos de privacidad y GPS para continuar.", "Aviso Legal", "error");
         return;
       }
 
@@ -649,9 +851,9 @@
       btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Registrando...`;
       lucide.createIcons();
 
-      // Generar código de aceptación aleatorio de 6 dígitos para el Admin
       const codigoGenerado = Math.floor(100000 + Math.random() * 900000).toString();
 
+      // Guardado con auditoría legal de fecha y hora
       const choferNuevo = {
         nombre,
         telefono: telLimpio,
@@ -660,20 +862,21 @@
         enLinea: false,
         estado: 'pendiente',
         codigoAceptacion: codigoGenerado,
+        aceptoPrivacidad: true,
+        fechaAceptoPrivacidad: new Date().toISOString(),
         registradoAt: new Date().toISOString(),
         ultimaConexion: new Date().toISOString()
       };
 
-      // Guardar en Firebase como pendiente
       db.ref(`choferes/${telLimpio}`).set(choferNuevo).then(() => {
         btn.disabled = false;
-        btn.innerHTML = `<span>Solicitar Registro</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+        btn.innerHTML = `<span>Crear Cuenta y Solicitar Código</span> <i data-lucide="check" class="w-4 h-4"></i>`;
         
-        mostrarToast("Registro guardado. Solicita tu código de aceptación al administrador.", "Registro Pendiente", "success");
+        mostrarToast("Registro guardado. Solicita tu código al administrador.", "Registro Pendiente", "success");
         mostrarVistaVerificacion(choferNuevo);
-      }).catch(err => {
+      }).catch(() => {
         btn.disabled = false;
-        btn.innerHTML = `<span>Solicitar Registro</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+        btn.innerHTML = `<span>Crear Cuenta y Solicitar Código</span> <i data-lucide="check" class="w-4 h-4"></i>`;
         mostrarToast("Hubo un error al guardar tu perfil", "Error", "error");
       });
     }
@@ -708,11 +911,11 @@
       if (!choferEnEspera) return;
       const mensaje = encodeURIComponent(
         `👋 *¡HOLA ADMINISTRADOR DE PEDIDOS FLASH!* 🛵\n\n` +
-        `Acabo de registrarme como Chofer en la aplicación.\n\n` +
+        `Acabo de registrarme como Chofer y acepté los permisos de privacidad.\n\n` +
         `👤 *Nombre:* ${choferEnEspera.nombre}\n` +
         `📞 *Teléfono:* ${choferEnEspera.telefono}\n` +
         `🛵 *Vehículo:* ${choferEnEspera.vehiculo || 'Moto'} (${choferEnEspera.placa || 'Sin placa'})\n\n` +
-        `Por favor, facilíteme mi *Código de Aceptación* del panel para activar mi cuenta.`
+        `Por favor envíeme mi *Código de Aceptación* para activar mi cuenta.`
       );
 
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
@@ -737,6 +940,7 @@
       document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo})`;
 
       iniciarConexionChoferFirebase();
+      iniciarSeguimientoGps();
       renderizarPedidos();
       mostrarToast(`¡Bienvenido a Pedidos Flash, ${choferActual.nombre}!`, "Cuenta Autorizada", "success");
     }
@@ -814,8 +1018,7 @@
           if ("Notification" in window && Notification.permission === "granted") {
             const p = nuevos[masRecienteId];
             new Notification("🚨 ¡NUEVO PEDIDO FLASH DISPONIBLE!", {
-              body: `Carrera para entregar en: ${p.direccion || 'Nirgua'}. Ganancia: $0.70.`,
-              icon: "img/logo.jfif"
+              body: `Carrera para entregar en: ${p.direccion || 'Nirgua'}. Ganancia: $0.70.`
             });
           }
         }
@@ -863,7 +1066,7 @@
       if (choferActual.enLinea) {
         mostrarToast("¡Estás en línea! Recibirás pedidos con sonido en vivo.", "Conectado", "success");
       } else {
-        mostrarToast("Estás fuera de línea. Si entra un pedido, te avisaremos al WhatsApp.", "Desconectado", "info");
+        mostrarToast("Estás fuera de línea. El rastreo GPS en vivo se ha pausado.", "Desconectado", "info");
       }
     }
 
@@ -878,7 +1081,7 @@
       if (estaEnLinea) {
         txt.innerText = "🟢 EN LÍNEA (Recibiendo pedidos)";
         txt.className = "text-xs font-black text-accent-emerald block leading-tight";
-        sub.innerText = "Sonido y despacho activo en Nirgua";
+        sub.innerText = "GPS y Despacho activo en Nirgua";
         btn.innerHTML = `<span>Activo</span>`;
         btn.className = "btn-tactil bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[11px] shadow-glow-emerald flex items-center gap-1";
         ping.className = "w-3 h-3 rounded-full bg-accent-emerald animate-ping";
@@ -886,7 +1089,7 @@
       } else {
         txt.innerText = "🔴 FUERA DE LÍNEA (Pausado)";
         txt.className = "text-xs font-black text-slate-400 block leading-tight";
-        sub.innerText = "Alertas enviadas a tu WhatsApp";
+        sub.innerText = "GPS en pausa • Alertas por WhatsApp";
         btn.innerHTML = `<span>Conectar</span>`;
         btn.className = "btn-tactil bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-[11px] border border-slate-700 flex items-center gap-1";
         ping.className = "w-3 h-3 rounded-full bg-slate-600";
@@ -910,21 +1113,29 @@
       window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
     }
 
-    // ================= SEGUIMIENTO GPS =================
+    // ================= SEGUIMIENTO GPS OPTIMIZADO (AHORRO DE CUOTA FIREBASE) =================
     function iniciarSeguimientoGps() {
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((pos) => {
-          choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
-          if (choferActual && choferActual.telefono) {
-            const tel = normalizarTelefono(choferActual.telefono);
-            db.ref(`choferes/${tel}/gps`).set({
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude,
-              actualizado: new Date().toISOString()
-            });
-          }
-        }, () => {}, { enableHighAccuracy: true });
-      }
+      if (!navigator.geolocation) return;
+      if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
+
+      gpsWatchId = navigator.geolocation.watchPosition((pos) => {
+        choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+        actualizarBadgeGps('granted');
+
+        // Solo escribe en Firebase si el chofer está EN LÍNEA y pasaron al menos 15 segundos
+        const ahora = Date.now();
+        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 15000)) {
+          ultimoEnvioGpsTimestamp = ahora;
+          const tel = normalizarTelefono(choferActual.telefono);
+          db.ref(`choferes/${tel}/gps`).set({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            actualizado: new Date().toISOString()
+          });
+        }
+      }, (err) => {
+        if (err.code === 1) actualizarBadgeGps('denied');
+      }, { enableHighAccuracy: true, maximumAge: 10000 });
     }
 
     function centrarGpsChoferEnMapa() {
@@ -998,7 +1209,7 @@
         contenedor.innerHTML = `
           <div class="text-center py-14 bg-slate-950/60 rounded-3xl border border-slate-800 p-6 space-y-2">
             <i data-lucide="package-open" class="w-10 h-10 mx-auto text-slate-600 opacity-60"></i>
-            <h4 class="text-xs font-bold text-slate-400">No hay registros en esta sección</h4>
+            <h4 class="text-xs font-bold text-slate-400">No hay carreras en esta sección</h4>
             <p class="text-[11px] text-slate-500">Mantente en línea para recibir los nuevos pedidos en tiempo real.</p>
           </div>
         `;
@@ -1176,7 +1387,7 @@
       mostrarToast("Solicitud enviada a la Administración por WhatsApp", "Retiro Solicitado", "success");
     }
 
-    // ================= DETALLE CON MAPA Y RUTA =================
+    // ================= DETALLE CON MAPA Y RUTA (OPENSTREETMAP + OSRM GRATUITO) =================
     function verMapaYDetalle(id) {
       const p = todosLosPedidos[id];
       if (!p) return;
@@ -1249,6 +1460,7 @@
       origenPuntoMapa = [latOrigen, lonOrigen];
       destinoPuntoMapa = [latDestino, lonDestino];
 
+      // Enlace universal gratuito (abre la app nativa de Google Maps sin costo de API)
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${latDestino},${lonDestino}`;
 
       const contAccion = document.getElementById('accion-estado-contenedor');
