@@ -1,1 +1,8 @@
-
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.franyisanabria2007_crypto.twa",
+        "sha256_cert_fingerprints": ["04:3A:6E:37:C8:3B:2C:52:85:F9:51:9B:E0:C9:F5:54:9B:D2:C8:C9:17:24:66:D2:B9:16:E7:06:9B:24:26:41"]
+      }
+    }]
