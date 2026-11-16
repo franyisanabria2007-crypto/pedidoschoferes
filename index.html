@@ -323,7 +323,7 @@
         </div>
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
           <h4 class="font-bold text-white text-xs">3. Tarifa y Liquidación</h4>
-          <p class="text-[10px] text-slate-400">Cada entrega completada acredita $1.00 netos de delivery al conductor. En compras de comercio, el chofer compra en tienda con sus fondos y solicita el reembolso a la administración mediante factura.</p>
+          <p class="text-[10px] text-slate-400">Cada entrega completada acredita $1.00 netos de delivery al conductor. El chofer va al comercio asignado, reporta el monto para que administración libere el dinero y luego sube obligatoriamente la factura.</p>
         </div>
       </div>
 
@@ -566,9 +566,9 @@
       <div id="mapa-alerta-comercio" class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl text-xs space-y-1 hidden">
         <div class="flex items-center gap-1.5 text-amber-300 font-extrabold font-mono">
           <i data-lucide="store" class="w-4 h-4"></i>
-          <span>PUNTO DE RETIRO / COMPRA: <span id="mapa-txt-tienda">Local Comercial</span></span>
+          <span>COMERCIO ASIGNADO POR ADMIN: <span id="mapa-txt-tienda">Local Comercial</span></span>
         </div>
-        <p class="text-[10px] text-slate-300">Compra los artículos en este comercio y guarda la factura para solicitar reembolso a la administración.</p>
+        <p class="text-[10px] text-slate-300">Ve a este comercio, verifica los precios y reporta el monto a administración para que te liberen los fondos.</p>
       </div>
 
       <div class="space-y-1">
@@ -614,7 +614,7 @@
         <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
           <h4 class="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
             <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-blue-400"></i>
-            <span>Artículos a Comprar / Retirar:</span>
+            <span>Artículos a Comprar en la Tienda Asignada:</span>
           </h4>
           <span class="text-[9px] text-slate-400 font-mono">Sin precios</span>
         </div>
@@ -622,7 +622,7 @@
         <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300 max-h-32 overflow-y-auto no-scrollbar pr-1 font-mono"></div>
       </div>
 
-      <!-- SECCIÓN GASTO DEL CHOFER & FACTURA PARA REEMBOLSO + BOTÓN WHATSAPP ADMIN -->
+      <!-- SECCIÓN PASO A PASO: REPORTE DE GASTO, WHATSAPP A ADMIN Y OBLIGATORIO SUBIR FACTURA -->
       <div id="seccion-factura-tienda" class="bg-[#141b2d] p-3.5 rounded-2xl border border-amber-500/30 space-y-3">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2">
@@ -630,24 +630,33 @@
               <i data-lucide="receipt" class="w-4 h-4"></i>
             </div>
             <div>
-              <h4 class="text-xs font-bold text-white">Reembolso por Compra en Comercio</h4>
-              <p class="text-[10px] text-slate-400">Ingresa cuánto gastaste y avisa a administración</p>
+              <h4 class="text-xs font-bold text-white">Paso 1 y Paso 2: Gasto y Factura</h4>
+              <p class="text-[10px] text-slate-400">Reporta al admin y sube tu factura obligatoria</p>
             </div>
           </div>
-          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Reembolso Admin</span>
+          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Flujo Chofer</span>
         </div>
 
         <div class="space-y-2.5">
           <div>
-            <label class="block text-[11px] font-mono text-slate-300 mb-1">¿Cuánto gastó el chofer en el comercio ($ USD)?</label>
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">1. Monto que necesitas que el admin te envíe ($ USD):</label>
             <div class="relative">
               <span class="absolute left-3 top-2.5 text-xs font-mono text-amber-400 font-bold">$</span>
               <input type="number" step="0.01" min="0" id="input-monto-factura" placeholder="0.00" class="w-full bg-[#0c1222] border border-white/15 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-bold text-white focus:outline-none focus:border-amber-400">
             </div>
           </div>
 
-          <div>
-            <label class="block text-[11px] font-mono text-slate-300 mb-1">Foto de la factura para pedir reembolso:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-bold py-2 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1 shadow-sm">
+              <i data-lucide="save" class="w-3.5 h-3.5 text-blue-400"></i> Guardar Monto
+            </button>
+            <button type="button" onclick="enviarReembolsoWhatsAppAdmin()" class="btn-spring bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-2 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-glow-emerald">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Pedir dinero a Admin
+            </button>
+          </div>
+
+          <div class="pt-1 border-t border-white/10">
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">2. Subir foto de la factura (OBLIGATORIO tras comprar):</label>
             <input type="file" id="input-foto-factura" accept="image/*" capture="environment" onchange="capturarFotoFactura(event)" class="hidden">
             <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#0c1222] hover:bg-[#18233c] border border-white/15 rounded-xl p-2.5 flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
               <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
@@ -658,17 +667,8 @@
               <button type="button" onclick="eliminarFotoFactura()" class="absolute top-2 right-2 bg-rose-600 text-white rounded-full p-1 shadow hover:bg-rose-500">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
-              <span class="absolute bottom-2 left-2 bg-emerald-500/90 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md backdrop-blur-sm">Factura Adjunta ✓</span>
+              <span class="absolute bottom-2 left-2 bg-emerald-500/90 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md backdrop-blur-sm">Factura Subida ✓</span>
             </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2 pt-1">
-            <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-bold py-2.5 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-sm">
-              <i data-lucide="save" class="w-3.5 h-3.5"></i> Guardar Gasto
-            </button>
-            <button type="button" onclick="enviarReembolsoWhatsAppAdmin()" class="btn-spring bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-2.5 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-glow-emerald">
-              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Pedir a Admin (WhatsApp)
-            </button>
           </div>
         </div>
       </div>
@@ -1739,7 +1739,7 @@
       }
 
       db.ref(`pedidos/${pedidoActivoModalId}`).update(updates).then(() => {
-        mostrarToast("Gasto y factura guardados para reembolso administrativo.", "Guardado", "success");
+        mostrarToast("Monto guardado en la base de datos.", "Guardado", "success");
       });
     }
 
@@ -1755,9 +1755,9 @@
       const nombreCliente = document.getElementById('mapa-nombre-cliente').innerText;
       const tiendaNombre = document.getElementById('mapa-txt-tienda').innerText || 'Comercio';
 
-      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE REEMBOLSO - PEDIDOS FLASH* 💸\n👤 Chofer: ${choferActual ? choferActual.nombre : 'Conductor'}\n📱 Teléfono: ${choferActual ? choferActual.telefono : ''}\n📦 Orden: ${numOrden}\n🏪 Comercio: ${tiendaNombre}\n🛍️ Cliente: ${nombreCliente}\n💰 *Monto a reembolsar (Factura): $${montoGasto.toFixed(2)}*\n\n_Por favor realizar transferencia o pago móvil._`);
+      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE DINERO/REEMBOLSO - PEDIDOS FLASH* 💸\n👤 Chofer: ${choferActual ? choferActual.nombre : 'Conductor'}\n📱 Teléfono: ${choferActual ? choferActual.telefono : ''}\n📦 Orden: ${numOrden}\n🏪 Comercio Asignado: ${tiendaNombre}\n🛍️ Cliente: ${nombreCliente}\n💰 *Monto necesario: $${montoGasto.toFixed(2)}*\n\n_Por favor liberar fondos vía Pago Móvil._`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
-      mostrarToast("Abriendo WhatsApp con la administración...", "WhatsApp", "success");
+      mostrarToast("Abriendo WhatsApp para pedir dinero a Admin...", "WhatsApp", "success");
     }
 
     function verMapaYDetalle(id) {
@@ -1832,7 +1832,7 @@
       if (p.estado === 'pendiente') {
         contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2"><span>Aceptar carrera (+$1.00)</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>`;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto al Comercio</span></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto al Comercio Asignado</span></button>`;
       } else if (p.estado === 'en_camino') {
         contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega (Cobrar Comisión $1.00)</span></button>`;
       } else {
@@ -1853,7 +1853,7 @@
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
         if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
-        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Comprar en: ${tiendaNombre}` : 'Salida');
+        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Comercio Asignado: ${tiendaNombre}` : 'Salida');
         marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`📍 Cliente: ${direccionCliente}`).openPopup();
 
         if (choferGpsPunto) {
@@ -1903,7 +1903,7 @@
         toastIcon.setAttribute('data-lucide', 'alert-circle');
       } else {
         toastBg.className = "w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-400/40 shadow-glow-solar";
-        toastIcon.setAttribute('data-lucide', 'bell');
+        toastIcon.setAttribute('data-lucide="bell"');
       }
       lucide.createIcons();
 
