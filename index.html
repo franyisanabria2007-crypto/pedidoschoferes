@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#05070c">
-  <title>Pedidos Flash — Driver Terminal</title>
+  <title>Pedidos Flash — Driver Terminal Nirgua</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,9 +37,21 @@
             midnight: '#05070c',
             obsidian: '#0b0f19',
             surface: '#111726',
-            electric: { blue: '#3b82f6', cobalt: '#2563eb', indigo: '#4f46e5' },
-            solar: { 400: '#fbbf24', 500: '#f59e0b', 600: '#ea580c' },
-            emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' }
+            electric: {
+              blue: '#3b82f6',
+              cobalt: '#2563eb',
+              indigo: '#4f46e5'
+            },
+            solar: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#ea580c'
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669'
+            }
           },
           boxShadow: {
             'specular': 'inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 20px 40px -15px rgba(0, 0, 0, 0.7)',
@@ -61,7 +73,9 @@
 
     .btn-spring { 
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s ease, background-color 0.2s ease;
-      will-change: transform; user-select: none; touch-action: manipulation;
+      will-change: transform;
+      user-select: none;
+      touch-action: manipulation;
     }
     .btn-spring:hover { transform: translateY(-2px) scale(1.02); }
     .btn-spring:active { transform: translateY(2px) scale(0.93) !important; filter: brightness(0.9); }
@@ -106,12 +120,20 @@
       font-family: 'JetBrains Mono', monospace;
     }
     .pin-jewel-gps {
-      width: 30px; height: 30px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       background: linear-gradient(135deg, #34d399, #059669);
       border: 2.5px solid #ffffff;
-      box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.35), 0 0 20px rgba(16, 185, 129, 0.6);
+      box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.35), 0 0 22px rgba(16, 185, 129, 0.7);
       display: flex; align-items: center; justify-content: center;
       color: #ffffff;
+    }
+    .pin-jewel-pedido {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, #00f2fe, #4f46e5);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.65);
+      display: flex; align-items: center; justify-content: center;
+      color: #ffffff; cursor: pointer;
     }
   </style>
 </head>
@@ -134,53 +156,53 @@
     </div>
   </div>
 
-  <!-- PANTALLA DE ACCESO -->
-  <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-[#0c111e]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-specular my-auto sheet-spring relative overflow-hidden">
+  <!-- MODAL INGRESO / REGISTRO DE CHOFER -->
+  <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[100] flex items-center justify-center p-4">
+    <div class="bg-[#0c1222]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-specular sheet-spring relative overflow-hidden">
       
-      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 bg-blue-500/20 blur-2xl pointer-events-none"></div>
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="text-center space-y-1.5 pt-1 relative z-10">
-        <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl flex items-center justify-center mx-auto shadow-glow-blue border border-white/20 mb-2">
-          <i data-lucide="navigation" class="w-7 h-7 fill-white"></i>
+      <div class="text-center space-y-1 relative z-10">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center mx-auto text-white shadow-glow-blue border border-white/20 mb-2">
+          <i data-lucide="navigation-2" class="w-7 h-7"></i>
         </div>
-        <h2 class="text-xl font-extrabold text-white tracking-tight">Pedidos Flash</h2>
-        <p class="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 uppercase tracking-wider font-mono">Terminal de Conductor • Nirgua</p>
+        <h2 class="text-xl font-extrabold text-white tracking-tight font-display">TERMINAL CHOFERES</h2>
+        <p class="text-xs text-slate-400 font-mono">Pedidos Flash • Nirgua, Yaracuy</p>
       </div>
 
-      <div id="auth-pestanas-nav" class="grid grid-cols-2 gap-1 bg-[#141b2d]/80 p-1.5 rounded-2xl border border-white/5 relative z-10">
+      <!-- PESTAÑAS LOGIN / REGISTRO -->
+      <div id="auth-pestanas-nav" class="grid grid-cols-2 p-1 bg-[#141b2d] rounded-2xl border border-white/5 relative z-10">
         <button onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md">
-          Iniciar sesión
+          Iniciar Turno
         </button>
         <button onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
-          Registrarse
+          Registrar Chofer
         </button>
       </div>
 
-      <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3 pt-1 relative z-10">
+      <!-- FORMULARIO LOGIN -->
+      <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3.5 pt-1 relative z-10">
         <div>
-          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono registrado (WhatsApp)</label>
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono Móvil (WhatsApp)</label>
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
-              <i data-lucide="phone" class="w-4 h-4"></i>
-            </span>
-            <input type="tel" id="login-telefono" required placeholder="04262566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl pl-10 pr-3 py-3 text-xs font-mono font-medium text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+            <span class="absolute left-3.5 top-3 text-slate-500 text-xs font-mono">+58</span>
+            <input type="tel" id="login-telefono" required placeholder="04262566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl py-3 pl-12 pr-3 text-xs font-mono font-medium text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Ingresa el teléfono asignado para entrar a tu turno.</p>
         </div>
 
-        <button type="submit" id="btn-submit-login" class="btn-spring w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2 mt-2">
+        <button type="submit" id="btn-submit-login" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
           <span>Ingresar al turno</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </form>
 
+      <!-- FORMULARIO REGISTRO -->
       <form id="form-registro" onsubmit="ejecutarRegistro(event)" class="space-y-3 pt-1 hidden relative z-10">
         <div>
-          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nombre completo</label>
-          <input type="text" id="reg-nombre" required placeholder="Carlos Pérez" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nombre y Apellido</label>
+          <input type="text" id="reg-nombre" required placeholder="Ej: Juan Silva" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
-        
+
         <div>
           <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono activo</label>
           <input type="tel" id="reg-telefono" required placeholder="04262566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
@@ -205,7 +227,7 @@
           <label class="flex items-start gap-2 cursor-pointer">
             <input type="checkbox" id="reg-privacidad" required class="w-4 h-4 mt-0.5 accent-blue-600 rounded cursor-pointer shrink-0">
             <span class="text-[10px] text-slate-300 leading-snug">
-              Acepto los <button type="button" onclick="abrirModalPrivacidad(event)" class="text-blue-400 font-bold underline">términos legales</button> y autorizo la geolocalización satelital en tiempo real.
+              Acepto los <button type="button" onclick="abrirModalPrivacidad(event)" class="text-blue-400 font-bold underline">términos legales</button> y autorizo la geolocalización satelital en tiempo real en Nirgua.
             </span>
           </label>
         </div>
@@ -216,6 +238,7 @@
         </button>
       </form>
 
+      <!-- VERIFICACIÓN DE CÓDIGO -->
       <div id="vista-verificacion-codigo" class="space-y-4 pt-1 hidden relative z-10">
         <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl text-center space-y-1.5">
           <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
@@ -296,39 +319,41 @@
         </div>
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
           <h4 class="font-bold text-white text-xs">2. Prestador Independiente</h4>
-          <p class="text-[10px] text-slate-400">El repartidor opera bajo su propia responsabilidad vial, portando casco, documentación y normas de tránsito vigentes.</p>
+          <p class="text-[10px] text-slate-400">El repartidor opera bajo su propia responsabilidad vial en Nirgua, portando casco, documentación y normas de tránsito vigentes.</p>
         </div>
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
           <h4 class="font-bold text-white text-xs">3. Tarifa y Liquidación</h4>
-          <p class="text-[10px] text-slate-400">Cada envío completado acredita $0.70 netos al repartidor, pagaderos por Pago Móvil a tasa oficial BCV o en efectivo.</p>
+          <p class="text-[10px] text-slate-400">Cada entrega completada acredita $1.00 netos de delivery al conductor. En compras de comercio, el chofer compra en tienda con sus fondos y solicita el reembolso a la administración mediante factura.</p>
         </div>
       </div>
 
-      <div class="pt-2 border-t border-white/10 flex justify-end shrink-0">
-        <button onclick="cerrarModalPrivacidad()" class="btn-spring bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md border border-white/20">
-          Aceptar y Entendido
+      <div class="border-t border-white/10 pt-3 shrink-0">
+        <button onclick="cerrarModalPrivacidad()" class="btn-spring w-full bg-white text-slate-950 font-extrabold py-3 rounded-2xl text-xs">
+          Entendido y Conforme
         </button>
       </div>
 
     </div>
   </div>
 
-  <!-- APLICACIÓN MÓVIL PRINCIPAL -->
-  <div class="w-full sm:max-w-md md:max-w-lg bg-[#070b14] h-[100dvh] sm:h-[95vh] sm:max-h-[920px] sm:rounded-[38px] shadow-specular overflow-hidden flex flex-col border border-white/10 relative z-10 mx-auto">
-    
-    <!-- ENCABEZADO -->
-    <header class="bg-[#090d18]/95 backdrop-blur-xl border-b border-white/10 px-4 py-3 safe-top shrink-0 relative z-30 flex items-center justify-between">
-      
+  <!-- CONTENEDOR PRINCIPAL DEL TERMINAL -->
+  <div class="w-full max-w-md h-[100dvh] sm:h-[840px] bg-[#090d18] sm:border border-white/10 sm:rounded-[36px] flex flex-col overflow-hidden shadow-2xl relative z-10">
+
+    <!-- CABECERA PRINCIPAL -->
+    <header class="bg-[#0b1020]/95 backdrop-blur-xl border-b border-white/10 px-4 py-3 shrink-0 flex items-center justify-between safe-top z-30">
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 text-white flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.45)] border border-cyan-400/40 shrink-0">
-          <i data-lucide="zap" class="w-5 h-5 fill-white text-white"></i>
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-glow-blue border border-white/20">
+          <i data-lucide="zap" class="w-5 h-5 fill-white"></i>
         </div>
         <div>
-          <div class="flex items-center gap-1.5 leading-none">
-            <span class="text-sm font-black tracking-tight text-white font-sans">PEDIDOS<span class="text-cyan-400 font-extrabold">FLASH</span></span>
-            <span class="text-[8px] font-mono font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-1.5 py-0.5 rounded-md uppercase">Driver</span>
+          <h1 class="text-xs font-black text-white tracking-wider uppercase font-display flex items-center gap-1.5">
+            PEDIDOS FLASH <span class="bg-blue-500/20 text-blue-400 border border-blue-400/30 text-[8px] font-mono px-1.5 py-0.2 rounded-md font-bold">DRIVER</span>
+          </h1>
+          <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+            <span id="txt-estado-permiso-gps" class="text-emerald-400 font-bold">GPS: Activo</span>
+            <span>•</span>
+            <span id="txt-vehiculo-badge-visible" class="text-amber-400 font-bold uppercase">Moto</span>
           </div>
-          <span class="text-[9px] font-mono text-slate-400 block tracking-wider mt-0.5">NIRGUA</span>
         </div>
       </div>
 
@@ -354,7 +379,7 @@
       <span id="total-ganancias-chofer" class="hidden">$0.00</span>
     </header>
 
-    <!-- BARRA DE CONEXIÓN -->
+    <!-- BARRA DE CONEXIÓN EN LÍNEA -->
     <div id="barra-conexion-ridery" class="bg-[#0b1020] border-b border-white/10 px-4 py-2 shrink-0 relative z-20 flex items-center justify-between">
       <div class="flex items-center gap-2.5 min-w-0">
         <div id="beacon-ridery" class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
@@ -365,7 +390,7 @@
             <span id="txt-ridery-estado" class="text-xs font-black text-white leading-tight">ESTÁS EN LÍNEA</span>
             <span id="ping-ridery-luz" class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping"></span>
           </div>
-          <span id="sub-ridery-telemetria" class="text-[10px] text-slate-400 font-mono block truncate">GPS Activo • Buscando carreras</span>
+          <span id="sub-ridery-telemetria" class="text-[10px] text-slate-400 font-mono block truncate">GPS Nirgua Activo • Monitoreo en vivo</span>
         </div>
       </div>
 
@@ -385,7 +410,7 @@
     <div id="banner-permiso-gps" class="bg-rose-950/90 border-b border-rose-500/40 p-2 px-4 flex items-center justify-between hidden relative z-20">
       <div class="flex items-center gap-2">
         <i data-lucide="map-pin-off" class="w-4 h-4 text-rose-400 shrink-0"></i>
-        <p class="text-[10px] text-rose-200 font-bold leading-tight">GPS desactivado. Actívalo para transmitir tu ubicación.</p>
+        <p class="text-[10px] text-rose-200 font-bold leading-tight">GPS desactivado. Actívalo para transmitir tu ubicación en vivo.</p>
       </div>
       <button onclick="solicitarPermisoGpsManual()" class="btn-spring bg-rose-600 hover:bg-rose-500 text-white font-bold px-3 py-1 rounded-lg text-[9px] shadow-sm">
         Activar
@@ -402,52 +427,52 @@
       </button>
     </div>
 
-    <!-- MAPA SATELITAL EN VIVO (HERO MAP PRINCIPAL) -->
-    <div class="relative flex-1 min-h-[220px] sm:min-h-[280px] w-full overflow-hidden bg-[#070b14]">
-      <!-- Contenedor del mapa Leaflet interactivo general -->
-      <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 220px; position: absolute; inset: 0;" class="z-0"></div>
+    <!-- MAPA SATELITAL EN VIVO (NIRGUA) - TAMAÑO COMPACTO -->
+    <div class="relative h-[160px] sm:h-[200px] w-full overflow-hidden bg-[#070b14] shrink-0">
+      <div id="mapa-principal" style="width: 100%; height: 100%; position: absolute; inset: 0;" class="z-0"></div>
 
-      <!-- BOTONES FLOTANTES SOBRE EL MAPA -->
-      <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
-        <button onclick="centrarGpsChoferEnMapaPrincipal()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
-          <i data-lucide="crosshair" class="w-5 h-5"></i>
+      <div class="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
+        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-9 h-9 rounded-xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
+          <i data-lucide="crosshair" class="w-4 h-4"></i>
         </button>
-        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
-          <i data-lucide="headset" class="w-5 h-5"></i>
+        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-9 h-9 rounded-xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
+          <i data-lucide="headset" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- BADGE FLOTANTE DE ZONA ACTIVA -->
-      <div class="absolute top-3 left-3 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-3 py-1.5 rounded-2xl flex items-center gap-2 shadow-specular">
+      <div class="absolute top-2 left-2 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-2.5 py-1 rounded-xl flex items-center gap-1.5 shadow-specular">
         <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
-        <span id="txt-zona-activa-mapa" class="text-[10px] font-mono font-bold text-white uppercase tracking-wider">GPS Activo en Vivo</span>
+        <span class="text-[9px] font-mono font-bold text-white uppercase tracking-wider">Nirgua Radar GPS</span>
       </div>
     </div>
 
     <!-- PANEL INFERIOR DE DESPACHO -->
-    <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 shrink-0 flex flex-col max-h-[50vh] relative z-20 shadow-dock-floating">
+    <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 flex-1 flex flex-col min-h-0 relative z-20 shadow-dock-floating">
       <div class="w-10 h-1 bg-white/20 rounded-full mx-auto my-2 shrink-0"></div>
 
-      <div class="px-4 pb-2">
-        <div class="bg-[#121829] p-1 rounded-2xl grid grid-cols-3 gap-1 border border-white/10">
-          <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2 rounded-xl text-xs font-black bg-[#1e2742] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
+      <!-- ALERTA SI HAY CARRERA ACTIVA -->
+      <div id="banner-carrera-activa-alerta" class="px-4 mb-2 hidden shrink-0"></div>
+
+      <!-- FILTRO DE PESTAÑAS (TABS) -->
+      <div class="px-4 mb-2.5 shrink-0">
+        <div class="grid grid-cols-3 p-1 bg-[#111728] rounded-2xl border border-white/10">
+          <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2.5 text-center rounded-xl text-xs font-extrabold bg-[#1a233b] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
             <span>Disponibles</span>
-            <span id="badge-disponibles" class="w-4 h-4 rounded-full bg-cyan-400 text-slate-950 font-black font-mono text-[9px] flex items-center justify-center tabular-nums shadow-[0_0_8px_#00f0ff]">0</span>
+            <span id="badge-disponibles" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-blue-500 text-white font-bold">0</span>
           </button>
-          <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-spring py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+          <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
             <span>En Ruta</span>
-            <span id="badge-activos" class="w-4 h-4 rounded-full bg-white/10 text-slate-300 font-bold font-mono text-[9px] flex items-center justify-center tabular-nums">0</span>
+            <span id="badge-activos" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-400 font-bold">0</span>
           </button>
-          <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-spring py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+          <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
             <span>Historial</span>
-            <span id="badge-historial" class="w-4 h-4 rounded-full bg-white/10 text-slate-300 font-bold font-mono text-[9px] flex items-center justify-center tabular-nums">0</span>
+            <span id="badge-historial" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-white/10 text-slate-300 font-bold">0</span>
           </button>
         </div>
       </div>
 
-      <div id="banner-carrera-activa-alerta" class="hidden px-4 mb-2"></div>
-
-      <div id="contenedor-pedidos" class="px-4 pb-20 overflow-y-auto max-h-[35vh] space-y-2.5 no-scrollbar"></div>
+      <!-- LISTA DE PEDIDOS -->
+      <div id="contenedor-pedidos" class="px-4 pb-24 overflow-y-auto flex-1 space-y-2.5 no-scrollbar"></div>
     </div>
 
     <!-- BARRA DOCK FLOTANTE -->
@@ -482,12 +507,12 @@
 
   </div>
 
-  <!-- MODAL DE RETIRO -->
+  <!-- MODAL DE RETIRO EXCLUSIVO PAGO MÓVIL -->
   <div id="modal-retiro" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0c1222]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-specular sheet-spring">
       <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="banknote" class="w-5 h-5 text-emerald-400"></i> Liquidación de Comisiones
+          <i data-lucide="banknote" class="w-5 h-5 text-emerald-400"></i> Liquidación por Pago Móvil
         </h3>
         <button onclick="cerrarModalRetiro()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -497,36 +522,33 @@
       <div class="bg-gradient-to-br from-emerald-500/15 to-teal-500/5 p-4 rounded-2xl border border-emerald-500/30 text-center">
         <span class="text-xs text-emerald-300 font-mono font-medium block">Saldo acumulado disponible a retirar:</span>
         <span id="monto-modal-retiro" class="text-3xl font-black font-mono text-emerald-400 tracking-tight tabular-nums block mt-1 drop-shadow-[0_2px_10px_rgba(16,185,129,0.3)]">$0.00</span>
+        <span class="text-[10px] text-slate-400 font-mono mt-1 block">Tarifa fija acreditada: $1.00 por orden</span>
       </div>
 
       <form onsubmit="enviarSolicitudRetiro(event)" class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Método de cobro preferido</label>
-          <select id="retiro-metodo" required class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-bold text-white focus:outline-none focus:border-blue-500">
-            <option value="Pago Móvil">📲 Pago Móvil (Bs a tasa oficial BCV)</option>
-            <option value="Efectivo en Persona">💵 Efectivo ($ USD o Bs en base central)</option>
-            <option value="Zelle / USDT">💲 Zelle / Binance USDT</option>
-          </select>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Método de cobro</label>
+          <input type="text" value="📲 Pago Móvil (Bs a tasa oficial BCV)" disabled class="w-full bg-[#141b2d]/60 border border-white/10 rounded-2xl p-3 text-xs font-bold text-emerald-400 cursor-not-allowed">
+          <input type="hidden" id="retiro-metodo" value="Pago Móvil">
         </div>
+
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Datos bancarios o cuenta</label>
-          <textarea id="retiro-datos" required rows="2" placeholder="Banesco • C.I: 28.123.456 • 0426-2566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"></textarea>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Tus datos de Pago Móvil</label>
+          <input type="text" id="retiro-datos" required placeholder="Banco, Cédula, Teléfono..." class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
-        <button type="submit" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 transition flex items-center justify-center gap-2">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          <span>Enviar solicitud a administración</span>
+
+        <button type="submit" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/20">
+          Solicitar Pago Móvil a Administración
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL DE DETALLE Y MAPA INDIVIDUAL -->
+  <!-- MODAL HOJA DE RUTA Y DETALLE DEL PEDIDO -->
   <div id="modal-detalle-pedido" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-    <div class="bg-[#0c1222]/95 border-t sm:border border-white/15 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] flex flex-col overflow-y-auto sheet-spring">
+    <div class="bg-[#0c1222]/98 border-t sm:border border-white/10 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] overflow-y-auto no-scrollbar sheet-spring">
       
-      <div class="w-12 h-1.5 bg-slate-600/60 rounded-full mx-auto -mt-1 mb-1 sm:hidden"></div>
-
-      <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
+      <div class="flex justify-between items-center border-b border-white/10 pb-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-400/30 flex items-center justify-center shadow-glow-blue">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
@@ -544,28 +566,30 @@
       <div id="mapa-alerta-comercio" class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl text-xs space-y-1 hidden">
         <div class="flex items-center gap-1.5 text-amber-300 font-extrabold font-mono">
           <i data-lucide="store" class="w-4 h-4"></i>
-          <span>PUNTO DE RETIRO: <span id="mapa-txt-tienda">Local Comercial</span></span>
+          <span>PUNTO DE RETIRO / COMPRA: <span id="mapa-txt-tienda">Local Comercial</span></span>
         </div>
-        <p class="text-[10px] text-slate-300">Retira los artículos en este local antes de dirigirte a la dirección del destinatario.</p>
+        <p class="text-[10px] text-slate-300">Compra los artículos en este comercio y guarda la factura para solicitar reembolso a la administración.</p>
       </div>
 
       <div class="space-y-1">
         <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
-          <span>A: Retiro • B: Destino</span>
-          <button onclick="centrarGpsChoferEnMapaModal()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
-            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi GPS
+          <span>A: Retiro / Tienda • B: Cliente</span>
+          <button onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
+            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
           </button>
         </div>
-        <div id="mapa-cliente" style="height: 210px; min-height: 210px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
+        <div id="mapa-cliente" style="height: 140px; min-height: 140px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
       </div>
 
+      <!-- BOTÓN DIRECTO GOOGLE MAPS GPS -->
       <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-spring w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/20">
-        <i data-lucide="navigation" class="w-4 h-4 fill-white"></i> Iniciar Ruta en Google Maps (GPS)
+        <i data-lucide="navigation" class="w-4 h-4 fill-white"></i> Iniciar Ruta GPS en Vivo (Google Maps)
       </a>
 
+      <!-- DATOS DEL CLIENTE -->
       <div class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2 text-xs">
         <div class="flex justify-between items-center">
-          <span class="text-slate-400 font-medium">Cliente / Destinatario:</span>
+          <span class="text-slate-400 font-medium">Cliente / Pasajero:</span>
           <span id="mapa-nombre-cliente" class="text-white font-extrabold"></span>
         </div>
         <div class="flex justify-between items-center">
@@ -579,32 +603,83 @@
             </button>
           </div>
         </div>
-        <div class="flex justify-between items-center border-t border-white/10 pt-1.5">
-          <span class="text-slate-400 font-medium">Forma de pago:</span>
-          <span id="mapa-metodo-pago" class="font-extrabold font-mono"></span>
-        </div>
-        <div id="caja-detalle-pago-cliente" class="hidden text-[10px] text-amber-300 bg-amber-500/10 p-2 rounded-xl border border-amber-500/20 font-mono"></div>
         <div>
-          <span class="text-slate-400 font-medium block mb-1">Dirección de entrega:</span>
+          <span class="text-slate-400 font-medium block mb-1">Punto de Entrega / Dirección:</span>
           <p id="mapa-direccion-cliente" class="text-slate-200 bg-[#0c1222] p-2.5 rounded-xl border border-white/10 text-[11px] font-semibold leading-relaxed"></p>
         </div>
       </div>
 
+      <!-- LISTA DE PRODUCTOS SOLICITADOS (SOLO CANTIDAD Y NOMBRE, SIN PRECIOS) -->
       <div class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2">
-        <h4 class="text-xs font-bold text-slate-300 font-mono border-b border-white/10 pb-1">Manifiesto de la orden:</h4>
-        <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300 max-h-24 overflow-y-auto no-scrollbar pr-1 font-mono"></div>
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <h4 class="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
+            <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span>Artículos a Comprar / Retirar:</span>
+          </h4>
+          <span class="text-[9px] text-slate-400 font-mono">Sin precios</span>
+        </div>
         
-        <div class="flex justify-between items-center border-t border-white/10 pt-2 font-bold font-mono">
-          <span class="text-xs text-slate-400">Cobro total al cliente:</span>
-          <span id="mapa-total-cobrar" class="text-base text-white tabular-nums">$0.00</span>
+        <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300 max-h-32 overflow-y-auto no-scrollbar pr-1 font-mono"></div>
+      </div>
+
+      <!-- SECCIÓN GASTO DEL CHOFER & FACTURA PARA REEMBOLSO + BOTÓN WHATSAPP ADMIN -->
+      <div id="seccion-factura-tienda" class="bg-[#141b2d] p-3.5 rounded-2xl border border-amber-500/30 space-y-3">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-white">Reembolso por Compra en Comercio</h4>
+              <p class="text-[10px] text-slate-400">Ingresa cuánto gastaste y avisa a administración</p>
+            </div>
+          </div>
+          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Reembolso Admin</span>
         </div>
 
-        <div class="flex justify-between items-center bg-gradient-to-r from-emerald-500/20 to-teal-500/10 p-2.5 rounded-xl border border-emerald-500/30 text-xs font-mono">
-          <span class="text-emerald-300 font-bold">Comisión acreditada al chofer:</span>
-          <span class="text-emerald-400 font-black text-sm tabular-nums">+$0.70</span>
+        <div class="space-y-2.5">
+          <div>
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">¿Cuánto gastó el chofer en el comercio ($ USD)?</label>
+            <div class="relative">
+              <span class="absolute left-3 top-2.5 text-xs font-mono text-amber-400 font-bold">$</span>
+              <input type="number" step="0.01" min="0" id="input-monto-factura" placeholder="0.00" class="w-full bg-[#0c1222] border border-white/15 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-bold text-white focus:outline-none focus:border-amber-400">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">Foto de la factura para pedir reembolso:</label>
+            <input type="file" id="input-foto-factura" accept="image/*" capture="environment" onchange="capturarFotoFactura(event)" class="hidden">
+            <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#0c1222] hover:bg-[#18233c] border border-white/15 rounded-xl p-2.5 flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
+              <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
+              <span id="btn-txt-foto-factura">Tomar o Subir Foto de Factura</span>
+            </button>
+            <div id="caja-preview-factura" class="hidden mt-2 relative">
+              <img id="img-preview-factura" src="" class="w-full h-36 object-cover rounded-xl border border-amber-500/50 shadow-md">
+              <button type="button" onclick="eliminarFotoFactura()" class="absolute top-2 right-2 bg-rose-600 text-white rounded-full p-1 shadow hover:bg-rose-500">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+              <span class="absolute bottom-2 left-2 bg-emerald-500/90 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md backdrop-blur-sm">Factura Adjunta ✓</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-bold py-2.5 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i> Guardar Gasto
+            </button>
+            <button type="button" onclick="enviarReembolsoWhatsAppAdmin()" class="btn-spring bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-2.5 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-glow-emerald">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Pedir a Admin (WhatsApp)
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- COMISIÓN ACREDITADA AL CHOFER -->
+      <div class="flex justify-between items-center bg-gradient-to-r from-emerald-500/20 to-teal-500/10 p-2.5 rounded-xl border border-emerald-500/30 text-xs font-mono">
+        <span class="text-emerald-300 font-bold">Comisión delivery chofer:</span>
+        <span class="text-emerald-400 font-black text-sm tabular-nums">+$1.00</span>
+      </div>
+
+      <!-- BOTÓN DE ACCIÓN DINÁMICO -->
       <div id="accion-estado-contenedor" class="pt-1"></div>
 
     </div>
@@ -624,7 +699,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const TARIFA_CHOFER = 0.70; 
+    const TARIFA_CHOFER = 1.00; 
     const NUMERO_ADMIN_WHATSAPP = "584262566854";
 
     let choferActual = null;
@@ -632,28 +707,25 @@
     let listenerAprobacionRealTime = null;
     let todosLosPedidos = {};
     let tabActual = 'disponibles';
-    
-    // Mapas
+    let mapaInstance = null;
     let mapaPrincipalInstance = null;
-    let marcadorChoferPrincipalRef = null;
-    let marcadoresPedidosRefs = {};
-
-    let mapaModalInstance = null;
+    let marcadoresPedidosMapa = [];
     let marcadorOrigRef = null;
     let marcadorDestRef = null;
-    let marcadorChoferModalRef = null;
-    let lineaTrayectoModal = null;
-
-    let origenPuntoMapa = [10.1500, -68.5667];
-    let destinoPuntoMapa = [10.1700, -68.2200];
-    let choferGpsPunto = [10.1500, -68.5667]; // Valor por defecto inicial (Nirgua)
-    let primerGpsRecibido = false;
+    let marcadorChoferGpsRef = null;
+    let marcadorChoferPrincipalRef = null;
+    let lineaTrayecto = null;
+    let origenPuntoMapa = [10.1506, -68.5668];
+    let destinoPuntoMapa = [10.1506, -68.5668];
+    let choferGpsPunto = [10.1506, -68.5668];
     let ultimoEnvioGpsTimestamp = 0;
     let gpsWatchId = null;
     let totalGananciasAcumuladas = 0;
     let audioHabilitado = true;
     let audioCtx = null;
     let ultimoPedidoVistoId = null;
+    let pedidoActivoModalId = null;
+    let fotoFacturaBase64 = null;
 
     function normalizarTelefono(tel) {
       if (!tel) return '';
@@ -709,12 +781,12 @@
           choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
           actualizarBadgeGps('granted');
           iniciarSeguimientoGps();
-          actualizarMapaPrincipalConGps(true);
+          actualizarMarcadorChoferEnMapaPrincipal();
           mostrarToast("Ubicación satelital confirmada.", "GPS Listo", "success");
         },
         () => {
           actualizarBadgeGps('denied');
-          mostrarToast("Permite la ubicación en los ajustes.", "Permiso Requerido", "error");
+          mostrarToast("Permite la ubicación en los ajustes del teléfono.", "Permiso Requerido", "error");
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
@@ -744,8 +816,15 @@
       lucide.createIcons();
       actualizarEstadoVisualPermisos();
 
-      // Inicializar el Mapa Principal (Hero Map)
-      inicializarMapaPrincipal();
+      try {
+        const mapaDiv = document.getElementById('mapa-principal');
+        if (mapaDiv) {
+          mapaPrincipalInstance = L.map('mapa-principal', { zoomControl: false, attributionControl: false }).setView([10.1506, -68.5668], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaPrincipalInstance);
+        }
+      } catch(e) {
+        console.error("Error al iniciar mapa radar Nirgua:", e);
+      }
 
       const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
@@ -764,6 +843,8 @@
               document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
               document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
               document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
+              const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+              if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
               iniciarConexionChoferFirebase();
             }
           } else {
@@ -774,6 +855,8 @@
           document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
           document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
           document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
+          const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+          if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
           iniciarConexionChoferFirebase();
         });
       } else {
@@ -785,7 +868,7 @@
         detectarNuevosPedidosYAlertar(nuevosPedidos);
         todosLosPedidos = nuevosPedidos;
         renderizarPedidos();
-        actualizarPinesMapaPrincipal();
+        actualizarMarcadoresMapaPrincipal();
 
         const params = new URLSearchParams(window.location.search);
         const idPedUrl = params.get('pedido');
@@ -798,108 +881,6 @@
       iniciarSeguimientoGps();
     };
 
-    // ================= INICIALIZACIÓN DEL MAPA PRINCIPAL =================
-    function inicializarMapaPrincipal() {
-      if (mapaPrincipalInstance) return;
-      mapaPrincipalInstance = L.map('mapa-principal', { zoomControl: false, attributionControl: false }).setView(choferGpsPunto, 14);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaPrincipalInstance);
-    }
-
-    function actualizarMapaPrincipalConGps(centrar = false) {
-      if (!mapaPrincipalInstance) return;
-
-      if (marcadorChoferPrincipalRef) {
-        marcadorChoferPrincipalRef.setLatLng(choferGpsPunto);
-      } else {
-        marcadorChoferPrincipalRef = L.marker(choferGpsPunto, {
-          icon: L.divIcon({ 
-            className: 'custom-pin',
-            html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', 
-            iconSize: [30, 30] 
-          })
-        }).addTo(mapaPrincipalInstance).bindPopup('Tu Posición GPS Satelital');
-      }
-
-      if (centrar) {
-        mapaPrincipalInstance.setView(choferGpsPunto, 15);
-      }
-    }
-
-    function actualizarPinesMapaPrincipal() {
-      if (!mapaPrincipalInstance) return;
-
-      // Limpiar pines anteriores de pedidos
-      Object.values(marcadoresPedidosRefs).forEach(m => mapaPrincipalInstance.removeLayer(m));
-      marcadoresPedidosRefs = {};
-
-      const bounds = [];
-      bounds.push(choferGpsPunto);
-
-      Object.keys(todosLosPedidos).forEach(id => {
-        const p = todosLosPedidos[id];
-        // Mostrar tanto pendientes como carreras activas en el mapa principal
-        if (p.lat && p.lng && (p.estado === 'pendiente' || p.estado === 'aceptado' || p.estado === 'en_camino')) {
-          const lat = parseFloat(p.lat);
-          const lng = parseFloat(p.lng);
-          const nombreCli = p.cliente ? (p.cliente.nombre || p.cliente) : 'Cliente';
-          const numOrd = p.orden || `#PF-${id.substring(id.length - 4)}`;
-
-          const marker = L.marker([lat, lng], {
-            icon: L.divIcon({
-              className: 'custom-pin',
-              html: `<div class="pin-jewel-b" style="font-size:9px;">📦</div>`,
-              iconSize: [28, 28]
-            })
-          }).addTo(mapaPrincipalInstance)
-            .bindPopup(`<b>${numOrd}</b><br>Destino: ${nombreCli}<br><button onclick="verMapaYDetalle('${id}')" style="color:#3b82f6;font-weight:bold;margin-top:4px;">Ver Detalle / Ruta</button>`);
-
-          marcadoresPedidosRefs[id] = marker;
-          bounds.push([lat, lng]);
-        }
-      });
-
-      if (bounds.length > 1 && !primerGpsRecibido) {
-        try {
-          mapaPrincipalInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
-        } catch(e) {}
-      }
-    }
-
-    function centrarGpsChoferEnMapaPrincipal() {
-      if (mapaPrincipalInstance && choferGpsPunto) {
-        mapaPrincipalInstance.setView(choferGpsPunto, 16);
-        if (marcadorChoferPrincipalRef) marcadorChoferPrincipalRef.openPopup();
-        mostrarToast("Mapa centrado en tu posición GPS actual.", "GPS", "info");
-      }
-    }
-
-    // ================= SEGUIMIENTO GPS DINÁMICO =================
-    function iniciarSeguimientoGps() {
-      if (!navigator.geolocation) return;
-      if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
-
-      gpsWatchId = navigator.geolocation.watchPosition((pos) => {
-        choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
-        actualizarBadgeGps('granted');
-        
-        if (!primerGpsRecibido) {
-          primerGpsRecibido = true;
-          actualizarMapaPrincipalConGps(true);
-        } else {
-          actualizarMapaPrincipalConGps(false);
-        }
-
-        const ahora = Date.now();
-        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 15000)) {
-          ultimoEnvioGpsTimestamp = ahora;
-          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
-            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
-          });
-        }
-      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 10000 });
-    }
-
-    // ================= AUTH Y NAVEGACIÓN =================
     function cambiarModoAuth(modo) {
       const btnLogin = document.getElementById('btn-tab-login');
       const btnReg = document.getElementById('btn-tab-registro');
@@ -950,7 +931,8 @@
 
     function volverDesdeVerificacion() {
       if (listenerAprobacionRealTime && choferEnEspera) {
-        db.ref(`choferes/${normalizarTelefono(choferEnEspera.telefono)}`).off('value', listenerAprobacionRealTime);
+        const tel = normalizarTelefono(choferEnEspera.telefono);
+        db.ref(`choferes/${tel}`).off('value', listenerAprobacionRealTime);
       }
       choferEnEspera = null;
       cambiarModoAuth('login');
@@ -1046,7 +1028,7 @@
 
     function solicitarCodigoWhatsAppAdmin() {
       if (!choferEnEspera) return;
-      const mensaje = encodeURIComponent(`Hola Administración, solicito código de activación para el chofer ${choferEnEspera.nombre} (${choferEnEspera.telefono}).`);
+      const mensaje = encodeURIComponent(`Hola Administración Nirgua, solicito código de activación para el chofer ${choferEnEspera.nombre} (${choferEnEspera.telefono}).`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
     }
 
@@ -1068,11 +1050,14 @@
       document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
       document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
       document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
+      const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+      if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
 
       iniciarConexionChoferFirebase();
       iniciarSeguimientoGps();
       renderizarPedidos();
-      mostrarToast(`Bienvenido, ${choferActual.nombre}`, "Conectado", "success");
+      actualizarMarcadoresMapaPrincipal();
+      mostrarToast(`Bienvenido, ${choferActual.nombre} (${choferActual.vehiculo})`, "Conectado", "success");
     }
 
     function cerrarSesionChofer() {
@@ -1121,15 +1106,30 @@
       lucide.createIcons();
     }
 
+    function esPedidoCompatibleConChofer(p) {
+      if (!choferActual) return true;
+      const vehiculoChofer = (choferActual.vehiculo || 'Moto').toLowerCase();
+      const vehiculoReq = (p.vehiculoRequerido || '').toLowerCase();
+      const esChoferMoto = vehiculoChofer.includes('moto') || vehiculoChofer.includes('bici');
+
+      if (vehiculoReq === 'carro' && esChoferMoto) {
+        return false;
+      }
+      return true;
+    }
+
     function detectarNuevosPedidosYAlertar(nuevos) {
       if (!choferActual) return;
       const keys = Object.keys(nuevos);
-      const pendientes = keys.filter(k => nuevos[k].estado === 'pendiente');
+      const pendientes = keys.filter(k => {
+        const p = nuevos[k];
+        return p.estado === 'pendiente' && esPedidoCompatibleConChofer(p);
+      });
       if (pendientes.length > 0) {
         const masRecienteId = pendientes[pendientes.length - 1];
         if (ultimoPedidoVistoId && ultimoPedidoVistoId !== masRecienteId) {
           emitirAlertaSonoraNuevoPedido();
-          mostrarToast("¡Nueva carrera disponible!", "Pedidos Flash", "success");
+          mostrarToast("¡Nueva carrera disponible en Nirgua!", "Pedidos Flash", "success");
         }
         ultimoPedidoVistoId = masRecienteId;
       }
@@ -1178,7 +1178,7 @@
     }
 
     function contactarBaseAdminWhatsApp() {
-      const msg = encodeURIComponent(`Hola Central, saludo desde el terminal conductor.`);
+      const msg = encodeURIComponent(`Hola Central Nirgua, saludo desde el terminal conductor.`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msg}`, '_blank');
     }
 
@@ -1225,7 +1225,7 @@
 
       if (estaEnLinea) {
         if (txtRidery) txtRidery.innerText = "ESTÁS EN LÍNEA";
-        if (subRidery) subRidery.innerText = "GPS Activo • Buscando carreras";
+        if (subRidery) subRidery.innerText = "GPS Nirgua Activo • Monitoreo en vivo";
         if (beaconRidery) beaconRidery.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.35)]";
         if (iconoBeacon) iconoBeacon.className = "w-4 h-4 animate-pulse text-emerald-400";
         if (pingLuz) pingLuz.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping inline-block";
@@ -1247,6 +1247,104 @@
         if (bannerDesconectado) bannerDesconectado.classList.remove('hidden');
       }
       lucide.createIcons();
+    }
+
+    function iniciarSeguimientoGps() {
+      if (!navigator.geolocation) return;
+      if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
+
+      gpsWatchId = navigator.geolocation.watchPosition((pos) => {
+        choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+        actualizarBadgeGps('granted');
+        actualizarMarcadorChoferEnMapaPrincipal();
+
+        const ahora = Date.now();
+        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 10000)) {
+          ultimoEnvioGpsTimestamp = ahora;
+          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
+            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
+          });
+        }
+      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 5000 });
+    }
+
+    function actualizarMarcadorChoferEnMapaPrincipal() {
+      if (!mapaPrincipalInstance || !choferGpsPunto) return;
+      if (marcadorChoferPrincipalRef) {
+        marcadorChoferPrincipalRef.setLatLng(choferGpsPunto);
+      } else {
+        marcadorChoferPrincipalRef = L.marker(choferGpsPunto, {
+          icon: L.divIcon({
+            className: 'custom-pin-driver',
+            html: '<div class="pin-jewel-gps"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>',
+            iconSize: [32, 32], iconAnchor: [16, 16]
+          })
+        }).addTo(mapaPrincipalInstance).bindPopup("📍 Tu posición GPS en vivo");
+      }
+    }
+
+    function actualizarMarcadoresMapaPrincipal() {
+      if (!mapaPrincipalInstance) return;
+
+      marcadoresPedidosMapa.forEach(m => mapaPrincipalInstance.removeLayer(m));
+      marcadoresPedidosMapa = [];
+
+      Object.keys(todosLosPedidos).forEach(id => {
+        const p = todosLosPedidos[id];
+        if (!p) return;
+
+        if (!esPedidoCompatibleConChofer(p)) return;
+
+        const esPendiente = p.estado === 'pendiente';
+        const esActivoMio = choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_camino');
+
+        if (esPendiente || esActivoMio) {
+          const lat = p.lat ? parseFloat(p.lat) : (p.destinoLat ? parseFloat(p.destinoLat) : null);
+          const lng = p.lng ? parseFloat(p.lng) : (p.destinoLng ? parseFloat(p.destinoLng) : null);
+
+          if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+            const colorClass = esActivoMio ? 'pin-jewel-b' : 'pin-jewel-pedido';
+            const etiqueta = esActivoMio ? '🚗 En Curso' : '🛍️ Carrera Disponible';
+
+            const marcador = L.marker([lat, lng], {
+              icon: L.divIcon({
+                className: 'custom-pin-orden',
+                html: `<div class="${colorClass}"><i data-lucide="${p.tipoServicio === 'transporte' ? 'navigation-2' : 'shopping-bag'}" style="width:14px;height:14px;"></i></div>`,
+                iconSize: [28, 28], iconAnchor: [14, 14]
+              })
+            }).addTo(mapaPrincipalInstance);
+
+            marcador.bindPopup(`
+              <div class="p-1 font-sans text-xs">
+                <b class="text-blue-600 block">${etiqueta}</b>
+                <span class="text-slate-800 font-bold block">${p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente')}</span>
+                <button onclick="verMapaYDetalle('${id}')" class="mt-1.5 w-full bg-blue-600 text-white font-black py-1 px-2 rounded-lg text-[10px]">Ver Detalle / Tomar</button>
+              </div>
+            `);
+
+            marcador.on('click', () => {
+              lucide.createIcons();
+            });
+
+            marcadoresPedidosMapa.push(marcador);
+          }
+        }
+      });
+      lucide.createIcons();
+    }
+
+    function centrarGpsChoferEnMapa() {
+      if (choferGpsPunto) {
+        if (mapaPrincipalInstance) {
+          mapaPrincipalInstance.setView(choferGpsPunto, 16);
+          if (marcadorChoferPrincipalRef) marcadorChoferPrincipalRef.openPopup();
+        }
+        if (mapaInstance) {
+          mapaInstance.setView(choferGpsPunto, 16);
+          if (marcadorChoferGpsRef) marcadorChoferGpsRef.openPopup();
+        }
+        mostrarToast("Centrado en tu GPS satelital.", "GPS", "info");
+      }
     }
 
     function filtrarTab(tab) {
@@ -1271,19 +1369,19 @@
         b.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white";
       });
 
-      btnInicio.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Despacho</span>`;
-      btnPedidos.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">En Ruta</span>`;
-      btnHistorial.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Historial</span>`;
+      btnInicio.innerHTML = `<div class="w-8 h-8 rounded-full flex items-center justify-center"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Despacho</span>`;
+      btnPedidos.innerHTML = `<div class="w-8 h-8 rounded-full flex items-center justify-center"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">En Ruta</span>`;
+      btnHistorial.innerHTML = `<div class="w-8 h-8 rounded-full flex items-center justify-center"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Historial</span>`;
 
       if (tab === 'disponibles') {
         btnInicio.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
-        btnInicio.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center shadow-glow-solar"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">Despacho</span>`;
+        btnInicio.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.4)]"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-black text-cyan-300">Despacho</span>`;
       } else if (tab === 'mis-pedidos') {
         btnPedidos.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
-        btnPedidos.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-glow-blue"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">En Ruta</span>`;
+        btnPedidos.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center shadow-glow-solar"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-black text-amber-300">En Ruta</span>`;
       } else if (tab === 'historial') {
         btnHistorial.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
-        btnHistorial.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 flex items-center justify-center shadow-glow-emerald"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">Historial</span>`;
+        btnHistorial.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 flex items-center justify-center shadow-glow-emerald"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-black text-emerald-300">Historial</span>`;
       }
       lucide.createIcons();
     }
@@ -1297,6 +1395,10 @@
 
       keys.forEach(id => {
         const p = todosLosPedidos[id];
+        if (!p) return;
+
+        if (!esPedidoCompatibleConChofer(p)) return;
+
         if (p.estado === 'pendiente') cantDisponibles++;
         if (choferActual && p.choferTelefono === choferActual.telefono) {
           if (p.estado === 'aceptado' || p.estado === 'en_camino') cantActivos++;
@@ -1326,7 +1428,7 @@
                 </div>
               </div>
               <span class="text-[11px] font-black text-slate-950 bg-amber-400 px-3 py-1 rounded-xl shadow-md flex items-center gap-1 shrink-0">
-                <span>Llévala</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                <span>Ver Ruta</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </span>
             </div>
           `;
@@ -1339,6 +1441,10 @@
 
       const pedidosFiltrados = keys.filter(id => {
         const p = todosLosPedidos[id];
+        if (!p) return false;
+
+        if (!esPedidoCompatibleConChofer(p)) return false;
+
         if (tabActual === 'disponibles') return p.estado === 'pendiente';
         if (tabActual === 'mis-pedidos') return choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_camino');
         if (tabActual === 'historial') return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
@@ -1352,7 +1458,7 @@
               <i data-lucide="package-search" class="w-5 h-5"></i>
             </div>
             <h4 class="text-xs font-bold text-white tracking-tight">No hay carreras en esta categoría</h4>
-            <p class="text-[10px] text-slate-400 font-medium">Mantén tu turno activo para recibir nuevas carreras.</p>
+            <p class="text-[10px] text-slate-400 font-medium">Mantén tu turno en línea para recibir nuevas solicitudes en Nirgua.</p>
           </div>
         `;
         lucide.createIcons();
@@ -1365,17 +1471,15 @@
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
         const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
-        const monto = p.total || p.montoTotal || p.monto || 0;
-        const metodoPago = p.metodoPago || p.pago || 'Efectivo';
-        const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
-        const badgePago = esPagoMovil 
-          ? `<span class="bg-blue-500/15 text-blue-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-blue-400/30">Pago Móvil</span>`
-          : `<span class="bg-emerald-500/15 text-emerald-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-emerald-400/30">Efectivo</span>`;
-
         const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
+        
         const badgeTienda = tiendaNombre 
-          ? `<span class="bg-amber-500/15 text-amber-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-amber-400/30 flex items-center gap-1 truncate max-w-[130px]"><i data-lucide="store" class="w-3 h-3 shrink-0"></i> ${tiendaNombre}</span>`
-          : `<span class="bg-white/5 text-slate-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/10">Paquete Flash</span>`;
+          ? `<span class="bg-amber-500/15 text-amber-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1 truncate max-w-[130px]"><i data-lucide="store" class="w-3 h-3 shrink-0"></i> ${tiendaNombre}</span>`
+          : `<span class="bg-white/5 text-slate-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/10">${p.tipoServicio === 'transporte' ? '🚗 Transporte' : '🛍️ Delivery'}</span>`;
+
+        const badgeVehiculo = p.vehiculoRequerido && p.vehiculoRequerido !== 'Cualquiera'
+          ? `<span class="bg-indigo-500/20 text-indigo-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-indigo-400/30 uppercase">${p.vehiculoRequerido}</span>`
+          : '';
 
         if (p.estado === 'aceptado' || p.estado === 'en_camino') {
           contenedor.innerHTML += `
@@ -1384,8 +1488,9 @@
                 <div class="flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
                   <span class="text-[10px] font-mono font-black text-amber-300 uppercase tracking-wider">CARRERA EN CURSO</span>
+                  ${badgeVehiculo}
                 </div>
-                <span class="text-[10px] font-black font-mono text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40">+$0.70 por entrega</span>
+                <span class="text-[10px] font-black font-mono text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40">+$1.00 comisión</span>
               </div>
 
               <div>
@@ -1395,8 +1500,8 @@
                     <h3 class="text-sm font-black text-white truncate tracking-tight">${nombreCliente}</h3>
                   </div>
                   <div class="text-right shrink-0">
-                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">Cobro</span>
-                    <span class="text-sm font-black font-mono text-white tabular-nums">$${parseFloat(monto).toFixed(2)}</span>
+                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">Comisión</span>
+                    <span class="text-sm font-black font-mono text-emerald-400 tabular-nums">+$1.00</span>
                   </div>
                 </div>
 
@@ -1404,13 +1509,13 @@
                   ${tiendaNombre ? `
                     <div class="flex items-center gap-2 text-slate-300">
                       <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
-                      <span class="text-slate-400 font-medium">Retiro:</span>
+                      <span class="text-slate-400 font-medium">Comprar en Comercio:</span>
                       <span class="font-bold text-white truncate">${tiendaNombre}</span>
                     </div>
                   ` : ''}
                   <div class="flex items-center gap-2 text-slate-300">
                     <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
-                    <span class="text-amber-300 font-bold shrink-0">Llévala a:</span>
+                    <span class="text-amber-300 font-bold shrink-0">Llevar al Cliente:</span>
                     <span class="font-bold text-slate-100 truncate">${direccionCliente}</span>
                   </div>
                 </div>
@@ -1420,17 +1525,17 @@
                 ${p.estado === 'aceptado' ? `
                   <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
                     <i data-lucide="navigation-2" class="w-4 h-4 animate-bounce"></i>
-                    <span class="tracking-wide uppercase">¡LLÉVALA YA! (Iniciar Trayecto)</span>
+                    <span class="tracking-wide uppercase">¡IR A COMPRAR AL COMERCIO!</span>
                   </button>
                 ` : `
-                  <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
-                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                    <span class="tracking-wide uppercase">CONFIRMAR ENTREGA (Cobrar $0.70)</span>
+                  <button onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
+                    <i data-lucide="receipt" class="w-4 h-4"></i>
+                    <span class="tracking-wide uppercase">SUBIR FACTURA & ENTREGAR (+$1.00)</span>
                   </button>
                 `}
 
                 <div class="grid grid-cols-3 gap-1.5">
-                  <a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat || 10.1700},${p.lng || -68.2200}" target="_blank" class="btn-spring bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat || p.destinoLat || 10.1506},${p.lng || p.destinoLng || -68.5668}" target="_blank" class="btn-spring bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
                     <i data-lucide="navigation" class="w-3 h-3 fill-white"></i> Maps GPS
                   </a>
                   <button onclick="contactarClienteWhatsApp('${telefonoCliente}', '${nombreCliente}')" class="btn-spring bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-400/40 font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
@@ -1451,21 +1556,21 @@
             <div class="flex items-start justify-between gap-2">
               <div class="flex items-center gap-2.5 min-w-0 flex-1">
                 <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.25)]">
-                  <i data-lucide="${p.estado === 'entregado' ? 'check-circle-2' : 'box'}" class="w-4 h-4"></i>
+                  <i data-lucide="${p.estado === 'entregado' ? 'check-circle-2' : (p.tipoServicio === 'transporte' ? 'navigation-2' : 'box')}" class="w-4 h-4"></i>
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 mb-0.5">
                     <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-tight">${numOrden}</span>
-                    ${badgePago}
                     ${badgeTienda}
+                    ${badgeVehiculo}
                   </div>
                   <h3 class="text-xs font-black text-white truncate tracking-tight">${nombreCliente}</h3>
                 </div>
               </div>
               
               <div class="text-right shrink-0">
-                <span class="text-xs font-black font-mono text-white block leading-tight tabular-nums">$${parseFloat(monto).toFixed(2)}</span>
-                <span class="text-[9px] font-black font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40 tabular-nums shadow-[0_0_8px_rgba(16,185,129,0.25)]">+$0.70</span>
+                <span class="text-[9px] font-mono text-slate-400 block leading-none">Comisión</span>
+                <span class="text-xs font-black font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40 tabular-nums shadow-[0_0_8px_rgba(16,185,129,0.25)]">+$1.00</span>
               </div>
             </div>
 
@@ -1473,13 +1578,13 @@
               ${tiendaNombre ? `
                 <div class="flex items-center gap-2 text-slate-300">
                   <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
-                  <span class="text-slate-400 font-medium">Retiro:</span>
+                  <span class="text-slate-400 font-medium">Comprar:</span>
                   <span class="font-bold text-slate-200 truncate">${tiendaNombre}</span>
                 </div>
               ` : ''}
               <div class="flex items-center gap-2 text-slate-300">
                 <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
-                <span class="text-slate-400 font-medium">Entrega:</span>
+                <span class="text-slate-400 font-medium">Cliente:</span>
                 <span class="font-bold text-slate-200 truncate">${direccionCliente}</span>
               </div>
             </div>
@@ -1487,19 +1592,19 @@
             <div class="flex gap-2 pt-0.5">
               <button onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-1 border border-white/10 shadow-sm shrink-0">
                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i>
-                <span>Ruta</span>
+                <span>Ver Hoja</span>
               </button>
               
               ${p.estado === 'pendiente' ? `
                 <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring btn-pulso-activo flex-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-2.5 px-4 rounded-2xl text-xs shadow-glow-blue border border-white/20 whitespace-nowrap flex items-center justify-center gap-2">
-                  <span>TOMAR CARRERA (+$0.70)</span>
+                  <span>TOMAR CARRERA (+$1.00)</span>
                   <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
               ` : ''}
 
               ${p.estado === 'entregado' ? `
                 <div class="flex-1 py-2 text-center text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center gap-1">
-                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Entregada con éxito
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Entregada (+$1.00 acreditado)
                 </div>
               ` : ''}
             </div>
@@ -1516,26 +1621,45 @@
         return;
       }
       const pedido = todosLosPedidos[id];
+      if (!pedido) return;
 
-      db.ref(`pedidos/${id}`).update({
+      const datosUpdate = {
         estado: nuevoEstado,
         chofer: choferActual.nombre,
         choferTelefono: choferActual.telefono,
         gananciaChofer: TARIFA_CHOFER,
         fechaActualizacion: new Date().toISOString()
-      }).then(() => {
+      };
+
+      if (nuevoEstado === 'entregado' && pedido.tipoServicio !== 'transporte') {
+        const inputMonto = document.getElementById('input-monto-factura');
+        if (inputMonto && inputMonto.value) {
+          datosUpdate.montoGastoChofer = parseFloat(inputMonto.value) || 0;
+        }
+        if (fotoFacturaBase64) {
+          datosUpdate.fotoFacturaReembolsoUrl = fotoFacturaBase64;
+        }
+      }
+
+      db.ref(`pedidos/${id}`).update(datosUpdate).then(() => {
         cerrarModalMapa();
         if (nuevoEstado === 'aceptado') {
-          mostrarToast("¡Orden aceptada! Pasa a 'En Ruta'.", "Aceptado", "success");
+          mostrarToast("¡Carrera aceptada! Pasa a la pestaña 'En Ruta'.", "Aceptado", "success");
         } else if (nuevoEstado === 'en_camino') {
-          mostrarToast("Iniciando despacho. Notificando al cliente...", "En Camino", "info");
+          mostrarToast("Dirigiéndote al comercio a comprar...", "En Camino", "info");
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
-            const mensaje = encodeURIComponent(`🛵 *¡Tu pedido va en camino!* Te saluda ${choferActual.nombre}.`);
+            const mensaje = encodeURIComponent(`🛵 *¡Tu pedido va en camino!* Te saluda ${choferActual.nombre} de Pedidos Flash Nirgua.`);
             window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${mensaje}`, '_blank');
           }
         } else if (nuevoEstado === 'entregado') {
-          mostrarToast("¡Entrega finalizada! +$0.70 acreditado.", "Completado", "success");
+          mostrarToast("¡Entrega finalizada con éxito! +$1.00 acreditado a tu balance.", "Completado", "success");
+          
+          const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
+          if (telefonoCliente) {
+            let msjFinal = `🛵 *Pedidos Flash Nirgua*\n¡Hola *${pedido.cliente ? (pedido.cliente.nombre || pedido.cliente) : (pedido.nombre || 'Cliente')}*! Tu orden ha sido entregada por *${choferActual.nombre}*.\n\n¡Gracias por elegirnos! ⭐`;
+            window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${encodeURIComponent(msjFinal)}`, '_blank');
+          }
         }
       });
     }
@@ -1545,7 +1669,7 @@
         mostrarToast("No hay número telefónico registrado.", "Aviso", "error");
         return;
       }
-      const mensaje = encodeURIComponent(`🛵 *Pedidos Flash*\nHola *${nombreCliente}*, te saluda *${choferActual.nombre}* con respecto a tu orden.`);
+      const mensaje = encodeURIComponent(`🛵 *Pedidos Flash Nirgua*\nHola *${nombreCliente}*, te saluda *${choferActual.nombre}* con respecto a tu orden en curso.`);
       window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${mensaje}`, '_blank');
     }
 
@@ -1573,53 +1697,85 @@
         });
       }
 
-      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE RETIRO* 💸\n👤 Chofer: ${choferActual.nombre}\n💰 Monto: $${totalGananciasAcumuladas.toFixed(2)}\n🏦 Método: ${metodo}\n📄 Datos: ${datos}`);
+      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE PAGO MÓVIL (GANANCIAS CHOFER)* 💸\n👤 Chofer: ${choferActual.nombre}\n📱 Teléfono: ${choferActual.telefono}\n💰 Monto Comisión: $${totalGananciasAcumuladas.toFixed(2)}\n🏦 Datos Pago Móvil: ${datos}`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
       cerrarModalRetiro();
-      mostrarToast("Solicitud enviada a la Administración.", "Retiro", "success");
+      mostrarToast("Solicitud de Pago Móvil enviada a Administración.", "Retiro", "success");
     }
 
-    function centrarGpsChoferEnMapaModal() {
-      if (mapaModalInstance && choferGpsPunto) {
-        mapaModalInstance.setView(choferGpsPunto, 16);
-        if (marcadorChoferModalRef) marcadorChoferModalRef.openPopup();
+    function capturarFotoFactura(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        fotoFacturaBase64 = e.target.result;
+        const img = document.getElementById('img-preview-factura');
+        img.src = fotoFacturaBase64;
+        document.getElementById('caja-preview-factura').classList.remove('hidden');
+        document.getElementById('btn-txt-foto-factura').innerText = "Cambiar Foto de Factura";
+        mostrarToast("Foto de la factura cargada correctamente.", "Factura", "success");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function eliminarFotoFactura() {
+      fotoFacturaBase64 = null;
+      document.getElementById('input-foto-factura').value = "";
+      document.getElementById('caja-preview-factura').classList.add('hidden');
+      document.getElementById('btn-txt-foto-factura').innerText = "Tomar o Subir Foto de Factura";
+    }
+
+    function guardarDatosFacturaEnFirebase() {
+      if (!pedidoActivoModalId) return;
+      const inputMonto = document.getElementById('input-monto-factura');
+      const montoGasto = parseFloat(inputMonto.value) || 0;
+
+      const updates = {
+        montoGastoChofer: montoGasto
+      };
+      if (fotoFacturaBase64) {
+        updates.fotoFacturaReembolsoUrl = fotoFacturaBase64;
       }
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates).then(() => {
+        mostrarToast("Gasto y factura guardados para reembolso administrativo.", "Guardado", "success");
+      });
+    }
+
+    function enviarReembolsoWhatsAppAdmin() {
+      const inputMonto = document.getElementById('input-monto-factura');
+      const montoGasto = parseFloat(inputMonto.value) || 0;
+      if (montoGasto <= 0) {
+        mostrarToast("Ingresa el monto gastado en la tienda primero.", "Atención", "error");
+        return;
+      }
+
+      const numOrden = document.getElementById('modal-num-orden').innerText;
+      const nombreCliente = document.getElementById('mapa-nombre-cliente').innerText;
+      const tiendaNombre = document.getElementById('mapa-txt-tienda').innerText || 'Comercio';
+
+      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE REEMBOLSO - PEDIDOS FLASH* 💸\n👤 Chofer: ${choferActual ? choferActual.nombre : 'Conductor'}\n📱 Teléfono: ${choferActual ? choferActual.telefono : ''}\n📦 Orden: ${numOrden}\n🏪 Comercio: ${tiendaNombre}\n🛍️ Cliente: ${nombreCliente}\n💰 *Monto a reembolsar (Factura): $${montoGasto.toFixed(2)}*\n\n_Por favor realizar transferencia o pago móvil._`);
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
+      mostrarToast("Abriendo WhatsApp con la administración...", "WhatsApp", "success");
     }
 
     function verMapaYDetalle(id) {
       const p = todosLosPedidos[id];
       if (!p) return;
+      pedidoActivoModalId = id;
 
       const numOrden = p.orden || `#PF-${id.substring(id.length - 4)}`;
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
       const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
-      const monto = p.total || p.montoTotal || p.monto || 0;
-      const metodoPago = p.metodoPago || p.pago || 'Efectivo';
-      const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
 
       document.getElementById('modal-num-orden').innerText = numOrden;
       document.getElementById('mapa-nombre-cliente').innerText = nombreCliente;
       document.getElementById('mapa-direccion-cliente').innerText = direccionCliente;
-      document.getElementById('mapa-total-cobrar').innerText = `$${parseFloat(monto).toFixed(2)}`;
 
       document.getElementById('mapa-btn-llamar').href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
       document.getElementById('mapa-btn-wa').onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
-
-      const elMetodo = document.getElementById('mapa-metodo-pago');
-      elMetodo.innerText = esPagoMovil ? 'Pago Móvil' : 'Efectivo';
-      elMetodo.className = esPagoMovil ? 'font-bold text-blue-400 font-mono' : 'font-bold text-emerald-400 font-mono';
-
-      const cajaDetallePago = document.getElementById('caja-detalle-pago-cliente');
-      if (esPagoMovil && p.referenciaPago) {
-        cajaDetallePago.innerText = `Referencia Pago Móvil: ${p.referenciaPago}`;
-        cajaDetallePago.classList.remove('hidden');
-      } else if (!esPagoMovil && p.pagaCon) {
-        cajaDetallePago.innerText = `Paga con: ${p.pagaCon}`;
-        cajaDetallePago.classList.remove('hidden');
-      } else {
-        cajaDetallePago.classList.add('hidden');
-      }
 
       const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
       const alertaTienda = document.getElementById('mapa-alerta-comercio');
@@ -1630,27 +1786,55 @@
         alertaTienda.classList.add('hidden');
       }
 
+      // LISTA DE ARTÍCULOS SIN PRECIOS (SOLO CANTIDAD Y NOMBRE)
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
       if (p.items && Array.isArray(p.items)) {
         p.items.forEach(it => {
-          listaItems.innerHTML += `<div class="flex justify-between items-center py-0.5"><span class="truncate pr-2">• ${it.cantidad || 1}x ${it.nombre}</span><span class="font-bold text-white shrink-0 font-mono">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span></div>`;
+          listaItems.innerHTML += `
+            <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+              <span class="text-xs font-semibold text-slate-100 flex items-center gap-2">
+                <span class="bg-blue-500/20 text-blue-300 font-bold px-2 py-0.5 rounded text-[10px] font-mono">${it.cantidad || 1}x</span>
+                ${it.nombre}
+              </span>
+              <span class="text-[9px] font-mono text-amber-300/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Comprar en tienda</span>
+            </div>
+          `;
         });
       } else {
-        listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de traslado directo.</p>`;
+        listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de transporte o encomienda.</p>`;
       }
 
-      origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : choferGpsPunto[0], p.origenLng ? parseFloat(p.origenLng) : choferGpsPunto[1]];
-      destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : choferGpsPunto[0] + 0.01, p.lng ? parseFloat(p.lng) : choferGpsPunto[1] + 0.01];
+      const secFactura = document.getElementById('seccion-factura-tienda');
+      if (p.tipoServicio !== 'transporte') {
+        secFactura.classList.remove('hidden');
+        const inputMonto = document.getElementById('input-monto-factura');
+        inputMonto.value = p.montoGastoChofer || "";
+
+        if (p.fotoFacturaReembolsoUrl) {
+          fotoFacturaBase64 = p.fotoFacturaReembolsoUrl;
+          document.getElementById('img-preview-factura').src = p.fotoFacturaReembolsoUrl;
+          document.getElementById('caja-preview-factura').classList.remove('hidden');
+          document.getElementById('btn-txt-foto-factura').innerText = "Cambiar Foto de Factura";
+        } else {
+          eliminarFotoFactura();
+        }
+      } else {
+        secFactura.classList.add('hidden');
+      }
+
+      origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : 10.1506, p.origenLng ? parseFloat(p.origenLng) : -68.5668];
+      destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : (p.destinoLat ? parseFloat(p.destinoLat) : 10.1506), p.lng ? parseFloat(p.lng) : (p.destinoLng ? parseFloat(p.destinoLng) : -68.5668)];
+      
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2"><span>Aceptar carrera (+$0.70)</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2"><span>Aceptar carrera (+$1.00)</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>`;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto</span></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto al Comercio</span></button>`;
       } else if (p.estado === 'en_camino') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega</span></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega (Cobrar Comisión $1.00)</span></button>`;
       } else {
         contAccion.innerHTML = `<div class="text-center text-xs text-emerald-400 font-extrabold font-mono py-2.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex items-center justify-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Entregado con éxito</div>`;
       }
@@ -1658,48 +1842,49 @@
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
 
       setTimeout(() => {
-        if (!mapaModalInstance) {
-          mapaModalInstance = L.map('mapa-cliente', { zoomControl: true, attributionControl: false }).setView(destinoPuntoMapa, 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaModalInstance);
+        if (!mapaInstance) {
+          mapaInstance = L.map('mapa-cliente', { zoomControl: true, attributionControl: false }).setView(destinoPuntoMapa, 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaInstance);
         } else {
-          mapaModalInstance.invalidateSize();
+          mapaInstance.invalidateSize();
         }
 
-        if (marcadorOrigRef) mapaModalInstance.removeLayer(marcadorOrigRef);
-        if (marcadorDestRef) mapaModalInstance.removeLayer(marcadorDestRef);
-        if (marcadorChoferModalRef) mapaModalInstance.removeLayer(marcadorChoferModalRef);
+        if (marcadorOrigRef) mapaInstance.removeLayer(marcadorOrigRef);
+        if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
+        if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
-        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup(tiendaNombre ? `Retiro: ${tiendaNombre}` : 'Salida');
-        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup('Entrega').openPopup();
+        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Comprar en: ${tiendaNombre}` : 'Salida');
+        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`📍 Cliente: ${direccionCliente}`).openPopup();
 
         if (choferGpsPunto) {
-          marcadorChoferModalRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup('Tu GPS');
+          marcadorChoferGpsRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Tu GPS');
         }
 
-        mapaModalInstance.invalidateSize();
+        mapaInstance.invalidateSize();
         calcularRutaOSRMChofer();
       }, 200);
       lucide.createIcons();
     }
 
     function calcularRutaOSRMChofer() {
-      if (!mapaModalInstance) return;
-      if (lineaTrayectoModal) mapaModalInstance.removeLayer(lineaTrayectoModal);
+      if (!mapaInstance) return;
+      if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
       fetch(`https://router.project-osrm.org/route/v1/driving/${origenPuntoMapa[1]},${origenPuntoMapa[0]};${destinoPuntoMapa[1]},${destinoPuntoMapa[0]}?overview=full&geometries=geojson`)
         .then(res => res.json())
         .then(data => {
           if (data.routes && data.routes.length > 0) {
             const latLngs = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-            lineaTrayectoModal = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaModalInstance);
-            mapaModalInstance.fitBounds(lineaTrayectoModal.getBounds(), { padding: [35, 35] });
+            lineaTrayecto = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaInstance);
+            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
           } else {
-            lineaTrayectoModal = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#3b82f6', weight: 4, dashArray: '5, 5' }).addTo(mapaModalInstance);
+            lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#3b82f6', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
           }
         }).catch(() => {});
     }
 
     function cerrarModalMapa() {
       document.getElementById('modal-detalle-pedido').classList.add('hidden');
+      pedidoActivoModalId = null;
     }
 
     let toastTimeout = null;
