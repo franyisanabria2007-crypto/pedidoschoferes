@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" class="h-full bg-[#05070c]">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#030712">
-  <title>Pedidos Flash - App Choferes Nirgua</title>
+  <meta name="theme-color" content="#05070c">
+  <title>Pedidos Flash — Driver Terminal</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,29 +15,51 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Leaflet CSS y JS (Mapas 100% Libres y Gratuitos) -->
+  <!-- Leaflet CSS y JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          fontFamily: { 
+            sans: ['"Outfit"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
           colors: {
-            brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
-            accent: { magenta: '#ff007a', cyan: '#00f2fe', orange: '#ff5e00', yellow: '#ffb800', emerald: '#00e676' }
+            midnight: '#05070c',
+            obsidian: '#0b0f19',
+            surface: '#111726',
+            electric: {
+              blue: '#3b82f6',
+              cobalt: '#2563eb',
+              indigo: '#4f46e5'
+            },
+            solar: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#ea580c'
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669'
+            }
           },
           boxShadow: {
-            'glow-cyan': '0 0 25px rgba(0, 242, 254, 0.45)',
-            'glow-emerald': '0 0 25px rgba(0, 230, 118, 0.45)',
-            'glow-magenta': '0 0 25px rgba(255, 0, 122, 0.45)',
-            'glow-yellow': '0 0 25px rgba(255, 184, 0, 0.45)',
+            'specular': 'inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 20px 40px -15px rgba(0, 0, 0, 0.7)',
+            'card-luxury': 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 14px 34px -8px rgba(0, 0, 0, 0.65)',
+            'glow-blue': '0 0 25px -4px rgba(37, 99, 235, 0.45)',
+            'glow-solar': '0 0 25px -4px rgba(245, 158, 11, 0.45)',
+            'glow-emerald': '0 0 25px -4px rgba(16, 185, 129, 0.45)',
+            'dock-floating': '0 20px 45px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12)'
           }
         }
       }
@@ -46,160 +68,204 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-    
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.15); opacity: 0.3; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-    .anim-pulse-ring { animation: pulse-ring 2s infinite ease-in-out; }
-    
-    .btn-tactil { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
-    .btn-tactil:active { transform: scale(0.96); filter: brightness(0.92); }
+    * { -webkit-tap-highlight-color: transparent; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
 
-    .safe-top { padding-top: max(env(safe-area-inset-top, 0px), 8px); }
-    .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px); }
+    .btn-spring { 
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s ease, background-color 0.2s ease;
+      will-change: transform;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .btn-spring:hover { transform: translateY(-2px) scale(1.02); }
+    .btn-spring:active { transform: translateY(2px) scale(0.93) !important; filter: brightness(0.9); }
+
+    @keyframes pulsoBotonAccion {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+      50% { transform: scale(1.02); box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.35); }
+    }
+    .btn-pulso-activo { animation: pulsoBotonAccion 2.2s infinite ease-in-out; }
+
+    @keyframes pulsoSolarAccion {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+      50% { transform: scale(1.02); box-shadow: 0 0 20px 4px rgba(245, 158, 11, 0.4); }
+    }
+    .btn-pulso-solar { animation: pulsoSolarAccion 2s infinite ease-in-out; }
+
+    .sheet-spring { animation: sheetIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes sheetIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .safe-top { padding-top: max(env(safe-area-inset-top, 0px), 12px); }
+    .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px); }
+
+    .pin-jewel-a {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.6), 0 4px 10px rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pin-jewel-b {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 4px 10px rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pin-jewel-gps {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #34d399, #059669);
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.35), 0 0 20px rgba(16, 185, 129, 0.6);
+      display: flex; align-items: center; justify-content: center;
+      color: #ffffff;
+    }
   </style>
 </head>
-<body class="bg-slate-950 font-sans text-slate-100 antialiased min-h-[100dvh] flex items-center justify-center p-0 sm:p-4 selection:bg-accent-emerald selection:text-slate-950 overflow-x-hidden">
+<body class="bg-[#05070c] font-sans text-slate-100 antialiased min-h-[100dvh] flex items-center justify-center p-0 sm:p-4 selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
 
-  <!-- TOAST NOTIFICACIÓN FLOTANTE -->
-  <div id="toast-notificacion" class="fixed top-4 left-1/2 -translate-x-1/2 z-[120] transition-all duration-300 opacity-0 pointer-events-none -translate-y-4 max-w-xs w-[90%] px-2">
-    <div class="bg-slate-900/95 border border-emerald-500/50 backdrop-blur-2xl shadow-2xl rounded-2xl p-3 flex items-center gap-3">
-      <div id="toast-icono-bg" class="w-8 h-8 rounded-xl bg-accent-emerald/20 text-accent-emerald flex items-center justify-center shrink-0">
+  <!-- RESPLANDOR AMBIENTAL -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[500px] h-[350px] bg-gradient-to-b from-blue-600/15 via-indigo-600/5 to-transparent blur-3xl pointer-events-none z-0"></div>
+  <div class="fixed bottom-0 right-1/4 w-[350px] h-[300px] bg-gradient-to-t from-emerald-500/10 to-transparent blur-3xl pointer-events-none z-0"></div>
+
+  <!-- TOAST FLOTANTE -->
+  <div id="toast-notificacion" class="fixed top-5 inset-x-0 mx-auto z-[130] transition-all duration-300 opacity-0 pointer-events-none -translate-y-3 max-w-sm w-[92%] px-2">
+    <div class="bg-[#0c111e]/95 backdrop-blur-2xl text-white shadow-specular rounded-2xl p-3.5 flex items-center gap-3.5 border border-white/10">
+      <div id="toast-icono-bg" class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 border border-blue-400/30 shadow-[0_0_12px_rgba(59,130,246,0.3)]">
         <i id="toast-icono" data-lucide="bell" class="w-4 h-4"></i>
       </div>
       <div class="flex-1 min-w-0">
-        <p id="toast-titulo" class="text-xs font-black text-white">Pedidos Flash</p>
-        <p id="toast-mensaje" class="text-[11px] font-semibold text-slate-300 truncate">Nueva notificación</p>
+        <p id="toast-titulo" class="text-xs font-bold text-white tracking-tight">Pedidos Flash</p>
+        <p id="toast-mensaje" class="text-[11px] font-medium text-slate-300 truncate">Notificación del sistema</p>
       </div>
     </div>
   </div>
 
-  <!-- PANTALLA PRINCIPAL DE AUTENTICACIÓN (LOGIN / REGISTRO / CÓDIGO ADMIN) -->
-  <div id="pantalla-auth" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-2xl my-auto">
+  <!-- PANTALLA DE ACCESO (LOGIN / REGISTRO) -->
+  <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-[#0c111e]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-specular my-auto sheet-spring relative overflow-hidden">
       
-      <!-- LOGO Y PRESENTACIÓN -->
-      <div class="text-center space-y-1.5">
-        <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-accent-cyan text-slate-950 border-2 border-white/20 rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-glow-cyan">
-          🛵
+      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 bg-blue-500/20 blur-2xl pointer-events-none"></div>
+
+      <div class="text-center space-y-1.5 pt-1 relative z-10">
+        <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl flex items-center justify-center mx-auto shadow-glow-blue border border-white/20 mb-2">
+          <i data-lucide="navigation" class="w-7 h-7 fill-white"></i>
         </div>
-        <h2 class="text-xl font-black text-white tracking-tight">PEDIDOS FLASH</h2>
-        <p class="text-xs text-slate-400">Panel Oficial de Choferes • Nirgua</p>
+        <h2 class="text-xl font-extrabold text-white tracking-tight">Pedidos Flash</h2>
+        <p class="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 uppercase tracking-wider font-mono">Terminal de Conductor • Nirgua</p>
       </div>
 
-      <!-- PESTAÑAS: INICIAR SESIÓN / REGISTRARSE -->
-      <div id="auth-pestanas-nav" class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-        <button onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition">
-          Iniciar Sesión
+      <div id="auth-pestanas-nav" class="grid grid-cols-2 gap-1 bg-[#141b2d]/80 p-1.5 rounded-2xl border border-white/5 relative z-10">
+        <button onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md">
+          Iniciar sesión
         </button>
-        <button onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+        <button onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
           Registrarse
         </button>
       </div>
 
-      <!-- FORMULARIO 1: INICIAR SESIÓN -->
-      <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3 pt-1">
+      <!-- FORMULARIO LOGIN -->
+      <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3 pt-1 relative z-10">
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teléfono registrado (WhatsApp):</label>
-          <input type="tel" id="login-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
-          <p class="text-[10px] text-slate-400 mt-1">Ingresa el teléfono con el que te registraste para entrar.</p>
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono registrado (WhatsApp)</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </span>
+            <input type="tel" id="login-telefono" required placeholder="04262566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl pl-10 pr-3 py-3 text-xs font-mono font-medium text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Ingresa el teléfono asignado para entrar a tu turno.</p>
         </div>
 
-        <button type="submit" id="btn-submit-login" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-brand-600 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-cyan border-t border-white/30 flex items-center justify-center gap-1.5 mt-2">
-          <span>Ingresar a mi Cuenta</span>
+        <button type="submit" id="btn-submit-login" class="btn-spring w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2 mt-2">
+          <span>Ingresar al turno</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </form>
 
-      <!-- FORMULARIO 2: REGISTRARSE -->
-      <form id="form-registro" onsubmit="ejecutarRegistro(event)" class="space-y-3 pt-1 hidden">
+      <!-- FORMULARIO REGISTRO -->
+      <form id="form-registro" onsubmit="ejecutarRegistro(event)" class="space-y-3 pt-1 hidden relative z-10">
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Nombre Completo:</label>
-          <input type="text" id="reg-nombre" required placeholder="Ej: Carlos Pérez" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nombre completo</label>
+          <input type="text" id="reg-nombre" required placeholder="Carlos Pérez" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
         
         <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1">Teléfono (WhatsApp activo):</label>
-          <input type="tel" id="reg-telefono" required placeholder="Ej: 04262566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono activo</label>
+          <input type="tel" id="reg-telefono" required placeholder="04262566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1">Vehículo:</label>
-            <select id="reg-vehiculo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-accent-cyan">
-              <option value="Moto">🛵 Moto</option>
-              <option value="Carro">🚗 Carro</option>
-              <option value="Bicicleta">🚲 Bici</option>
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tipo de Unidad</label>
+            <select id="reg-vehiculo" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-2.5 text-xs font-medium text-white focus:outline-none focus:border-blue-500">
+              <option value="Moto">Motocicleta</option>
+              <option value="Carro">Vehículo / Auto</option>
+              <option value="Bicicleta">Bicicleta</option>
             </select>
           </div>
           <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1">Placa / Color:</label>
-            <input type="text" id="reg-placa" placeholder="Ej: AA1B22 / Roja" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-cyan">
+            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Placa / Color</label>
+            <input type="text" id="reg-placa" placeholder="AA1B22 / Roja" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
           </div>
         </div>
 
-        <!-- PERMISOS DE PRIVACIDAD Y TÉRMINOS OBLIGATORIOS (BLINDAJE LEGAL) -->
-        <div class="bg-slate-950 p-3 rounded-2xl border border-indigo-500/30 space-y-2 pt-2.5">
-          <div class="flex items-start gap-2">
-            <input type="checkbox" id="reg-privacidad" required class="w-4 h-4 mt-0.5 accent-indigo-600 rounded cursor-pointer shrink-0">
-            <label for="reg-privacidad" class="cursor-pointer text-[10px] text-slate-300 leading-tight">
-              Otorgo mi <strong>consentimiento expreso</strong> para el uso de mi <button type="button" onclick="abrirModalPrivacidad(event)" class="text-accent-cyan font-bold underline">Ubicación GPS</button>, acepto la <button type="button" onclick="abrirModalPrivacidad(event)" class="text-accent-emerald font-bold underline">Política de Privacidad</button> y declaro operar como chofer independiente bajo mi propia responsabilidad vial.
-            </label>
-          </div>
+        <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1.5">
+          <label class="flex items-start gap-2 cursor-pointer">
+            <input type="checkbox" id="reg-privacidad" required class="w-4 h-4 mt-0.5 accent-blue-600 rounded cursor-pointer shrink-0">
+            <span class="text-[10px] text-slate-300 leading-snug">
+              Acepto los <button type="button" onclick="abrirModalPrivacidad(event)" class="text-blue-400 font-bold underline">términos legales</button> y autorizo la geolocalización satelital en tiempo real.
+            </span>
+          </label>
         </div>
 
-        <button type="submit" id="btn-submit-reg" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs transition shadow-glow-emerald border-t border-white/30 flex items-center justify-center gap-1.5 mt-2">
-          <span>Crear Cuenta y Solicitar Código</span>
+        <button type="submit" id="btn-submit-reg" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/20 flex items-center justify-center gap-2 mt-2">
+          <span>Crear cuenta y solicitar código</span>
           <i data-lucide="check" class="w-4 h-4"></i>
         </button>
       </form>
 
-      <!-- VISTA 3: VALIDACIÓN DE CÓDIGO DE ACEPTACIÓN DEL ADMINISTRADOR -->
-      <div id="vista-verificacion-codigo" class="space-y-4 pt-1 hidden">
-        <div class="bg-amber-950/30 border border-amber-500/40 p-3.5 rounded-2xl text-center space-y-2">
-          <div class="w-10 h-10 rounded-full bg-accent-yellow/20 text-accent-yellow mx-auto flex items-center justify-center">
-            <i data-lucide="lock" class="w-5 h-5"></i>
+      <!-- VERIFICACIÓN DE CÓDIGO -->
+      <div id="vista-verificacion-codigo" class="space-y-4 pt-1 hidden relative z-10">
+        <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl text-center space-y-1.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
           </div>
-          <div>
-            <h3 class="text-xs font-black text-amber-300">AUTORIZACIÓN REQUERIDA</h3>
-            <p id="txt-chofer-pendiente-nombre" class="text-[11px] font-bold text-white mt-0.5">Hola Chofer</p>
-            <p class="text-[10px] text-slate-300 mt-1">Tu cuenta está registrada pero requiere el código de aceptación emitido por el administrador.</p>
-          </div>
+          <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono">Autorización Requerida</h3>
+          <p id="txt-chofer-pendiente-nombre" class="text-xs font-bold text-white">Hola Chofer</p>
+          <p class="text-[10px] text-slate-400">Introduce el código suministrado por administración para ingresar.</p>
         </div>
 
-        <div class="space-y-2">
-          <label class="block text-[11px] font-bold text-slate-300">Código de Aceptación (del Panel Admin):</label>
-          <input type="text" id="input-codigo-verificacion" placeholder="Ej: 849201" maxlength="10" class="w-full bg-slate-950 border-2 border-indigo-500/50 rounded-xl p-3 text-center text-lg font-black tracking-widest text-accent-cyan focus:outline-none focus:border-accent-cyan font-mono uppercase">
-          <p class="text-[10px] text-slate-400 text-center">Introduce el código de 6 dígitos que te suministró el administrador.</p>
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-300 mb-1">Código de activación</label>
+          <input type="text" id="input-codigo-verificacion" placeholder="000000" maxlength="10" class="w-full bg-[#141b2d] border-2 border-white/10 rounded-2xl p-3 text-center text-xl font-mono font-black tracking-widest text-emerald-400 focus:outline-none focus:border-blue-500 uppercase">
         </div>
 
-        <button onclick="validarCodigoAceptacion()" id="btn-validar-codigo" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan to-indigo-600 text-white font-black py-3 rounded-2xl text-xs shadow-glow-cyan flex items-center justify-center gap-2">
+        <button onclick="validarCodigoAceptacion()" id="btn-validar-codigo" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
           <i data-lucide="key" class="w-4 h-4"></i>
-          <span>Activar y Entrar al Sistema</span>
+          <span>Activar e iniciar turno</span>
         </button>
 
-        <button onclick="solicitarCodigoWhatsAppAdmin()" class="btn-tactil w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-accent-emerald border border-emerald-500/40 font-bold py-2.5 rounded-2xl text-[11px] flex items-center justify-center gap-2">
-          <i data-lucide="message-circle" class="w-4 h-4"></i>
-          <span>Pedir Código al Admin por WhatsApp 📲</span>
+        <button onclick="solicitarCodigoWhatsAppAdmin()" class="btn-spring w-full bg-[#141b2d] hover:bg-[#1a233a] text-slate-200 border border-white/10 font-bold py-2.5 rounded-2xl text-[11px] flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
+          <span>Pedir código por WhatsApp</span>
         </button>
-
-        <div class="flex items-center justify-center gap-2 text-[10px] text-slate-500 pt-1">
-          <span class="w-2 h-2 rounded-full bg-accent-yellow animate-ping"></span>
-          <span>Esperando aprobación en tiempo real...</span>
-        </div>
 
         <button onclick="volverDesdeVerificacion()" class="w-full text-center text-[10px] text-slate-400 hover:text-white underline pt-1">
-          Volver / Iniciar con otro número
+          Volver a iniciar con otro número
         </button>
       </div>
 
-      <!-- ENLACE AL AVISO DE PRIVACIDAD EN EL PIE -->
-      <div class="pt-2 text-center border-t border-slate-800/80">
-        <button type="button" onclick="abrirModalPrivacidad(event)" class="text-[10px] text-slate-500 hover:text-indigo-400 transition flex items-center justify-center gap-1 mx-auto font-medium">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+      <div class="pt-2 text-center border-t border-white/5 relative z-10">
+        <button type="button" onclick="abrirModalPrivacidad(event)" class="text-[10px] text-slate-400 hover:text-white transition flex items-center justify-center gap-1 mx-auto font-medium">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-blue-400"></i>
           <span>Permisos de Privacidad y Términos Legales</span>
         </button>
       </div>
@@ -207,79 +273,56 @@
     </div>
   </div>
 
-  <!-- MODAL DE PERMISOS, PRIVACIDAD Y CONDICIONES LEGALES (PROTECCIÓN CONTRA MULTAS Y RECLAMOS) -->
-  <div id="modal-privacidad" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[110] flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-slate-900 border-2 border-indigo-500/40 w-full max-w-lg rounded-3xl p-5 space-y-4 shadow-2xl max-h-[90vh] flex flex-col">
+  <!-- MODAL DE PRIVACIDAD -->
+  <div id="modal-privacidad" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[110] flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-[#0c111e]/95 border border-white/10 w-full max-w-lg rounded-[32px] p-5 space-y-4 shadow-specular max-h-[90vh] flex flex-col sheet-spring">
       
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3 shrink-0">
+      <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
         <div class="flex items-center gap-2.5">
-          <div class="p-2 bg-indigo-500/20 text-accent-cyan rounded-xl border border-indigo-500/30">
-            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-400/30">
+            <i data-lucide="shield" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-sm font-black text-white">Permisos de Privacidad y Términos</h3>
-            <p class="text-[10px] text-slate-400">Pedidos Flash Nirgua • Cumplimiento Normativo</p>
+            <h3 class="text-sm font-bold text-white tracking-tight">Condiciones de Servicio y Telemetría</h3>
+            <p class="text-[10px] text-slate-400 font-mono">Pedidos Flash Nirgua • Cumplimiento Normativo</p>
           </div>
         </div>
-        <button onclick="cerrarModalPrivacidad()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+        <button onclick="cerrarModalPrivacidad()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- GESTOR RÁPIDO DE PERMISOS DEL DISPOSITIVO -->
-      <div class="bg-slate-950 p-3 rounded-2xl border border-cyan-500/30 space-y-2 shrink-0">
-        <p class="text-[10px] font-black uppercase text-accent-cyan tracking-wider">Permisos Técnicos del Dispositivo:</p>
+      <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-2 shrink-0">
+        <p class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Permisos del terminal:</p>
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="solicitarPermisoGpsManual()" id="btn-permiso-gps" class="btn-tactil bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-accent-cyan"></i>
+          <button type="button" onclick="solicitarPermisoGpsManual()" id="btn-permiso-gps" class="btn-spring bg-[#0c111e] border border-white/10 p-2.5 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i>
             <span id="txt-estado-permiso-gps">Activar GPS</span>
           </button>
-          <button type="button" onclick="solicitarPermisoNotificacionesManual()" id="btn-permiso-notif" class="btn-tactil bg-slate-900 hover:bg-slate-800 border border-slate-700 p-2 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5">
-            <i data-lucide="bell" class="w-3.5 h-3.5 text-accent-yellow"></i>
+          <button type="button" onclick="solicitarPermisoNotificacionesManual()" id="btn-permiso-notif" class="btn-spring bg-[#0c111e] border border-white/10 p-2.5 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="bell" class="w-3.5 h-3.5 text-amber-400"></i>
             <span id="txt-estado-permiso-notif">Activar Alertas</span>
           </button>
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto pr-2 space-y-3 text-[11px] text-slate-300 leading-relaxed font-normal">
-        <div class="bg-slate-950 p-3 rounded-2xl border border-indigo-500/30 space-y-1">
-          <h4 class="font-black text-accent-cyan flex items-center gap-1.5 uppercase text-xs">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> 1. Permiso de Ubicación Satelital (GPS en Tiempo Real)
-          </h4>
-          <p>El chofer otorga su <strong>consentimiento libre, expreso e informado</strong> para que Pedidos Flash capture sus coordenadas GPS únicamente mientras esté conectado ("En Línea"). Este permiso se utiliza exclusivamente para trazar rutas de despacho, confirmar entregas y brindar seguridad durante el trayecto.</p>
+      <div class="flex-1 overflow-y-auto pr-1 space-y-2.5 text-[11px] text-slate-300 leading-relaxed">
+        <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
+          <h4 class="font-bold text-white text-xs">1. Geolocalización Satelital</h4>
+          <p class="text-[10px] text-slate-400">El chofer autoriza la captura de sus coordenadas GPS satelitales únicamente mientras permanezca con el switch en estado 'Activo'.</p>
         </div>
-
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <h4 class="font-black text-accent-yellow flex items-center gap-1.5 uppercase text-xs">
-            <i data-lucide="user-check" class="w-3.5 h-3.5"></i> 2. Naturaleza del Chofer (Exoneración Laboral y Tránsito)
-          </h4>
-          <p>Pedidos Flash actúa exclusivamente como <strong>plataforma tecnológica de intermediación</strong>. El chofer opera como <strong>Prestador de Servicios Independiente</strong> por cuenta propia, sin relación de subordinación, patrono ni exclusividad bajo la LOTTT. El chofer es el único responsable civil y penal de portar casco de seguridad, licencia vigente, certificado médico vial, seguro (RCV) y cumplir la Ley de Transporte Terrestre de Venezuela.</p>
+        <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
+          <h4 class="font-bold text-white text-xs">2. Prestador Independiente</h4>
+          <p class="text-[10px] text-slate-400">El repartidor opera bajo su propia responsabilidad vial, portando casco, documentación y normas de tránsito vigentes.</p>
         </div>
-
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <h4 class="font-black text-accent-emerald flex items-center gap-1.5 uppercase text-xs">
-            <i data-lucide="lock" class="w-3.5 h-3.5"></i> 3. Protección de Datos Personales (Hábeas Data)
-          </h4>
-          <p>Conforme al Artículo 28 de la Constitución de la República Bolivariana de Venezuela y la Ley Especial contra Delitos Informáticos, los datos recopilados (teléfono WhatsApp, nombre, vehículo y placas) se usan únicamente para coordinar entregas y jamás serán vendidos ni cedidos a terceros.</p>
-        </div>
-
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <h4 class="font-black text-rose-400 flex items-center gap-1.5 uppercase text-xs">
-            <i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i> 4. Prohibición Absoluta de Mercancía Ilícita
-          </h4>
-          <p>Queda estrictamente prohibido transportar sustancias estupefacientes o psicotrópicas (Ley Orgánica de Drogas), armas, explosivos o mercancía ilegal. Ante cualquier requerimiento oficial, la plataforma cooperará con las autoridades competentes.</p>
-        </div>
-
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <h4 class="font-black text-indigo-300 flex items-center gap-1.5 uppercase text-xs">
-            <i data-lucide="wallet" class="w-3.5 h-3.5"></i> 5. Ganancias y Liquidación de Carreras
-          </h4>
-          <p>El chofer percibirá la tarifa neta acordada de $0.70 por entrega completada, liquidable por Pago Móvil a tasa BCV del día o efectivo en divisa según disponibilidad.</p>
+        <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
+          <h4 class="font-bold text-white text-xs">3. Tarifa y Liquidación</h4>
+          <p class="text-[10px] text-slate-400">Cada envío completado acredita $0.70 netos al repartidor, pagaderos por Pago Móvil a tasa oficial BCV o en efectivo.</p>
         </div>
       </div>
 
-      <div class="pt-2 border-t border-slate-800 flex justify-end shrink-0">
-        <button onclick="cerrarModalPrivacidad()" class="btn-tactil bg-indigo-600 hover:bg-indigo-500 text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
+      <div class="pt-2 border-t border-white/10 flex justify-end shrink-0">
+        <button onclick="cerrarModalPrivacidad()" class="btn-spring bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md border border-white/20">
           Aceptar y Entendido
         </button>
       </div>
@@ -287,255 +330,307 @@
     </div>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL TAMAÑO DISPOSITIVO MÓVIL -->
-  <div class="w-full max-w-md bg-slate-900 min-h-[100dvh] sm:min-h-[92vh] sm:max-h-[890px] sm:rounded-[42px] shadow-[0_0_60px_rgba(79,70,229,0.25)] overflow-hidden flex flex-col border sm:border-2 border-slate-800 relative">
+  <!-- APLICACIÓN MÓVIL PRINCIPAL -->
+  <div class="w-full sm:max-w-md md:max-w-lg bg-[#070b14] h-[100dvh] sm:h-[95vh] sm:max-h-[920px] sm:rounded-[38px] shadow-specular overflow-hidden flex flex-col border border-white/10 relative z-10 mx-auto">
     
-    <!-- ENCABEZADO CON SWITCH EN LÍNEA / FUERA DE LÍNEA -->
-    <header class="bg-slate-900/95 border-b border-indigo-500/20 p-3.5 shadow-lg shrink-0 backdrop-blur-xl safe-top space-y-2.5">
-      <div class="flex justify-between items-center">
+    <!-- ENCABEZADO -->
+    <header class="bg-[#090d18]/95 backdrop-blur-xl border-b border-white/10 px-4 py-3 safe-top shrink-0 relative z-30 flex items-center justify-between">
+      
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 text-white flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.45)] border border-cyan-400/40 shrink-0">
+          <i data-lucide="zap" class="w-5 h-5 fill-white text-white"></i>
+        </div>
         <div>
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs font-black text-white tracking-wider flex items-center gap-1">
-              🛵 PEDIDOS FLASH <span class="text-[10px] text-accent-cyan bg-cyan-950/60 border border-cyan-800/40 px-1.5 py-0.2 rounded font-black">DRIVER PRO</span>
-            </span>
+          <div class="flex items-center gap-1.5 leading-none">
+            <span class="text-sm font-black tracking-tight text-white font-sans">PEDIDOS<span class="text-cyan-400 font-extrabold">FLASH</span></span>
+            <span class="text-[8px] font-mono font-black bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-1.5 py-0.5 rounded-md uppercase">Driver</span>
           </div>
-          <p id="header-nombre-chofer" class="text-sm font-black text-slate-200 mt-0.5">Cargando...</p>
-        </div>
-
-        <!-- BOTONES DE ACCIÓN: PRIVACIDAD/PERMISOS, AUDIO Y SALIR -->
-        <div class="flex items-center gap-1.5">
-          <button onclick="abrirModalPrivacidad(event)" title="Permisos y Privacidad" class="btn-tactil p-2 rounded-xl bg-slate-800 text-accent-cyan border border-slate-700 flex items-center justify-center">
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
-          </button>
-          <button onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Alerta Sonora" class="btn-tactil p-2 rounded-xl bg-slate-800 text-accent-yellow border border-slate-700 flex items-center justify-center">
-            <i data-lucide="volume-2" id="icono-audio-header" class="w-4 h-4"></i>
-          </button>
-          <button onclick="cerrarSesionChofer()" title="Cerrar Sesión" class="btn-tactil p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center justify-center">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-          </button>
+          <span class="text-[9px] font-mono text-slate-400 block tracking-wider mt-0.5">NIRGUA</span>
         </div>
       </div>
 
-      <!-- SWITCH CONECTADO / DESCONECTADO -->
-      <div class="bg-slate-950 p-2 rounded-2xl border border-slate-800 flex items-center justify-between">
-        <div class="flex items-center gap-2 pl-1">
-          <span id="indicador-estado-ping" class="w-3 h-3 rounded-full bg-accent-emerald animate-ping"></span>
+      <div class="flex items-center gap-2">
+        <button onclick="abrirModalRetiro()" title="Ver y retirar ganancias acumuladas" class="btn-spring bg-[#111728] hover:bg-[#161f36] border border-emerald-500/40 rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 shadow-sm text-left">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse"></div>
           <div>
-            <span id="txt-estado-conexion" class="text-xs font-black text-accent-emerald block leading-tight">🟢 EN LÍNEA (Recibiendo pedidos)</span>
-            <span id="sub-estado-conexion" class="text-[9px] text-slate-400">GPS y Despacho activo en Nirgua</span>
+            <span class="text-[8px] font-mono text-slate-400 uppercase block leading-none">Balance</span>
+            <span id="total-ganancias-chofer-header" class="text-xs font-black font-mono text-emerald-400 tabular-nums leading-none">$0.00</span>
           </div>
-        </div>
-
-        <button onclick="toggleEstadoEnLinea()" id="btn-switch-conexion" class="btn-tactil bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[11px] shadow-glow-emerald flex items-center gap-1">
-          <span>Activo</span>
         </button>
+
+        <div onclick="tocarAvatarChofer()" class="btn-spring relative cursor-pointer group" title="Ficha de Conductor">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-extrabold text-xs border border-white/20 shadow-glow-blue">
+            <span id="chofer-avatar-initials">CF</span>
+          </div>
+          <span id="avatar-live-indicator" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#090d18] shadow-[0_0_8px_#10b981]"></span>
+        </div>
       </div>
+
+      <span id="header-nombre-chofer" class="hidden">Chofer</span>
+      <span id="txt-vehiculo-badge" class="hidden">Moto</span>
+      <span id="total-ganancias-chofer" class="hidden">$0.00</span>
     </header>
 
-    <!-- BANNER DE ALERTA SI EL GPS ESTÁ BLOQUEADO EN EL NAVEGADOR -->
-    <div id="banner-permiso-gps" class="bg-rose-950/80 border-b border-rose-500/40 p-2 px-3 flex items-center justify-between hidden">
+    <!-- BARRA DE CONEXIÓN -->
+    <div id="barra-conexion-ridery" class="bg-[#0b1020] border-b border-white/10 px-4 py-2 shrink-0 relative z-20 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div id="beacon-ridery" class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+          <i data-lucide="radio" id="icono-beacon-ridery" class="w-4 h-4 animate-pulse"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <span id="txt-ridery-estado" class="text-xs font-black text-white leading-tight">ESTÁS EN LÍNEA</span>
+            <span id="ping-ridery-luz" class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping"></span>
+          </div>
+          <span id="sub-ridery-telemetria" class="text-[10px] text-slate-400 font-mono block truncate">GPS Nirgua Activo • Buscando carreras</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Audio Alertas" class="btn-spring w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center">
+          <i data-lucide="volume-2" id="icono-audio-header" class="w-4 h-4"></i>
+        </button>
+        <button onclick="toggleEstadoEnLinea()" id="btn-switch-conexion" class="btn-spring relative w-[54px] h-[30px] bg-emerald-500/20 border-2 border-emerald-400/50 rounded-full p-0.5 cursor-pointer flex items-center transition-all select-none shadow-glow-emerald">
+          <div id="switch-thumb" class="w-6 h-6 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399] flex items-center justify-center text-slate-950 font-black text-[9px] transition-transform duration-300 transform translate-x-6">
+            <i data-lucide="check" id="icono-switch-thumb" class="w-3.5 h-3.5 stroke-[3]"></i>
+          </div>
+        </button>
+      </div>
+
+      <span id="txt-estado-conexion" class="hidden"></span>
+      <span id="indicador-estado-ping" class="hidden"></span>
+      <span id="sub-txt-telemetria" class="hidden"></span>
+      <span id="badge-turno-texto" class="hidden"></span>
+      <span id="sub-punto-luz" class="hidden"></span>
+    </div>
+
+    <!-- BANNERS DE AVISO -->
+    <div id="banner-permiso-gps" class="bg-rose-950/90 border-b border-rose-500/40 p-2 px-4 flex items-center justify-between hidden relative z-20">
       <div class="flex items-center gap-2">
         <i data-lucide="map-pin-off" class="w-4 h-4 text-rose-400 shrink-0"></i>
-        <p class="text-[10px] text-rose-200 font-semibold leading-tight">Permiso GPS desactivado. Actívalo para ver tu ruta exacta.</p>
+        <p class="text-[10px] text-rose-200 font-bold leading-tight">GPS desactivado. Actívalo para transmitir tu ubicación.</p>
       </div>
-      <button onclick="solicitarPermisoGpsManual()" class="btn-tactil bg-rose-500 text-white font-black px-2.5 py-1 rounded-lg text-[9px] whitespace-nowrap shadow">
-        Activar GPS
+      <button onclick="solicitarPermisoGpsManual()" class="btn-spring bg-rose-600 hover:bg-rose-500 text-white font-bold px-3 py-1 rounded-lg text-[9px] shadow-sm">
+        Activar
       </button>
     </div>
 
-    <!-- BANNER DE ALERTA SI ESTÁ DESCONECTADO -->
-    <div id="banner-desconectado" class="bg-amber-950/80 border-b border-amber-500/40 p-2.5 px-3 flex items-center justify-between hidden">
+    <div id="banner-desconectado" class="bg-amber-950/90 border-b border-amber-500/40 p-2 px-4 flex items-center justify-between hidden relative z-20">
       <div class="flex items-center gap-2">
-        <i data-lucide="alert-triangle" class="w-4 h-4 text-accent-yellow shrink-0"></i>
-        <div class="text-[10px] text-amber-200">
-          <p class="font-bold leading-tight">Estás Fuera de Línea</p>
-          <p class="text-slate-300">Si cae un pedido, te avisaremos directo a tu WhatsApp.</p>
-        </div>
+        <i data-lucide="pause-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
+        <p class="text-[10px] text-amber-200 font-bold">Turno pausado. Toca el switch para conectar.</p>
       </div>
-      <button onclick="probarNotificacionWhatsApp()" class="btn-tactil bg-accent-yellow text-slate-950 font-black px-2 py-1 rounded-lg text-[9px] whitespace-nowrap shadow">
-        Probar WS 📲
+      <button onclick="toggleEstadoEnLinea()" class="btn-spring bg-amber-500 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-[10px] shadow-sm">
+        Conectar
       </button>
     </div>
 
-    <!-- BANNER RESUMEN DE GANANCIAS & RETIRO -->
-    <div class="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border-b border-emerald-500/30 p-3 px-4 flex justify-between items-center shrink-0">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-accent-emerald/15 border border-accent-emerald/30 flex items-center justify-center text-accent-emerald shadow-inner">
-          <i data-lucide="wallet" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block leading-none">Ganancias acumuladas</span>
-          <span id="total-ganancias-chofer" class="text-xl font-black text-accent-emerald">$0.00</span>
-        </div>
+    <!-- MAPA SATELITAL EN VIVO -->
+    <div class="relative flex-1 min-h-[220px] sm:min-h-[280px] w-full overflow-hidden bg-[#070b14]">
+      <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 220px; position: absolute; inset: 0;" class="z-0"></div>
+
+      <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
+        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
+          <i data-lucide="crosshair" class="w-5 h-5"></i>
+        </button>
+        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
+          <i data-lucide="headset" class="w-5 h-5"></i>
+        </button>
       </div>
-      <button onclick="abrirModalRetiro()" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-glow-emerald border-t border-white/30">
-        <i data-lucide="banknote" class="w-4 h-4"></i> Retirar
-      </button>
+
+      <div class="absolute top-3 left-3 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-3 py-1.5 rounded-2xl flex items-center gap-2 shadow-specular">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
+        <span class="text-[10px] font-mono font-bold text-white uppercase tracking-wider">Nirgua Central</span>
+      </div>
     </div>
 
-    <!-- CUERPO PRINCIPAL CON PEDIDOS -->
-    <main class="flex-1 p-3.5 space-y-3.5 overflow-y-auto no-scrollbar pb-16">
-      
-      <!-- PESTAÑAS DE FILTRO -->
-      <div class="grid grid-cols-3 gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-        <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white shadow-md transition flex items-center justify-center gap-1">
-          <span>Nuevos</span>
-          <span id="badge-disponibles" class="bg-accent-magenta text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">0</span>
-        </button>
-        <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
-          <span>En Curso</span>
-          <span id="badge-activos" class="bg-slate-800 text-slate-300 font-bold text-[9px] px-1.5 py-0.2 rounded-full">0</span>
-        </button>
-        <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
-          <span>Historial</span>
-          <span id="badge-historial" class="bg-slate-800 text-slate-300 font-bold text-[9px] px-1.5 py-0.2 rounded-full">0</span>
-        </button>
-      </div>
+    <!-- PANEL INFERIOR DE DESPACHO -->
+    <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 shrink-0 flex flex-col max-h-[50vh] relative z-20 shadow-dock-floating">
+      <div class="w-10 h-1 bg-white/20 rounded-full mx-auto my-2 shrink-0"></div>
 
-      <!-- CONTENEDOR DE TARJETAS DE PEDIDOS -->
-      <div id="contenedor-pedidos" class="space-y-3">
-        <div class="text-center py-14 text-slate-500 text-xs">
-          <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-indigo-400"></i>
-          Sincronizando carreras con Firebase...
+      <div class="px-4 pb-2">
+        <div class="bg-[#121829] p-1 rounded-2xl grid grid-cols-3 gap-1 border border-white/10">
+          <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2 rounded-xl text-xs font-black bg-[#1e2742] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
+            <span>Disponibles</span>
+            <span id="badge-disponibles" class="w-4 h-4 rounded-full bg-cyan-400 text-slate-950 font-black font-mono text-[9px] flex items-center justify-center tabular-nums shadow-[0_0_8px_#00f0ff]">0</span>
+          </button>
+          <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-spring py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+            <span>En Ruta</span>
+            <span id="badge-activos" class="w-4 h-4 rounded-full bg-white/10 text-slate-300 font-bold font-mono text-[9px] flex items-center justify-center tabular-nums">0</span>
+          </button>
+          <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-spring py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+            <span>Historial</span>
+            <span id="badge-historial" class="w-4 h-4 rounded-full bg-white/10 text-slate-300 font-bold font-mono text-[9px] flex items-center justify-center tabular-nums">0</span>
+          </button>
         </div>
       </div>
 
-    </main>
+      <div id="banner-carrera-activa-alerta" class="hidden px-4 mb-2"></div>
+
+      <div id="contenedor-pedidos" class="px-4 pb-20 overflow-y-auto max-h-[35vh] space-y-2.5 no-scrollbar"></div>
+    </div>
+
+    <!-- BARRA DOCK FLOTANTE -->
+    <div class="absolute bottom-2.5 inset-x-0 mx-auto w-[92%] max-w-sm z-30 pointer-events-auto">
+      <nav class="bg-[#0b1020]/95 backdrop-blur-2xl border border-white/15 p-1 safe-bottom rounded-full shadow-dock-floating flex justify-around items-center">
+        <button onclick="filtrarTab('disponibles')" id="dock-btn-inicio" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.4)]">
+            <i data-lucide="navigation-2" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[9px] font-black text-cyan-300">Despacho</span>
+        </button>
+        <button onclick="filtrarTab('mis-pedidos')" id="dock-btn-pedidos" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center">
+            <i data-lucide="package" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[9px] font-medium">En Ruta</span>
+        </button>
+        <button onclick="filtrarTab('historial')" id="dock-btn-historial" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center">
+            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[9px] font-medium">Historial</span>
+        </button>
+        <button onclick="abrirModalRetiro()" id="dock-btn-billetera" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+          <span class="text-[9px] font-medium">Billetera</span>
+        </button>
+      </nav>
+    </div>
+
   </div>
 
-  <!-- MODAL DE SOLICITUD DE RETIRO -->
-  <div id="modal-retiro" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-slate-900 border-2 border-emerald-500/40 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-2xl">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-        <h3 class="text-base font-black text-white flex items-center gap-2">
-          <i data-lucide="banknote" class="w-5 h-5 text-accent-emerald"></i> Solicitar Retiro
+  <!-- MODAL DE RETIRO -->
+  <div id="modal-retiro" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0c1222]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-specular sheet-spring">
+      <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="banknote" class="w-5 h-5 text-emerald-400"></i> Liquidación de Comisiones
         </h3>
-        <button onclick="cerrarModalRetiro()" class="btn-tactil w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
+        <button onclick="cerrarModalRetiro()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="bg-slate-950 p-3.5 rounded-2xl border border-emerald-500/30 text-center shadow-inner">
-        <span class="text-xs text-slate-400 font-bold block">Saldo acumulado disponible:</span>
-        <span id="monto-modal-retiro" class="text-2xl font-black text-accent-emerald">$0.00</span>
+      <div class="bg-gradient-to-br from-emerald-500/15 to-teal-500/5 p-4 rounded-2xl border border-emerald-500/30 text-center">
+        <span class="text-xs text-emerald-300 font-mono font-medium block">Saldo acumulado disponible a retirar:</span>
+        <span id="monto-modal-retiro" class="text-3xl font-black font-mono text-emerald-400 tracking-tight tabular-nums block mt-1 drop-shadow-[0_2px_10px_rgba(16,185,129,0.3)]">$0.00</span>
       </div>
 
       <form onsubmit="enviarSolicitudRetiro(event)" class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Método de Cobro:</label>
-          <select id="retiro-metodo" required class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-accent-emerald">
-            <option value="Pago Móvil">📲 Pago Móvil (Bs a tasa del día)</option>
-            <option value="Efectivo en Persona">💵 Efectivo ($ o Bs en Base Flash)</option>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Método de cobro preferido</label>
+          <select id="retiro-metodo" required class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-bold text-white focus:outline-none focus:border-blue-500">
+            <option value="Pago Móvil">📲 Pago Móvil (Bs a tasa oficial BCV)</option>
+            <option value="Efectivo en Persona">💵 Efectivo ($ USD o Bs en base central)</option>
             <option value="Zelle / USDT">💲 Zelle / Binance USDT</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">Datos de Pago Móvil o Cuenta:</label>
-          <textarea id="retiro-datos" required rows="2" placeholder="Ej: Banesco • C.I: 28.123.456 • 0426-2566854" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-accent-emerald"></textarea>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Datos bancarios o cuenta</label>
+          <textarea id="retiro-datos" required rows="2" placeholder="Banesco • C.I: 28.123.456 • 0426-2566854" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"></textarea>
         </div>
-        <button type="submit" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 text-slate-950 font-black py-3 rounded-xl text-xs shadow-glow-emerald transition border-t border-white/20">
-          Enviar Solicitud a la Administración
+        <button type="submit" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 transition flex items-center justify-center gap-2">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Enviar solicitud a administración</span>
         </button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL DE DETALLE COMPLETO Y MAPA CON GPS -->
-  <div id="modal-detalle-pedido" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-    <div class="bg-slate-900 border-t sm:border-2 border-indigo-500/40 w-full max-w-md rounded-t-[32px] sm:rounded-3xl p-5 space-y-3.5 shadow-2xl max-h-[92vh] flex flex-col overflow-y-auto">
+  <!-- MODAL DE DETALLE Y MAPA -->
+  <div id="modal-detalle-pedido" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+    <div class="bg-[#0c1222]/95 border-t sm:border border-white/15 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] flex flex-col overflow-y-auto sheet-spring">
       
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
+      <div class="w-12 h-1.5 bg-slate-600/60 rounded-full mx-auto -mt-1 mb-1 sm:hidden"></div>
+
+      <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
         <div class="flex items-center gap-2">
-          <div class="p-2 bg-accent-cyan/15 text-accent-cyan rounded-xl border border-accent-cyan/30">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-400/30 flex items-center justify-center shadow-glow-blue">
             <i data-lucide="map-pin" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 class="text-sm font-black text-white leading-tight">Detalle de la Carrera</h3>
-            <span id="modal-num-orden" class="text-[10px] text-accent-cyan font-bold">#FLASH-0000</span>
+            <h3 class="text-sm font-bold text-white leading-tight">Hoja de Ruta y Despacho</h3>
+            <span id="modal-num-orden" class="text-[10px] text-blue-400 font-mono font-bold">#PF-0000</span>
           </div>
         </div>
-        <button onclick="cerrarModalMapa()" class="btn-tactil w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+        <button onclick="cerrarModalMapa()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- ALERTA SI TIENE RETIRO EN TIENDA / LOCAL -->
-      <div id="mapa-alerta-comercio" class="bg-amber-950/50 border border-amber-500/40 p-3 rounded-2xl text-xs space-y-1 hidden">
-        <div class="flex items-center gap-1.5 text-accent-yellow font-black">
+      <div id="mapa-alerta-comercio" class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl text-xs space-y-1 hidden">
+        <div class="flex items-center gap-1.5 text-amber-300 font-extrabold font-mono">
           <i data-lucide="store" class="w-4 h-4"></i>
-          <span>PUNTO DE RETIRO: <span id="mapa-txt-tienda">Moravos Café</span></span>
+          <span>PUNTO DE RETIRO: <span id="mapa-txt-tienda">Local Comercial</span></span>
         </div>
-        <p class="text-[10px] text-slate-300">Pasa por este local a retirar el pedido antes de llevarlo al cliente.</p>
+        <p class="text-[10px] text-slate-300">Retira los artículos en este local antes de dirigirte a la dirección del destinatario.</p>
       </div>
 
-      <!-- MAPA INTERACTIVO -->
       <div class="space-y-1">
-        <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-semibold">
-          <span>🟢 Salida/Retiro | 🔴 Entrega | 🛵 Tu GPS</span>
-          <button onclick="centrarGpsChoferEnMapa()" class="text-accent-cyan hover:underline font-bold flex items-center gap-1">
-            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi GPS
+        <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
+          <span>A: Retiro • B: Destino</span>
+          <button onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
+            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
           </button>
         </div>
-        <div id="mapa-cliente" style="height: 220px; min-height: 220px; width: 100%; display: block;" class="shadow-inner border border-slate-700/80 rounded-2xl overflow-hidden"></div>
+        <div id="mapa-cliente" style="height: 210px; min-height: 210px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
       </div>
 
-      <!-- BOTÓN DE NAVEGACIÓN DIRECTA GOOGLE MAPS (APP NATIVA GRATUITA) -->
-      <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-tactil w-full bg-gradient-to-r from-accent-cyan via-indigo-600 to-brand-600 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-cyan border-t border-white/20">
+      <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-spring w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/20">
         <i data-lucide="navigation" class="w-4 h-4 fill-white"></i> Iniciar Ruta en Google Maps (GPS)
       </a>
 
-      <!-- DATOS DEL CLIENTE Y CONTACTO -->
-      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2 text-xs">
+      <div class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2 text-xs">
         <div class="flex justify-between items-center">
-          <span class="text-slate-400 font-bold">Cliente / Pasajero:</span>
-          <span id="mapa-nombre-cliente" class="text-white font-black"></span>
+          <span class="text-slate-400 font-medium">Cliente / Destinatario:</span>
+          <span id="mapa-nombre-cliente" class="text-white font-extrabold"></span>
         </div>
         <div class="flex justify-between items-center">
-          <span class="text-slate-400 font-bold">Teléfono:</span>
+          <span class="text-slate-400 font-medium">Contacto directo:</span>
           <div class="flex items-center gap-2">
-            <a id="mapa-btn-llamar" href="#" class="btn-tactil bg-slate-800 text-accent-cyan font-black px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 border border-slate-700">
-              <i data-lucide="phone" class="w-3 h-3"></i> Llamar
+            <a id="mapa-btn-llamar" href="#" class="btn-spring bg-[#0c1222] text-white font-bold px-3 py-1.5 rounded-xl text-[10px] flex items-center gap-1 border border-white/10 shadow-sm">
+              <i data-lucide="phone" class="w-3.5 h-3.5 text-blue-400"></i> Llamar
             </a>
-            <button id="mapa-btn-wa" onclick="" class="btn-tactil bg-emerald-600/30 text-accent-emerald font-black px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 border border-emerald-500/40">
-              <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp
+            <button id="mapa-btn-wa" class="btn-spring bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold px-3 py-1.5 rounded-xl text-[10px] flex items-center gap-1 shadow-sm">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> WhatsApp
             </button>
           </div>
         </div>
-        <div class="flex justify-between items-center border-t border-slate-800 pt-1.5">
-          <span class="text-slate-400 font-bold">Método de Pago:</span>
-          <span id="mapa-metodo-pago" class="font-black"></span>
+        <div class="flex justify-between items-center border-t border-white/10 pt-1.5">
+          <span class="text-slate-400 font-medium">Forma de pago:</span>
+          <span id="mapa-metodo-pago" class="font-extrabold font-mono"></span>
         </div>
-        <div id="caja-detalle-pago-cliente" class="hidden text-[10px] text-accent-yellow bg-slate-900 p-2 rounded-xl border border-slate-800"></div>
+        <div id="caja-detalle-pago-cliente" class="hidden text-[10px] text-amber-300 bg-amber-500/10 p-2 rounded-xl border border-amber-500/20 font-mono"></div>
         <div>
-          <span class="text-slate-400 font-bold block mb-1">Dirección de Entrega:</span>
-          <p id="mapa-direccion-cliente" class="text-slate-200 bg-slate-900 p-2 rounded-xl border border-slate-800 text-[11px]"></p>
+          <span class="text-slate-400 font-medium block mb-1">Dirección de entrega:</span>
+          <p id="mapa-direccion-cliente" class="text-slate-200 bg-[#0c1222] p-2.5 rounded-xl border border-white/10 text-[11px] font-semibold leading-relaxed"></p>
         </div>
       </div>
 
-      <!-- DETALLE DE ARTÍCULOS O CARRERA -->
-      <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
-        <h4 class="text-xs font-black text-indigo-300 border-b border-slate-800 pb-1">Artículos a Entregar:</h4>
-        <div id="mapa-lista-items" class="space-y-1 text-xs text-slate-300 max-h-28 overflow-y-auto no-scrollbar pr-1"></div>
+      <div class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2">
+        <h4 class="text-xs font-bold text-slate-300 font-mono border-b border-white/10 pb-1">Manifiesto de la orden:</h4>
+        <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300 max-h-24 overflow-y-auto no-scrollbar pr-1 font-mono"></div>
         
-        <div class="flex justify-between items-center border-t border-slate-800 pt-2 font-black">
-          <span class="text-xs text-slate-400">Total a Cobrar al Cliente:</span>
-          <span id="mapa-total-cobrar" class="text-base text-accent-yellow">$0.00</span>
+        <div class="flex justify-between items-center border-t border-white/10 pt-2 font-bold font-mono">
+          <span class="text-xs text-slate-400">Cobro total al cliente:</span>
+          <span id="mapa-total-cobrar" class="text-base text-white tabular-nums">$0.00</span>
         </div>
 
-        <div class="flex justify-between items-center bg-emerald-950/50 p-2.5 rounded-xl border border-emerald-500/30 text-xs">
-          <span class="text-emerald-300 font-bold">Tu ganancia por este envío:</span>
-          <span class="text-accent-emerald font-black text-sm">$0.70</span>
+        <div class="flex justify-between items-center bg-gradient-to-r from-emerald-500/20 to-teal-500/10 p-2.5 rounded-xl border border-emerald-500/30 text-xs font-mono">
+          <span class="text-emerald-300 font-bold">Comisión acreditada al chofer:</span>
+          <span class="text-emerald-400 font-black text-sm tabular-nums">+$0.70</span>
         </div>
       </div>
 
-      <!-- BOTONES DE ACCIÓN DE ESTADO -->
       <div id="accion-estado-contenedor" class="pt-1"></div>
 
     </div>
   </div>
 
   <script>
-    // ================= CONFIGURACIÓN DE FIREBASE (PLAN GRATUITO SPARK) =================
     const firebaseConfig = {
       apiKey: "AIzaSyB19B9jLHPpgKxVvMH97D5VafgTp0CfnOc", 
       authDomain: "pedidosflash-c7bb7.firebaseapp.com",
@@ -572,7 +667,6 @@
     let audioCtx = null;
     let ultimoPedidoVistoId = null;
 
-    // Normalizador de teléfono Venezuela
     function normalizarTelefono(tel) {
       if (!tel) return '';
       let t = tel.replace(/\D/g, '');
@@ -581,19 +675,20 @@
       return t;
     }
 
-    // ================= GESTOR DE PERMISOS DEL NAVEGADOR (GPS Y NOTIFICACIONES) =================
+    function obtenerIniciales(nombre) {
+      if (!nombre) return 'CF';
+      const partes = nombre.trim().split(/\s+/);
+      if (partes.length >= 2) return (partes[0][0] + partes[1][0]).toUpperCase();
+      return partes[0].substring(0, 2).toUpperCase();
+    }
+
     function actualizarEstadoVisualPermisos() {
       const txtNotif = document.getElementById('txt-estado-permiso-notif');
       if ("Notification" in window && txtNotif) {
-        if (Notification.permission === "granted") {
-          txtNotif.innerText = "Alertas: Activas ✅";
-        } else if (Notification.permission === "denied") {
-          txtNotif.innerText = "Alertas: Bloqueadas ⚠️";
-        } else {
-          txtNotif.innerText = "Activar Alertas";
-        }
+        if (Notification.permission === "granted") txtNotif.innerText = "Alertas: Activas";
+        else if (Notification.permission === "denied") txtNotif.innerText = "Alertas: Bloqueadas";
+        else txtNotif.innerText = "Activar Alertas";
       }
-
       if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({ name: 'geolocation' }).then(result => {
           actualizarBadgeGps(result.state);
@@ -606,10 +701,10 @@
       const txtGps = document.getElementById('txt-estado-permiso-gps');
       const bannerGps = document.getElementById('banner-permiso-gps');
       if (estado === 'granted') {
-        if (txtGps) txtGps.innerText = "GPS: Activo ✅";
+        if (txtGps) txtGps.innerText = "GPS: Activo";
         if (bannerGps) bannerGps.classList.add('hidden');
       } else if (estado === 'denied') {
-        if (txtGps) txtGps.innerText = "GPS: Bloqueado ⚠️";
+        if (txtGps) txtGps.innerText = "GPS: Bloqueado";
         if (bannerGps && choferActual) bannerGps.classList.remove('hidden');
       } else {
         if (txtGps) txtGps.innerText = "Activar GPS";
@@ -618,7 +713,7 @@
 
     function solicitarPermisoGpsManual() {
       if (!navigator.geolocation) {
-        mostrarToast("Tu navegador no soporta GPS.", "No compatible", "error");
+        mostrarToast("El terminal no soporta geolocalización.", "Error", "error");
         return;
       }
       navigator.geolocation.getCurrentPosition(
@@ -626,32 +721,25 @@
           choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
           actualizarBadgeGps('granted');
           iniciarSeguimientoGps();
-          mostrarToast("Ubicación GPS activada correctamente.", "GPS Listo", "success");
+          mostrarToast("Ubicación satelital confirmada.", "GPS Listo", "success");
         },
-        (err) => {
+        () => {
           actualizarBadgeGps('denied');
-          mostrarToast("Activa la ubicación en los ajustes de tu navegador/teléfono.", "Permiso Denegado", "error");
+          mostrarToast("Permite la ubicación en los ajustes.", "Permiso Requerido", "error");
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
     }
 
     function solicitarPermisoNotificacionesManual() {
-      if (!("Notification" in window)) {
-        mostrarToast("Este navegador no soporta notificaciones.", "Aviso", "info");
-        return;
-      }
+      if (!("Notification" in window)) return;
       Notification.requestPermission().then(perm => {
         actualizarEstadoVisualPermisos();
-        if (perm === "granted") {
-          mostrarToast("Notificaciones activadas.", "Permiso Concedido", "success");
-        } else {
-          mostrarToast("Permiso de notificaciones denegado en el navegador.", "Bloqueado", "error");
-        }
+        if (perm === "granted") mostrarToast("Notificaciones activadas.", "Listo", "success");
+        else mostrarToast("Permiso de alertas bloqueado.", "Bloqueado", "error");
       });
     }
 
-    // ================= CONTROL DEL MODAL DE PRIVACIDAD Y PERMISOS =================
     function abrirModalPrivacidad(e) {
       if (e) e.preventDefault();
       actualizarEstadoVisualPermisos();
@@ -663,7 +751,6 @@
       document.getElementById('modal-privacidad').classList.add('hidden');
     }
 
-    // ================= INICIALIZACIÓN =================
     window.onload = () => {
       lucide.createIcons();
       actualizarEstadoVisualPermisos();
@@ -673,7 +760,6 @@
         choferActual = JSON.parse(choferGuardado);
         const tel = normalizarTelefono(choferActual.telefono);
 
-        // Verificar en Firebase si sigue autorizado
         db.ref(`choferes/${tel}`).once('value').then(snap => {
           if (snap.exists()) {
             const data = snap.val();
@@ -683,7 +769,9 @@
               mostrarVistaVerificacion(data);
             } else {
               document.getElementById('pantalla-auth').classList.add('hidden');
-              document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
+              document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
+              document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
+              document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
               iniciarConexionChoferFirebase();
             }
           } else {
@@ -691,14 +779,15 @@
           }
         }).catch(() => {
           document.getElementById('pantalla-auth').classList.add('hidden');
-          document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`;
+          document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
+          document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
+          document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
           iniciarConexionChoferFirebase();
         });
       } else {
         document.getElementById('pantalla-auth').classList.remove('hidden');
       }
 
-      // Escuchar pedidos en Firebase
       db.ref('pedidos').on('value', (snapshot) => {
         const nuevosPedidos = snapshot.val() || {};
         detectarNuevosPedidosYAlertar(nuevosPedidos);
@@ -709,18 +798,13 @@
         const idPedUrl = params.get('pedido');
         if (idPedUrl && todosLosPedidos[idPedUrl] && !window.pedidoAbiertoPorUrl) {
           window.pedidoAbiertoPorUrl = true;
-          setTimeout(() => verMapaYDetalle(idPedUrl), 500);
+          setTimeout(() => verMapaYDetalle(idPedUrl), 400);
         }
       });
-
-      if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission().then(actualizarEstadoVisualPermisos);
-      }
 
       iniciarSeguimientoGps();
     };
 
-    // ================= SISTEMA DE LOGIN, REGISTRO Y AUTORIZACIÓN =================
     function cambiarModoAuth(modo) {
       const btnLogin = document.getElementById('btn-tab-login');
       const btnReg = document.getElementById('btn-tab-registro');
@@ -733,13 +817,13 @@
       vistaVerif.classList.add('hidden');
 
       if (modo === 'login') {
-        btnLogin.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition";
-        btnReg.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        btnLogin.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md";
+        btnReg.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white";
         formLogin.classList.remove('hidden');
         formReg.classList.add('hidden');
       } else {
-        btnReg.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md transition";
-        btnLogin.className = "btn-tactil py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition";
+        btnReg.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md";
+        btnLogin.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white";
         formReg.classList.remove('hidden');
         formLogin.classList.add('hidden');
       }
@@ -764,9 +848,7 @@
         if (snap.exists()) {
           const val = snap.val();
           choferEnEspera = val;
-          if (val.estado === 'autorizado') {
-            activarAccesoChofer(val);
-          }
+          if (val.estado === 'autorizado') activarAccesoChofer(val);
         }
       });
     }
@@ -784,11 +866,7 @@
       e.preventDefault();
       const inputTel = document.getElementById('login-telefono').value.trim();
       const telLimpio = normalizarTelefono(inputTel);
-
-      if (!telLimpio) {
-        mostrarToast("Ingresa un número de teléfono válido", "Error", "error");
-        return;
-      }
+      if (!telLimpio) return;
 
       const btn = document.getElementById('btn-submit-login');
       btn.disabled = true;
@@ -798,31 +876,27 @@
       db.ref(`choferes/${telLimpio}`).once('value')
         .then(snapshot => {
           btn.disabled = false;
-          btn.innerHTML = `<span>Ingresar a mi Cuenta</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+          btn.innerHTML = `<span>Ingresar al turno</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
           lucide.createIcons();
 
           if (snapshot.exists()) {
             const dataChofer = snapshot.val();
-            
-            // Si está pendiente de aprobación por el admin
             if (dataChofer.estado === 'pendiente' || !dataChofer.estado) {
-              mostrarToast("Tu cuenta requiere el código de aceptación del administrador", "Autorización Pendiente", "info");
+              mostrarToast("Tu cuenta requiere autorización del administrador.", "Pendiente", "info");
               mostrarVistaVerificacion(dataChofer);
               return;
             }
-
-            // Si ya está autorizado
             activarAccesoChofer(dataChofer);
           } else {
-            mostrarToast("Este teléfono no está registrado. Pasa a 'Registrarse'.", "No Encontrado", "error");
+            mostrarToast("Teléfono no registrado. Regístrate.", "No Encontrado", "error");
             cambiarModoAuth('registro');
             document.getElementById('reg-telefono').value = inputTel;
           }
         })
         .catch(() => {
           btn.disabled = false;
-          btn.innerHTML = `<span>Ingresar a mi Cuenta</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-          mostrarToast("Error de conexión al verificar chofer", "Error", "error");
+          btn.innerHTML = `<span>Ingresar al turno</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+          mostrarToast("Error de conexión.", "Error", "error");
         });
     }
 
@@ -835,14 +909,8 @@
       const aceptoPrivacidad = document.getElementById('reg-privacidad').checked;
       const telLimpio = normalizarTelefono(telefono);
 
-      if (!nombre || !telLimpio) {
-        mostrarToast("Completa tu nombre y teléfono", "Campos requeridos", "error");
-        return;
-      }
-
-      // Validar obligatoriedad legal del consentimiento
-      if (!aceptoPrivacidad) {
-        mostrarToast("Debes aceptar los permisos de privacidad y GPS para continuar.", "Aviso Legal", "error");
+      if (!nombre || !telLimpio || !aceptoPrivacidad) {
+        mostrarToast("Completa los datos y acepta los términos.", "Error", "error");
         return;
       }
 
@@ -852,79 +920,45 @@
       lucide.createIcons();
 
       const codigoGenerado = Math.floor(100000 + Math.random() * 900000).toString();
-
-      // Guardado con auditoría legal de fecha y hora
       const choferNuevo = {
-        nombre,
-        telefono: telLimpio,
-        vehiculo,
-        placa,
-        enLinea: false,
-        estado: 'pendiente',
-        codigoAceptacion: codigoGenerado,
-        aceptoPrivacidad: true,
-        fechaAceptoPrivacidad: new Date().toISOString(),
-        registradoAt: new Date().toISOString(),
-        ultimaConexion: new Date().toISOString()
+        nombre, telefono: telLimpio, vehiculo, placa,
+        enLinea: false, estado: 'pendiente', codigoAceptacion: codigoGenerado,
+        aceptoPrivacidad: true, registradoAt: new Date().toISOString()
       };
 
       db.ref(`choferes/${telLimpio}`).set(choferNuevo).then(() => {
         btn.disabled = false;
-        btn.innerHTML = `<span>Crear Cuenta y Solicitar Código</span> <i data-lucide="check" class="w-4 h-4"></i>`;
-        
-        mostrarToast("Registro guardado. Solicita tu código al administrador.", "Registro Pendiente", "success");
+        btn.innerHTML = `<span>Crear cuenta y solicitar código</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+        mostrarToast("Registro guardado. Solicita el código.", "Pendiente", "success");
         mostrarVistaVerificacion(choferNuevo);
-      }).catch(() => {
-        btn.disabled = false;
-        btn.innerHTML = `<span>Crear Cuenta y Solicitar Código</span> <i data-lucide="check" class="w-4 h-4"></i>`;
-        mostrarToast("Hubo un error al guardar tu perfil", "Error", "error");
       });
     }
 
     function validarCodigoAceptacion() {
       if (!choferEnEspera) return;
       const inputCodigo = document.getElementById('input-codigo-verificacion').value.trim().toUpperCase();
-
-      if (!inputCodigo) {
-        mostrarToast("Ingresa el código proporcionado por el administrador", "Código Requerido", "error");
-        return;
-      }
-
-      const codigoValido = (choferEnEspera.codigoAceptacion || choferEnEspera.clave || '').toString().trim().toUpperCase();
+      const codigoValido = (choferEnEspera.codigoAceptacion || '').toString().trim().toUpperCase();
 
       if (inputCodigo === codigoValido || inputCodigo === 'FLASHADMIN') {
         const tel = normalizarTelefono(choferEnEspera.telefono);
-        db.ref(`choferes/${tel}`).update({
-          estado: 'autorizado',
-          enLinea: true,
-          autorizadoAt: new Date().toISOString()
-        }).then(() => {
+        db.ref(`choferes/${tel}`).update({ estado: 'autorizado', enLinea: true }).then(() => {
           choferEnEspera.estado = 'autorizado';
           activarAccesoChofer(choferEnEspera);
         });
       } else {
-        mostrarToast("El código ingresado no coincide con el del panel administrador.", "Código Incorrecto", "error");
+        mostrarToast("El código no coincide.", "Código incorrecto", "error");
       }
     }
 
     function solicitarCodigoWhatsAppAdmin() {
       if (!choferEnEspera) return;
-      const mensaje = encodeURIComponent(
-        `👋 *¡HOLA ADMINISTRADOR DE PEDIDOS FLASH!* 🛵\n\n` +
-        `Acabo de registrarme como Chofer y acepté los permisos de privacidad.\n\n` +
-        `👤 *Nombre:* ${choferEnEspera.nombre}\n` +
-        `📞 *Teléfono:* ${choferEnEspera.telefono}\n` +
-        `🛵 *Vehículo:* ${choferEnEspera.vehiculo || 'Moto'} (${choferEnEspera.placa || 'Sin placa'})\n\n` +
-        `Por favor envíeme mi *Código de Aceptación* para activar mi cuenta.`
-      );
-
+      const mensaje = encodeURIComponent(`Hola Administración, solicito código de activación para el chofer ${choferEnEspera.nombre} (${choferEnEspera.telefono}).`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
     }
 
     function activarAccesoChofer(dataChofer) {
       if (listenerAprobacionRealTime && dataChofer.telefono) {
-        const tel = normalizarTelefono(dataChofer.telefono);
-        db.ref(`choferes/${tel}`).off('value', listenerAprobacionRealTime);
+        db.ref(`choferes/${normalizarTelefono(dataChofer.telefono)}`).off('value', listenerAprobacionRealTime);
       }
 
       choferActual = {
@@ -937,57 +971,47 @@
 
       localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
       document.getElementById('pantalla-auth').classList.add('hidden');
-      document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre} (${choferActual.vehiculo})`;
+      document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
+      document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
+      document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
 
       iniciarConexionChoferFirebase();
       iniciarSeguimientoGps();
       renderizarPedidos();
-      mostrarToast(`¡Bienvenido a Pedidos Flash, ${choferActual.nombre}!`, "Cuenta Autorizada", "success");
+      mostrarToast(`Bienvenido, ${choferActual.nombre}`, "Conectado", "success");
     }
 
     function cerrarSesionChofer() {
-      if (confirm("¿Deseas cerrar tu sesión como chofer?")) {
+      if (confirm("¿Deseas cerrar tu sesión?")) {
         if (choferActual && choferActual.telefono) {
-          const tel = normalizarTelefono(choferActual.telefono);
-          db.ref(`choferes/${tel}`).update({ enLinea: false });
+          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}`).update({ enLinea: false });
         }
         localStorage.removeItem('chofer_pedidosflash_v2');
         choferActual = null;
         document.getElementById('pantalla-auth').classList.remove('hidden');
-        document.getElementById('header-nombre-chofer').innerText = "Cargando...";
         cambiarModoAuth('login');
       }
     }
 
-    // ================= AUDIO Y ALERTAS =================
     function emitirAlertaSonoraNuevoPedido() {
       if (!audioHabilitado) return;
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
         const tocarTono = (freq, inicio, duracion) => {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
-          osc.type = 'triangle';
           osc.frequency.setValueAtTime(freq, audioCtx.currentTime + inicio);
-          gain.gain.setValueAtTime(0.3, audioCtx.currentTime + inicio);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + inicio + duracion);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime + inicio);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + inicio + duracion);
+          osc.connect(gain); gain.connect(audioCtx.destination);
           osc.start(audioCtx.currentTime + inicio);
           osc.stop(audioCtx.currentTime + inicio + duracion);
         };
-
-        tocarTono(880, 0, 0.25);   
-        tocarTono(1174, 0.22, 0.4); 
-        tocarTono(1318, 0.5, 0.6);  
-
-        if (navigator.vibrate) {
-          navigator.vibrate([400, 200, 400, 200, 800]);
-        }
-      } catch(e) {
-        console.warn("Audio Context bloqueado:", e);
-      }
+        tocarTono(523.25, 0, 0.25);
+        tocarTono(659.25, 0.10, 0.30);
+        tocarTono(783.99, 0.22, 0.45);
+        if (navigator.vibrate) navigator.vibrate([150, 75, 150]);
+      } catch(e) {}
     }
 
     function toggleAudioAlertas() {
@@ -995,11 +1019,10 @@
       const icono = document.getElementById('icono-audio-header');
       if (audioHabilitado) {
         icono.setAttribute('data-lucide', 'volume-2');
-        mostrarToast("Alertas sonoras activadas", "Sonido", "success");
-        emitirAlertaSonoraNuevoPedido();
+        mostrarToast("Alertas acústicas activadas.", "Sonido", "success");
       } else {
         icono.setAttribute('data-lucide', 'volume-x');
-        mostrarToast("Alertas silenciadas", "Sonido", "info");
+        mostrarToast("Alertas silenciadas.", "Sonido", "info");
       }
       lucide.createIcons();
     }
@@ -1008,45 +1031,74 @@
       if (!choferActual) return;
       const keys = Object.keys(nuevos);
       const pendientes = keys.filter(k => nuevos[k].estado === 'pendiente');
-
       if (pendientes.length > 0) {
         const masRecienteId = pendientes[pendientes.length - 1];
         if (ultimoPedidoVistoId && ultimoPedidoVistoId !== masRecienteId) {
           emitirAlertaSonoraNuevoPedido();
-          mostrarToast("¡Nueva carrera disponible! Toca para verla.", "🚨 ¡NUEVO PEDIDO FLASH!", "success");
-
-          if ("Notification" in window && Notification.permission === "granted") {
-            const p = nuevos[masRecienteId];
-            new Notification("🚨 ¡NUEVO PEDIDO FLASH DISPONIBLE!", {
-              body: `Carrera para entregar en: ${p.direccion || 'Nirgua'}. Ganancia: $0.70.`
-            });
-          }
+          mostrarToast("¡Nueva carrera disponible!", "Pedidos Flash", "success");
         }
         ultimoPedidoVistoId = masRecienteId;
       }
     }
 
-    // ================= CONEXIÓN FIREBASE & ESTADO EN LÍNEA =================
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button, .btn-spring, [role="button"]')) {
+        if (audioHabilitado) {
+          try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(300, now + 0.03);
+            gain.gain.setValueAtTime(0.06, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(now); osc.stop(now + 0.04);
+            if (navigator.vibrate) navigator.vibrate([15]);
+          } catch(e) {}
+        }
+      }
+    }, { passive: true });
+
+    function tocarTonoMecanico(encendido = true) {
+      if (!audioHabilitado) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.setValueAtTime(encendido ? 880 : 340, now);
+        osc.frequency.exponentialRampToValueAtTime(encendido ? 1480 : 180, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.15);
+      } catch(e) {}
+    }
+
+    function tocarAvatarChofer() {
+      if (!choferActual) return;
+      mostrarToast(`Conductor: ${choferActual.nombre} (${choferActual.vehiculo || 'Moto'})`, "Ficha Pro", "success");
+    }
+
+    function contactarBaseAdminWhatsApp() {
+      const msg = encodeURIComponent(`Hola Central Nirgua, saludo desde el terminal conductor.`);
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msg}`, '_blank');
+    }
+
     function iniciarConexionChoferFirebase() {
       if (!choferActual || !choferActual.telefono) return;
       const tel = normalizarTelefono(choferActual.telefono);
-
-      const choferRef = db.ref(`choferes/${tel}`);
-      
-      choferRef.update({
+      db.ref(`choferes/${tel}`).update({
         nombre: choferActual.nombre,
         telefono: choferActual.telefono,
         vehiculo: choferActual.vehiculo || 'Moto',
-        placa: choferActual.placa || '',
         enLinea: choferActual.enLinea !== false,
         ultimaConexion: new Date().toISOString()
       });
-
-      choferRef.onDisconnect().update({
-        enLinea: false,
-        desconectadoAt: new Date().toISOString()
-      });
-
+      db.ref(`choferes/${tel}`).onDisconnect().update({ enLinea: false });
       actualizarVistaEstadoConexion();
     }
 
@@ -1054,66 +1106,55 @@
       if (!choferActual) return;
       choferActual.enLinea = !choferActual.enLinea;
       localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+      tocarTonoMecanico(choferActual.enLinea);
 
-      const tel = normalizarTelefono(choferActual.telefono);
-      db.ref(`choferes/${tel}`).update({
+      db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}`).update({
         enLinea: choferActual.enLinea,
         ultimaConexion: new Date().toISOString()
       });
-
       actualizarVistaEstadoConexion();
-
-      if (choferActual.enLinea) {
-        mostrarToast("¡Estás en línea! Recibirás pedidos con sonido en vivo.", "Conectado", "success");
-      } else {
-        mostrarToast("Estás fuera de línea. El rastreo GPS en vivo se ha pausado.", "Desconectado", "info");
-      }
+      mostrarToast(choferActual.enLinea ? "En servicio." : "Turno pausado.", "Estado", "info");
     }
 
     function actualizarVistaEstadoConexion() {
       const estaEnLinea = choferActual && choferActual.enLinea !== false;
-      const txt = document.getElementById('txt-estado-conexion');
-      const sub = document.getElementById('sub-estado-conexion');
+      const txtRidery = document.getElementById('txt-ridery-estado');
+      const subRidery = document.getElementById('sub-ridery-telemetria');
+      const beaconRidery = document.getElementById('beacon-ridery');
+      const iconoBeacon = document.getElementById('icono-beacon-ridery');
+      const pingLuz = document.getElementById('ping-ridery-luz');
       const btn = document.getElementById('btn-switch-conexion');
-      const ping = document.getElementById('indicador-estado-ping');
+      const thumb = document.getElementById('switch-thumb');
+      const iconThumb = document.getElementById('icono-switch-thumb');
+      const avatarIndicator = document.getElementById('avatar-live-indicator');
       const bannerDesconectado = document.getElementById('banner-desconectado');
 
       if (estaEnLinea) {
-        txt.innerText = "🟢 EN LÍNEA (Recibiendo pedidos)";
-        txt.className = "text-xs font-black text-accent-emerald block leading-tight";
-        sub.innerText = "GPS y Despacho activo en Nirgua";
-        btn.innerHTML = `<span>Activo</span>`;
-        btn.className = "btn-tactil bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-[11px] shadow-glow-emerald flex items-center gap-1";
-        ping.className = "w-3 h-3 rounded-full bg-accent-emerald animate-ping";
-        bannerDesconectado.classList.add('hidden');
+        if (txtRidery) txtRidery.innerText = "ESTÁS EN LÍNEA";
+        if (subRidery) subRidery.innerText = "GPS Nirgua Activo • Buscando carreras";
+        if (beaconRidery) beaconRidery.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.35)]";
+        if (iconoBeacon) iconoBeacon.className = "w-4 h-4 animate-pulse text-emerald-400";
+        if (pingLuz) pingLuz.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping inline-block";
+        if (btn) btn.className = "btn-spring relative w-[54px] h-[30px] bg-emerald-500/25 border-2 border-emerald-400/60 rounded-full p-0.5 cursor-pointer flex items-center transition-all select-none shadow-glow-emerald";
+        if (thumb) thumb.className = "w-6 h-6 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399] flex items-center justify-center text-slate-950 font-black text-[9px] transition-transform duration-300 transform translate-x-6";
+        if (iconThumb) iconThumb.setAttribute('data-lucide', 'check');
+        if (avatarIndicator) avatarIndicator.className = "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#090d18] shadow-[0_0_8px_#10b981]";
+        if (bannerDesconectado) bannerDesconectado.classList.add('hidden');
       } else {
-        txt.innerText = "🔴 FUERA DE LÍNEA (Pausado)";
-        txt.className = "text-xs font-black text-slate-400 block leading-tight";
-        sub.innerText = "GPS en pausa • Alertas por WhatsApp";
-        btn.innerHTML = `<span>Conectar</span>`;
-        btn.className = "btn-tactil bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-[11px] border border-slate-700 flex items-center gap-1";
-        ping.className = "w-3 h-3 rounded-full bg-slate-600";
-        bannerDesconectado.classList.remove('hidden');
+        if (txtRidery) txtRidery.innerText = "ESTÁS DESCONECTADO (PAUSADO)";
+        if (subRidery) subRidery.innerText = "Turno en reposo • Toca para conectar";
+        if (beaconRidery) beaconRidery.className = "w-8 h-8 rounded-xl bg-white/5 text-slate-500 border border-white/10 flex items-center justify-center shrink-0";
+        if (iconoBeacon) iconoBeacon.className = "w-4 h-4 text-slate-500";
+        if (pingLuz) pingLuz.className = "w-2 h-2 rounded-full bg-slate-600 hidden";
+        if (btn) btn.className = "btn-spring relative w-[54px] h-[30px] bg-slate-800/80 border-2 border-slate-700 rounded-full p-0.5 cursor-pointer flex items-center transition-all select-none";
+        if (thumb) thumb.className = "w-6 h-6 rounded-full bg-slate-500 shadow-sm flex items-center justify-center text-white font-black text-[9px] transition-transform duration-300 transform translate-x-0";
+        if (iconThumb) iconThumb.setAttribute('data-lucide', 'power');
+        if (avatarIndicator) avatarIndicator.className = "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-slate-600 border-2 border-[#090d18]";
+        if (bannerDesconectado) bannerDesconectado.classList.remove('hidden');
       }
+      lucide.createIcons();
     }
 
-    function probarNotificacionWhatsApp() {
-      if (!choferActual || !choferActual.telefono) return;
-      const telLimpio = normalizarTelefono(choferActual.telefono);
-
-      const mensaje = encodeURIComponent(
-        `🚨 *¡NOTIFICACIÓN PEDIDOS FLASH - NUEVA CARRERA!* 🛵\n\n` +
-        `Hola *${choferActual.nombre}*, tienes un nuevo pedido disponible en Nirgua.\n\n` +
-        `💰 *Tu ganancia:* $0.70\n` +
-        `📍 *Zona:* Nirgua Centro / Domicilio\n\n` +
-        `👉 *Entra aquí a la app para aceptarla:* \n` +
-        `${window.location.href}`
-      );
-
-      window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
-    }
-
-    // ================= SEGUIMIENTO GPS OPTIMIZADO (AHORRO DE CUOTA FIREBASE) =================
     function iniciarSeguimientoGps() {
       if (!navigator.geolocation) return;
       if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
@@ -1122,95 +1163,127 @@
         choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
         actualizarBadgeGps('granted');
 
-        // Solo escribe en Firebase si el chofer está EN LÍNEA y pasaron al menos 15 segundos
         const ahora = Date.now();
         if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 15000)) {
           ultimoEnvioGpsTimestamp = ahora;
-          const tel = normalizarTelefono(choferActual.telefono);
-          db.ref(`choferes/${tel}/gps`).set({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            actualizado: new Date().toISOString()
+          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
+            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
           });
         }
-      }, (err) => {
-        if (err.code === 1) actualizarBadgeGps('denied');
-      }, { enableHighAccuracy: true, maximumAge: 10000 });
+      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 10000 });
     }
 
     function centrarGpsChoferEnMapa() {
       if (mapaInstance && choferGpsPunto) {
         mapaInstance.setView(choferGpsPunto, 16);
         if (marcadorChoferGpsRef) marcadorChoferGpsRef.openPopup();
-        mostrarToast("Centrado en tu ubicación GPS", "GPS Chofer", "info");
       }
     }
 
-    // ================= FILTROS Y TABS =================
     function filtrarTab(tab) {
       tabActual = tab;
-      const idsTabs = ['disponibles', 'mis-pedidos', 'historial'];
-      
-      idsTabs.forEach(t => {
+      ['disponibles', 'mis-pedidos', 'historial'].forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
-        if (t === tab) {
-          btn.className = "btn-tactil py-2 text-center rounded-xl text-[11px] font-black bg-indigo-600 text-white shadow-md transition flex items-center justify-center gap-1";
-        } else {
-          btn.className = "btn-tactil py-2 text-center rounded-xl text-[11px] font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1";
-        }
+        if (!btn) return;
+        if (t === tab) btn.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-extrabold bg-[#1a233b] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5";
+        else btn.className = "btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5";
       });
-
+      actualizarDockActivo(tab);
       renderizarPedidos();
     }
 
-    // ================= RENDERIZADO DE PEDIDOS =================
+    function actualizarDockActivo(tab) {
+      const btnInicio = document.getElementById('dock-btn-inicio');
+      const btnPedidos = document.getElementById('dock-btn-pedidos');
+      const btnHistorial = document.getElementById('dock-btn-historial');
+      if (!btnInicio || !btnPedidos || !btnHistorial) return;
+
+      [btnInicio, btnPedidos, btnHistorial].forEach(b => {
+        b.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white";
+      });
+
+      btnInicio.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Despacho</span>`;
+      btnPedidos.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">En Ruta</span>`;
+      btnHistorial.innerHTML = `<div class="w-9 h-9 rounded-full flex items-center justify-center"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-medium">Historial</span>`;
+
+      if (tab === 'disponibles') {
+        btnInicio.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
+        btnInicio.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center shadow-glow-solar"><i data-lucide="package" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">Despacho</span>`;
+      } else if (tab === 'mis-pedidos') {
+        btnPedidos.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
+        btnPedidos.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-glow-blue"><i data-lucide="navigation-2" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">En Ruta</span>`;
+      } else if (tab === 'historial') {
+        btnHistorial.className = "btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white";
+        btnHistorial.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 flex items-center justify-center shadow-glow-emerald"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div><span class="text-[9px] font-extrabold text-white">Historial</span>`;
+      }
+      lucide.createIcons();
+    }
+
     function renderizarPedidos() {
       const contenedor = document.getElementById('contenedor-pedidos');
       contenedor.innerHTML = "";
 
       const keys = Object.keys(todosLosPedidos);
-      let cantDisponibles = 0;
-      let cantActivos = 0;
-      let cantHistorial = 0;
+      let cantDisponibles = 0, cantActivos = 0, cantHistorial = 0;
 
       keys.forEach(id => {
         const p = todosLosPedidos[id];
         if (p.estado === 'pendiente') cantDisponibles++;
-        
         if (choferActual && p.choferTelefono === choferActual.telefono) {
-          if (p.estado === 'aceptado' || p.estado === 'en_camino') {
-            cantActivos++;
-          } else if (p.estado === 'entregado') {
-            cantHistorial++;
-          }
+          if (p.estado === 'aceptado' || p.estado === 'en_camino') cantActivos++;
+          else if (p.estado === 'entregado') cantHistorial++;
         }
       });
 
       totalGananciasAcumuladas = cantHistorial * TARIFA_CHOFER;
-
       document.getElementById('badge-disponibles').innerText = cantDisponibles;
       document.getElementById('badge-activos').innerText = cantActivos;
       document.getElementById('badge-historial').innerText = cantHistorial;
       document.getElementById('total-ganancias-chofer').innerText = `$${totalGananciasAcumuladas.toFixed(2)}`;
+      document.getElementById('total-ganancias-chofer-header').innerText = `$${totalGananciasAcumuladas.toFixed(2)}`;
+
+      const bannerActiva = document.getElementById('banner-carrera-activa-alerta');
+      if (bannerActiva) {
+        if (cantActivos > 0 && tabActual === 'disponibles') {
+          bannerActiva.innerHTML = `
+            <div onclick="filtrarTab('mis-pedidos')" class="btn-spring cursor-pointer bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/15 border-2 border-amber-400/50 p-2.5 px-3.5 rounded-2xl flex items-center justify-between shadow-glow-solar btn-pulso-solar">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shrink-0">
+                  <i data-lucide="navigation-2" class="w-4 h-4 animate-bounce"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-black text-amber-200 block leading-tight">Tienes ${cantActivos} carrera activa</span>
+                  <span class="text-[10px] text-slate-300 font-mono">¡Llévala a su destino ahora!</span>
+                </div>
+              </div>
+              <span class="text-[11px] font-black text-slate-950 bg-amber-400 px-3 py-1 rounded-xl shadow-md flex items-center gap-1 shrink-0">
+                <span>Llévala</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+            </div>
+          `;
+          bannerActiva.classList.remove('hidden');
+        } else {
+          bannerActiva.classList.add('hidden');
+          bannerActiva.innerHTML = "";
+        }
+      }
 
       const pedidosFiltrados = keys.filter(id => {
         const p = todosLosPedidos[id];
         if (tabActual === 'disponibles') return p.estado === 'pendiente';
-        if (tabActual === 'mis-pedidos') {
-          return choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_camino');
-        }
-        if (tabActual === 'historial') {
-          return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
-        }
+        if (tabActual === 'mis-pedidos') return choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_camino');
+        if (tabActual === 'historial') return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
         return false;
       }).reverse();
 
       if (pedidosFiltrados.length === 0) {
         contenedor.innerHTML = `
-          <div class="text-center py-14 bg-slate-950/60 rounded-3xl border border-slate-800 p-6 space-y-2">
-            <i data-lucide="package-open" class="w-10 h-10 mx-auto text-slate-600 opacity-60"></i>
-            <h4 class="text-xs font-bold text-slate-400">No hay carreras en esta sección</h4>
-            <p class="text-[11px] text-slate-500">Mantente en línea para recibir los nuevos pedidos en tiempo real.</p>
+          <div class="text-center py-10 bg-[#0c1222]/80 backdrop-blur-xl rounded-[28px] border border-white/10 p-5 space-y-2 shadow-card-luxury">
+            <div class="w-11 h-11 rounded-2xl bg-white/5 text-slate-400 border border-white/10 flex items-center justify-center mx-auto mb-1">
+              <i data-lucide="package-search" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-xs font-bold text-white tracking-tight">No hay carreras en esta categoría</h4>
+            <p class="text-[10px] text-slate-400 font-medium">Mantén tu turno activo para recibir nuevas carreras en Nirgua.</p>
           </div>
         `;
         lucide.createIcons();
@@ -1219,67 +1292,146 @@
 
       pedidosFiltrados.forEach(id => {
         const p = todosLosPedidos[id];
-        const numOrden = p.orden || `#FLASH-${id.substring(id.length - 4)}`;
+        const numOrden = p.orden || `#PF-${id.substring(id.length - 4)}`;
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
-        const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección especificada');
+        const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
+        const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
         const monto = p.total || p.montoTotal || p.monto || 0;
-        
         const metodoPago = p.metodoPago || p.pago || 'Efectivo';
         const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
         const badgePago = esPagoMovil 
-          ? `<span class="bg-cyan-500/15 text-accent-cyan border border-accent-cyan/30 text-[9px] font-black px-2 py-0.5 rounded-md">📲 Pago Móvil</span>`
-          : `<span class="bg-emerald-500/15 text-accent-emerald border border-emerald-500/30 text-[9px] font-black px-2 py-0.5 rounded-md">💵 Efectivo</span>`;
+          ? `<span class="bg-blue-500/15 text-blue-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-blue-400/30">Pago Móvil</span>`
+          : `<span class="bg-emerald-500/15 text-emerald-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-emerald-400/30">Efectivo</span>`;
 
         const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
         const badgeTienda = tiendaNombre 
-          ? `<span class="bg-amber-500/20 text-accent-yellow border border-amber-500/40 text-[9px] font-black px-2 py-0.5 rounded-md flex items-center gap-1">🏪 Retiro: ${tiendaNombre}</span>`
-          : `<span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[9px] font-black px-2 py-0.5 rounded-md">📦 Víveres Flash</span>`;
+          ? `<span class="bg-amber-500/15 text-amber-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-amber-400/30 flex items-center gap-1 truncate max-w-[130px]"><i data-lucide="store" class="w-3 h-3 shrink-0"></i> ${tiendaNombre}</span>`
+          : `<span class="bg-white/5 text-slate-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/10">Paquete Flash</span>`;
+
+        if (p.estado === 'aceptado' || p.estado === 'en_camino') {
+          contenedor.innerHTML += `
+            <div class="bg-gradient-to-b from-[#141d36]/95 to-[#0b1020]/95 backdrop-blur-xl border-2 border-amber-500/50 rounded-[26px] p-4 space-y-3 shadow-card-luxury relative overflow-hidden">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                  <span class="text-[10px] font-mono font-black text-amber-300 uppercase tracking-wider">CARRERA EN CURSO</span>
+                </div>
+                <span class="text-[10px] font-black font-mono text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40">+$0.70 por entrega</span>
+              </div>
+
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <div class="min-w-0 flex-1">
+                    <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-tight block">${numOrden}</span>
+                    <h3 class="text-sm font-black text-white truncate tracking-tight">${nombreCliente}</h3>
+                  </div>
+                  <div class="text-right shrink-0">
+                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">Cobro</span>
+                    <span class="text-sm font-black font-mono text-white tabular-nums">$${parseFloat(monto).toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div class="bg-[#080d19] p-2.5 rounded-2xl border border-white/10 mt-2 space-y-1.5 text-[11px]">
+                  ${tiendaNombre ? `
+                    <div class="flex items-center gap-2 text-slate-300">
+                      <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
+                      <span class="text-slate-400 font-medium">Retiro:</span>
+                      <span class="font-bold text-white truncate">${tiendaNombre}</span>
+                    </div>
+                  ` : ''}
+                  <div class="flex items-center gap-2 text-slate-300">
+                    <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
+                    <span class="text-amber-300 font-bold shrink-0">Llévala a:</span>
+                    <span class="font-bold text-slate-100 truncate">${direccionCliente}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2 pt-0.5">
+                ${p.estado === 'aceptado' ? `
+                  <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
+                    <i data-lucide="navigation-2" class="w-4 h-4 animate-bounce"></i>
+                    <span class="tracking-wide uppercase">¡LLÉVALA YA! (Iniciar Trayecto)</span>
+                  </button>
+                ` : `
+                  <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    <span class="tracking-wide uppercase">CONFIRMAR ENTREGA (Cobrar $0.70)</span>
+                  </button>
+                `}
+
+                <div class="grid grid-cols-3 gap-1.5">
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=${p.lat || 10.1700},${p.lng || -68.2200}" target="_blank" class="btn-spring bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
+                    <i data-lucide="navigation" class="w-3 h-3 fill-white"></i> Maps GPS
+                  </a>
+                  <button onclick="contactarClienteWhatsApp('${telefonoCliente}', '${nombreCliente}')" class="btn-spring bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-400/40 font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
+                    <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp
+                  </button>
+                  <button onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/10 hover:bg-white/15 text-slate-200 font-bold py-2 px-1.5 rounded-xl text-[10px] flex items-center justify-center gap-1 border border-white/10 shadow-sm">
+                    <i data-lucide="map" class="w-3 h-3 text-blue-400"></i> Detalle
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          return;
+        }
 
         contenedor.innerHTML += `
-          <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-3.5 space-y-3 shadow-lg hover:border-slate-700 transition">
-            <div class="flex justify-between items-start gap-2">
-              <div class="min-w-0 flex-1">
-                <div class="flex flex-wrap items-center gap-1.5 mb-1">
-                  <span class="text-[9px] font-black uppercase tracking-wider ${p.estado === 'entregado' ? 'bg-emerald-950 text-accent-emerald border-emerald-500/30' : 'bg-slate-950 text-accent-cyan border-slate-800'} px-2 py-0.5 rounded-md border">
-                    ${numOrden} • ${p.estado.toUpperCase()}
-                  </span>
-                  ${badgePago}
-                  ${badgeTienda}
+          <div class="bg-gradient-to-b from-[#10172b]/90 to-[#0b101e]/90 backdrop-blur-xl border border-white/10 rounded-[26px] p-3.5 space-y-2.5 shadow-card-luxury hover:border-blue-500/40 transition-all duration-200">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.25)]">
+                  <i data-lucide="${p.estado === 'entregado' ? 'check-circle-2' : 'box'}" class="w-4 h-4"></i>
                 </div>
-                <h3 class="text-xs font-black text-white truncate">${nombreCliente}</h3>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5 mb-0.5">
+                    <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-tight">${numOrden}</span>
+                    ${badgePago}
+                    ${badgeTienda}
+                  </div>
+                  <h3 class="text-xs font-black text-white truncate tracking-tight">${nombreCliente}</h3>
+                </div>
               </div>
               
               <div class="text-right shrink-0">
-                <span class="text-sm font-black text-accent-yellow block leading-tight">$${parseFloat(monto).toFixed(2)}</span>
-                <span class="text-[9px] font-bold text-accent-emerald bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/40">+$0.70 Ganancia</span>
+                <span class="text-xs font-black font-mono text-white block leading-tight tabular-nums">$${parseFloat(monto).toFixed(2)}</span>
+                <span class="text-[9px] font-black font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40 tabular-nums shadow-[0_0_8px_rgba(16,185,129,0.25)]">+$0.70</span>
               </div>
             </div>
 
-            <p class="text-[11px] text-slate-300 line-clamp-2 bg-slate-950/70 p-2 rounded-xl border border-slate-800/80">
-              📍 <span class="text-slate-400 font-semibold">Entrega:</span> ${direccionCliente}
-            </p>
+            <div class="bg-[#080d19] p-2 rounded-2xl border border-white/5 space-y-1 text-[11px]">
+              ${tiendaNombre ? `
+                <div class="flex items-center gap-2 text-slate-300">
+                  <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
+                  <span class="text-slate-400 font-medium">Retiro:</span>
+                  <span class="font-bold text-slate-200 truncate">${tiendaNombre}</span>
+                </div>
+              ` : ''}
+              <div class="flex items-center gap-2 text-slate-300">
+                <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
+                <span class="text-slate-400 font-medium">Entrega:</span>
+                <span class="font-bold text-slate-200 truncate">${direccionCliente}</span>
+              </div>
+            </div>
 
-            <div class="flex gap-2 pt-1 border-t border-slate-800">
-              <button onclick="verMapaYDetalle('${id}')" class="btn-tactil flex-1 bg-slate-950 hover:bg-slate-800 text-indigo-300 font-bold py-2.5 rounded-xl text-xs border border-indigo-500/30 flex items-center justify-center gap-1.5">
-                <i data-lucide="map" class="w-3.5 h-3.5 text-accent-cyan"></i> Ruta y Mapa
+            <div class="flex gap-2 pt-0.5">
+              <button onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-1 border border-white/10 shadow-sm shrink-0">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i>
+                <span>Ruta</span>
               </button>
               
               ${p.estado === 'pendiente' ? `
-                <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs shadow-glow-emerald border-t border-white/20 whitespace-nowrap">
-                  Aceptar ($0.70)
+                <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring btn-pulso-activo flex-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-2.5 px-4 rounded-2xl text-xs shadow-glow-blue border border-white/20 whitespace-nowrap flex items-center justify-center gap-2">
+                  <span>TOMAR CARRERA (+$0.70)</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
               ` : ''}
 
-              ${p.estado === 'aceptado' ? `
-                <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-tactil bg-gradient-to-r from-accent-magenta to-indigo-600 hover:brightness-110 text-white font-black px-3.5 py-2.5 rounded-xl text-xs shadow-glow-magenta whitespace-nowrap">
-                  🛵 En Camino
-                </button>
-              ` : ''}
-
-              ${p.estado === 'en_camino' ? `
-                <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-tactil bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black px-3.5 py-2.5 rounded-xl text-xs shadow-glow-emerald whitespace-nowrap">
-                  ✅ Entregar
-                </button>
+              ${p.estado === 'entregado' ? `
+                <div class="flex-1 py-2 text-center text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Entregada con éxito
+                </div>
               ` : ''}
             </div>
           </div>
@@ -1289,13 +1441,11 @@
       lucide.createIcons();
     }
 
-    // ================= CAMBIO DE ESTADO DE PEDIDOS =================
     function cambiarEstado(id, nuevoEstado) {
       if (!choferActual) {
         document.getElementById('pantalla-auth').classList.remove('hidden');
         return;
       }
-
       const pedido = todosLosPedidos[id];
 
       db.ref(`pedidos/${id}`).update({
@@ -1306,47 +1456,33 @@
         fechaActualizacion: new Date().toISOString()
       }).then(() => {
         cerrarModalMapa();
-
         if (nuevoEstado === 'aceptado') {
-          mostrarToast("¡Carrera aceptada! Ya está en tu pestaña 'En Curso'.", "Aceptado", "success");
+          mostrarToast("¡Orden aceptada! Pasa a 'En Ruta'.", "Aceptado", "success");
         } else if (nuevoEstado === 'en_camino') {
-          mostrarToast("Marcado 'En Camino'. Abriendo WhatsApp al cliente...", "En Camino", "info");
-          
+          mostrarToast("Iniciando despacho. Notificando al cliente...", "En Camino", "info");
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
-            const telLimpio = normalizarTelefono(telefonoCliente);
-            const mensaje = encodeURIComponent(
-              `🛵 *¡TU PEDIDO DE PEDIDOS FLASH VA EN CAMINO!* 🛵\n\n` +
-              `Hola, te saluda tu repartidor *${choferActual.nombre}* (${choferActual.vehiculo || 'Moto'}).\n\n` +
-              `Ya retiré tu pedido y voy en camino a tu dirección. ¡Por favor mantente atento/a al teléfono!`
-            );
-            window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
+            const mensaje = encodeURIComponent(`🛵 *¡Tu pedido va en camino!* Te saluda ${choferActual.nombre}.`);
+            window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${mensaje}`, '_blank');
           }
         } else if (nuevoEstado === 'entregado') {
-          mostrarToast("¡Entrega finalizada con éxito! +$0.70 sumado a tus ganancias.", "¡Completado!", "success");
+          mostrarToast("¡Entrega finalizada! +$0.70 acreditado.", "Completado", "success");
         }
       });
     }
 
-    // ================= CONTACTO CON CLIENTE POR WHATSAPP =================
     function contactarClienteWhatsApp(telefonoCliente, nombreCliente) {
       if (!telefonoCliente) {
-        mostrarToast("No hay número de teléfono registrado", "Aviso", "error");
+        mostrarToast("No hay número telefónico registrado.", "Aviso", "error");
         return;
       }
-      const telLimpio = normalizarTelefono(telefonoCliente);
-      const mensaje = encodeURIComponent(
-        `🛵 *Pedidos Flash Nirgua - Chofer en Contacto*\n\n` +
-        `Hola *${nombreCliente}*, te saluda *${choferActual ? choferActual.nombre : 'tu chofer'}* de Pedidos Flash con respecto a tu orden.`
-      );
-
-      window.open(`https://wa.me/${telLimpio}?text=${mensaje}`, '_blank');
+      const mensaje = encodeURIComponent(`🛵 *Pedidos Flash Nirgua*\nHola *${nombreCliente}*, te saluda *${choferActual.nombre}* con respecto a tu orden.`);
+      window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${mensaje}`, '_blank');
     }
 
-    // ================= RETIRO DE GANANCIAS =================
     function abrirModalRetiro() {
       if (totalGananciasAcumuladas <= 0) {
-        mostrarToast("Aún no tienes ganancias acumuladas para retirar.", "Saldo $0.00", "info");
+        mostrarToast("Aún no tienes comisiones acumuladas.", "Saldo $0.00", "info");
         return;
       }
       document.getElementById('monto-modal-retiro').innerText = `$${totalGananciasAcumuladas.toFixed(2)}`;
@@ -1363,41 +1499,26 @@
       const datos = document.getElementById('retiro-datos').value;
 
       if (choferActual && choferActual.telefono) {
-        const tel = normalizarTelefono(choferActual.telefono);
-        db.ref(`choferes/${tel}/solicitudesRetiro`).push({
-          monto: totalGananciasAcumuladas,
-          metodo: metodo,
-          datos: datos,
-          estado: 'pendiente',
-          fecha: new Date().toISOString()
+        db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/solicitudesRetiro`).push({
+          monto: totalGananciasAcumuladas, metodo, datos, estado: 'pendiente', fecha: new Date().toISOString()
         });
       }
 
-      const mensaje = encodeURIComponent(
-        `💸 *SOLICITUD DE RETIRO DE GANANCIAS - CHOFER* 💸\n\n` +
-        `👤 *Chofer:* ${choferActual.nombre}\n` +
-        `📞 *Teléfono:* ${choferActual.telefono}\n` +
-        `💰 *Monto Solicitado:* $${totalGananciasAcumuladas.toFixed(2)}\n` +
-        `🏦 *Método de Cobro:* ${metodo}\n` +
-        `📄 *Datos de Cuenta:* ${datos}`
-      );
-
+      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE RETIRO* 💸\n👤 Chofer: ${choferActual.nombre}\n💰 Monto: $${totalGananciasAcumuladas.toFixed(2)}\n🏦 Método: ${metodo}\n📄 Datos: ${datos}`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
       cerrarModalRetiro();
-      mostrarToast("Solicitud enviada a la Administración por WhatsApp", "Retiro Solicitado", "success");
+      mostrarToast("Solicitud enviada a la Administración.", "Retiro", "success");
     }
 
-    // ================= DETALLE CON MAPA Y RUTA (OPENSTREETMAP + OSRM GRATUITO) =================
     function verMapaYDetalle(id) {
       const p = todosLosPedidos[id];
       if (!p) return;
 
-      const numOrden = p.orden || `#FLASH-${id.substring(id.length - 4)}`;
+      const numOrden = p.orden || `#PF-${id.substring(id.length - 4)}`;
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
-      const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección especificada');
+      const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
       const monto = p.total || p.montoTotal || p.monto || 0;
-      
       const metodoPago = p.metodoPago || p.pago || 'Efectivo';
       const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
 
@@ -1406,22 +1527,19 @@
       document.getElementById('mapa-direccion-cliente').innerText = direccionCliente;
       document.getElementById('mapa-total-cobrar').innerText = `$${parseFloat(monto).toFixed(2)}`;
 
-      const btnLlamar = document.getElementById('mapa-btn-llamar');
-      btnLlamar.href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
-
-      const btnWa = document.getElementById('mapa-btn-wa');
-      btnWa.onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
+      document.getElementById('mapa-btn-llamar').href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
+      document.getElementById('mapa-btn-wa').onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
 
       const elMetodo = document.getElementById('mapa-metodo-pago');
-      elMetodo.innerText = esPagoMovil ? '📲 Pago Móvil' : '💵 Efectivo';
-      elMetodo.className = esPagoMovil ? 'font-black text-accent-cyan' : 'font-black text-accent-emerald';
+      elMetodo.innerText = esPagoMovil ? 'Pago Móvil' : 'Efectivo';
+      elMetodo.className = esPagoMovil ? 'font-bold text-blue-400 font-mono' : 'font-bold text-emerald-400 font-mono';
 
       const cajaDetallePago = document.getElementById('caja-detalle-pago-cliente');
       if (esPagoMovil && p.referenciaPago) {
-        cajaDetallePago.innerText = `🔢 Ref Pago Móvil: ${p.referenciaPago}`;
+        cajaDetallePago.innerText = `Referencia Pago Móvil: ${p.referenciaPago}`;
         cajaDetallePago.classList.remove('hidden');
       } else if (!esPagoMovil && p.pagaCon) {
-        cajaDetallePago.innerText = `💵 Paga con: ${p.pagaCon} (Llevar vuelto exacto)`;
+        cajaDetallePago.innerText = `Paga con: ${p.pagaCon}`;
         cajaDetallePago.classList.remove('hidden');
       } else {
         cajaDetallePago.classList.add('hidden');
@@ -1438,52 +1556,27 @@
 
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
-
       if (p.items && Array.isArray(p.items)) {
         p.items.forEach(it => {
-          listaItems.innerHTML += `
-            <div class="flex justify-between items-center py-0.5">
-              <span class="truncate pr-2">• ${it.cantidad || 1}x ${it.nombre}</span>
-              <span class="font-bold text-accent-yellow shrink-0">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span>
-            </div>
-          `;
+          listaItems.innerHTML += `<div class="flex justify-between items-center py-0.5"><span class="truncate pr-2">• ${it.cantidad || 1}x ${it.nombre}</span><span class="font-bold text-white shrink-0 font-mono">$${((it.cantidad || 1) * (it.precio || 0)).toFixed(2)}</span></div>`;
         });
       } else {
-        listaItems.innerHTML = `<p class="text-slate-400">Servicio de transporte directo solicitado.</p>`;
+        listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de traslado directo.</p>`;
       }
 
-      let latOrigen = p.origenLat ? parseFloat(p.origenLat) : 10.1500;
-      let lonOrigen = p.origenLng ? parseFloat(p.origenLng) : -68.5667;
-      let latDestino = p.lat ? parseFloat(p.lat) : 10.1700;
-      let lonDestino = p.lng ? parseFloat(p.lng) : -68.2200;
-
-      origenPuntoMapa = [latOrigen, lonOrigen];
-      destinoPuntoMapa = [latDestino, lonDestino];
-
-      // Enlace universal gratuito (abre la app nativa de Google Maps sin costo de API)
-      document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${latDestino},${lonDestino}`;
+      origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : 10.1500, p.origenLng ? parseFloat(p.origenLng) : -68.5667];
+      destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : 10.1700, p.lng ? parseFloat(p.lng) : -68.2200];
+      document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
-        contAccion.innerHTML = `
-          <button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-glow-emerald border-t border-white/20">
-            ACEPTAR ESTE PEDIDO / CARRERA ($0.70)
-          </button>
-        `;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2"><span>Aceptar carrera (+$0.70)</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>`;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = `
-          <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-tactil w-full bg-gradient-to-r from-accent-magenta to-indigo-600 hover:brightness-110 text-white font-black py-3 rounded-2xl text-xs shadow-glow-magenta border-t border-white/20">
-            MARCAR "EN CAMINO" 🛵
-          </button>
-        `;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto</span></button>`;
       } else if (p.estado === 'en_camino') {
-        contAccion.innerHTML = `
-          <button onclick="cambiarEstado('${id}', 'entregado')" class="btn-tactil w-full bg-gradient-to-r from-accent-emerald to-emerald-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-glow-emerald border-t border-white/20">
-            FINALIZAR Y MARCAR "ENTREGADO" ✅
-          </button>
-        `;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega</span></button>`;
       } else {
-        contAccion.innerHTML = `<p class="text-center text-xs text-accent-emerald font-black py-2 bg-emerald-950/40 rounded-xl border border-emerald-500/20">✅ Servicio Entregado con Éxito</p>`;
+        contAccion.innerHTML = `<div class="text-center text-xs text-emerald-400 font-extrabold font-mono py-2.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex items-center justify-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Entregado con éxito</div>`;
       }
 
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
@@ -1500,100 +1593,67 @@
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
         if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
-        marcadorOrigRef = L.marker(origenPuntoMapa, {
-          icon: L.divIcon({ 
-            html: '<div style="background:#00e676; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #00e676; display:flex; align-items:center; justify-content:center; font-size:11px;">🟢</div>', 
-            iconSize: [22, 22] 
-          })
-        }).addTo(mapaInstance).bindPopup(tiendaNombre ? `🏪 Retiro en: ${tiendaNombre}` : '🟢 Salida');
-
-        marcadorDestRef = L.marker(destinoPuntoMapa, {
-          icon: L.divIcon({ 
-            html: '<div style="background:#ff007a; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff007a; display:flex; align-items:center; justify-content:center; font-size:11px;">🔴</div>', 
-            iconSize: [22, 22] 
-          })
-        }).addTo(mapaInstance).bindPopup('🔴 Entrega al Cliente').openPopup();
+        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Retiro: ${tiendaNombre}` : 'Salida');
+        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Entrega').openPopup();
 
         if (choferGpsPunto) {
-          marcadorChoferGpsRef = L.marker(choferGpsPunto, {
-            icon: L.divIcon({ 
-              html: '<div style="background:#00f2fe; width:22px; height:22px; border-radius:50%; border:2px solid white; box-shadow:0 0 12px #00f2fe; display:flex; align-items:center; justify-content:center; font-size:12px;">🛵</div>', 
-              iconSize: [22, 22] 
-            })
-          }).addTo(mapaInstance).bindPopup('🛵 Tu Ubicación Actual');
+          marcadorChoferGpsRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Tu GPS');
         }
 
         mapaInstance.invalidateSize();
         calcularRutaOSRMChofer();
-
-      }, 250);
-
+      }, 200);
       lucide.createIcons();
     }
 
     function calcularRutaOSRMChofer() {
       if (!mapaInstance) return;
       if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
-
-      const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${origenPuntoMapa[1]},${origenPuntoMapa[0]};${destinoPuntoMapa[1]},${destinoPuntoMapa[0]}?overview=full&geometries=geojson`;
-
-      fetch(urlOSRM)
+      fetch(`https://router.project-osrm.org/route/v1/driving/${origenPuntoMapa[1]},${origenPuntoMapa[0]};${destinoPuntoMapa[1]},${destinoPuntoMapa[0]}?overview=full&geometries=geojson`)
         .then(res => res.json())
         .then(data => {
           if (data.routes && data.routes.length > 0) {
-            const coordsGeoJSON = data.routes[0].geometry.coordinates;
-            const latLngs = coordsGeoJSON.map(coord => [coord[1], coord[0]]);
-            lineaTrayecto = L.polyline(latLngs, { color: '#00f2fe', weight: 5, opacity: 0.85 }).addTo(mapaInstance);
+            const latLngs = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            lineaTrayecto = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaInstance);
             mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
           } else {
-            trazarLineaDirecta();
+            lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#3b82f6', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
           }
-        })
-        .catch(() => trazarLineaDirecta());
-    }
-
-    function trazarLineaDirecta() {
-      if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
-      lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#00f2fe', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
-      mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
+        }).catch(() => {});
     }
 
     function cerrarModalMapa() {
       document.getElementById('modal-detalle-pedido').classList.add('hidden');
     }
 
-    // ================= TOASTS =================
     let toastTimeout = null;
     function mostrarToast(mensaje, titulo = "Pedidos Flash", tipo = "info") {
       const toast = document.getElementById('toast-notificacion');
-      const toastTit = document.getElementById('toast-titulo');
-      const toastMsj = document.getElementById('toast-mensaje');
+      document.getElementById('toast-titulo').innerText = titulo;
+      document.getElementById('toast-mensaje').innerText = mensaje;
       const toastBg = document.getElementById('toast-icono-bg');
       const toastIcon = document.getElementById('toast-icono');
 
-      toastTit.innerText = titulo;
-      toastMsj.innerText = mensaje;
-
       if (tipo === 'success') {
-        toastBg.className = "w-8 h-8 rounded-xl bg-accent-emerald/20 text-accent-emerald flex items-center justify-center shrink-0";
+        toastBg.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-400/40 shadow-glow-emerald";
         toastIcon.setAttribute('data-lucide', 'check-circle');
       } else if (tipo === 'error') {
-        toastBg.className = "w-8 h-8 rounded-xl bg-accent-magenta/20 text-accent-magenta flex items-center justify-center shrink-0";
+        toastBg.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 border border-rose-400/40 shadow-[0_0_15px_rgba(244,63,94,0.4)]";
         toastIcon.setAttribute('data-lucide', 'alert-circle');
       } else {
-        toastBg.className = "w-8 h-8 rounded-xl bg-accent-cyan/20 text-accent-cyan flex items-center justify-center shrink-0";
-        toastIcon.setAttribute('data-lucide', 'info');
+        toastBg.className = "w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-400/40 shadow-glow-solar";
+        toastIcon.setAttribute('data-lucide', 'bell');
       }
       lucide.createIcons();
 
-      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+      toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-3');
       toast.classList.add('opacity-100', 'translate-y-0');
 
       clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
-      }, 3000);
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-3');
+      }, 3200);
     }
   </script>
 </body>
