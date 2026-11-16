@@ -37,21 +37,9 @@
             midnight: '#05070c',
             obsidian: '#0b0f19',
             surface: '#111726',
-            electric: {
-              blue: '#3b82f6',
-              cobalt: '#2563eb',
-              indigo: '#4f46e5'
-            },
-            solar: {
-              400: '#fbbf24',
-              500: '#f59e0b',
-              600: '#ea580c'
-            },
-            emerald: {
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669'
-            }
+            electric: { blue: '#3b82f6', cobalt: '#2563eb', indigo: '#4f46e5' },
+            solar: { 400: '#fbbf24', 500: '#f59e0b', 600: '#ea580c' },
+            emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' }
           },
           boxShadow: {
             'specular': 'inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 20px 40px -15px rgba(0, 0, 0, 0.7)',
@@ -73,9 +61,7 @@
 
     .btn-spring { 
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s ease, background-color 0.2s ease;
-      will-change: transform;
-      user-select: none;
-      touch-action: manipulation;
+      will-change: transform; user-select: none; touch-action: manipulation;
     }
     .btn-spring:hover { transform: translateY(-2px) scale(1.02); }
     .btn-spring:active { transform: translateY(2px) scale(0.93) !important; filter: brightness(0.9); }
@@ -148,7 +134,7 @@
     </div>
   </div>
 
-  <!-- PANTALLA DE ACCESO (LOGIN / REGISTRO) -->
+  <!-- PANTALLA DE ACCESO -->
   <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-[#0c111e]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-specular my-auto sheet-spring relative overflow-hidden">
       
@@ -171,7 +157,6 @@
         </button>
       </div>
 
-      <!-- FORMULARIO LOGIN -->
       <form id="form-login" onsubmit="ejecutarLogin(event)" class="space-y-3 pt-1 relative z-10">
         <div>
           <label class="block text-[11px] font-semibold text-slate-300 mb-1">Teléfono registrado (WhatsApp)</label>
@@ -190,7 +175,6 @@
         </button>
       </form>
 
-      <!-- FORMULARIO REGISTRO -->
       <form id="form-registro" onsubmit="ejecutarRegistro(event)" class="space-y-3 pt-1 hidden relative z-10">
         <div>
           <label class="block text-[11px] font-semibold text-slate-300 mb-1">Nombre completo</label>
@@ -232,7 +216,6 @@
         </button>
       </form>
 
-      <!-- VERIFICACIÓN DE CÓDIGO -->
       <div id="vista-verificacion-codigo" class="space-y-4 pt-1 hidden relative z-10">
         <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl text-center space-y-1.5">
           <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
@@ -382,7 +365,7 @@
             <span id="txt-ridery-estado" class="text-xs font-black text-white leading-tight">ESTÁS EN LÍNEA</span>
             <span id="ping-ridery-luz" class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping"></span>
           </div>
-          <span id="sub-ridery-telemetria" class="text-[10px] text-slate-400 font-mono block truncate">GPS Nirgua Activo • Buscando carreras</span>
+          <span id="sub-ridery-telemetria" class="text-[10px] text-slate-400 font-mono block truncate">GPS Activo • Buscando carreras</span>
         </div>
       </div>
 
@@ -396,12 +379,6 @@
           </div>
         </button>
       </div>
-
-      <span id="txt-estado-conexion" class="hidden"></span>
-      <span id="indicador-estado-ping" class="hidden"></span>
-      <span id="sub-txt-telemetria" class="hidden"></span>
-      <span id="badge-turno-texto" class="hidden"></span>
-      <span id="sub-punto-luz" class="hidden"></span>
     </div>
 
     <!-- BANNERS DE AVISO -->
@@ -425,12 +402,14 @@
       </button>
     </div>
 
-    <!-- MAPA SATELITAL EN VIVO -->
+    <!-- MAPA SATELITAL EN VIVO (HERO MAP PRINCIPAL) -->
     <div class="relative flex-1 min-h-[220px] sm:min-h-[280px] w-full overflow-hidden bg-[#070b14]">
+      <!-- Contenedor del mapa Leaflet interactivo general -->
       <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 220px; position: absolute; inset: 0;" class="z-0"></div>
 
+      <!-- BOTONES FLOTANTES SOBRE EL MAPA -->
       <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
-        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
+        <button onclick="centrarGpsChoferEnMapaPrincipal()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
           <i data-lucide="crosshair" class="w-5 h-5"></i>
         </button>
         <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
@@ -438,9 +417,10 @@
         </button>
       </div>
 
+      <!-- BADGE FLOTANTE DE ZONA ACTIVA -->
       <div class="absolute top-3 left-3 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-3 py-1.5 rounded-2xl flex items-center gap-2 shadow-specular">
         <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
-        <span class="text-[10px] font-mono font-bold text-white uppercase tracking-wider">Nirgua Central</span>
+        <span id="txt-zona-activa-mapa" class="text-[10px] font-mono font-bold text-white uppercase tracking-wider">GPS Activo en Vivo</span>
       </div>
     </div>
 
@@ -540,7 +520,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE DETALLE Y MAPA -->
+  <!-- MODAL DE DETALLE Y MAPA INDIVIDUAL -->
   <div id="modal-detalle-pedido" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
     <div class="bg-[#0c1222]/95 border-t sm:border border-white/15 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] flex flex-col overflow-y-auto sheet-spring">
       
@@ -572,8 +552,8 @@
       <div class="space-y-1">
         <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
           <span>A: Retiro • B: Destino</span>
-          <button onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
-            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
+          <button onclick="centrarGpsChoferEnMapaModal()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
+            <i data-lucide="crosshair" class="w-3 h-3"></i> Mi GPS
           </button>
         </div>
         <div id="mapa-cliente" style="height: 210px; min-height: 210px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
@@ -652,14 +632,22 @@
     let listenerAprobacionRealTime = null;
     let todosLosPedidos = {};
     let tabActual = 'disponibles';
-    let mapaInstance = null;
+    
+    // Mapas
+    let mapaPrincipalInstance = null;
+    let marcadorChoferPrincipalRef = null;
+    let marcadoresPedidosRefs = {};
+
+    let mapaModalInstance = null;
     let marcadorOrigRef = null;
     let marcadorDestRef = null;
-    let marcadorChoferGpsRef = null;
-    let lineaTrayecto = null;
+    let marcadorChoferModalRef = null;
+    let lineaTrayectoModal = null;
+
     let origenPuntoMapa = [10.1500, -68.5667];
     let destinoPuntoMapa = [10.1700, -68.2200];
-    let choferGpsPunto = [10.1500, -68.5667];
+    let choferGpsPunto = [10.1500, -68.5667]; // Valor por defecto inicial (Nirgua)
+    let primerGpsRecibido = false;
     let ultimoEnvioGpsTimestamp = 0;
     let gpsWatchId = null;
     let totalGananciasAcumuladas = 0;
@@ -721,6 +709,7 @@
           choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
           actualizarBadgeGps('granted');
           iniciarSeguimientoGps();
+          actualizarMapaPrincipalConGps(true);
           mostrarToast("Ubicación satelital confirmada.", "GPS Listo", "success");
         },
         () => {
@@ -754,6 +743,9 @@
     window.onload = () => {
       lucide.createIcons();
       actualizarEstadoVisualPermisos();
+
+      // Inicializar el Mapa Principal (Hero Map)
+      inicializarMapaPrincipal();
 
       const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
@@ -793,6 +785,7 @@
         detectarNuevosPedidosYAlertar(nuevosPedidos);
         todosLosPedidos = nuevosPedidos;
         renderizarPedidos();
+        actualizarPinesMapaPrincipal();
 
         const params = new URLSearchParams(window.location.search);
         const idPedUrl = params.get('pedido');
@@ -805,6 +798,108 @@
       iniciarSeguimientoGps();
     };
 
+    // ================= INICIALIZACIÓN DEL MAPA PRINCIPAL =================
+    function inicializarMapaPrincipal() {
+      if (mapaPrincipalInstance) return;
+      mapaPrincipalInstance = L.map('mapa-principal', { zoomControl: false, attributionControl: false }).setView(choferGpsPunto, 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaPrincipalInstance);
+    }
+
+    function actualizarMapaPrincipalConGps(centrar = false) {
+      if (!mapaPrincipalInstance) return;
+
+      if (marcadorChoferPrincipalRef) {
+        marcadorChoferPrincipalRef.setLatLng(choferGpsPunto);
+      } else {
+        marcadorChoferPrincipalRef = L.marker(choferGpsPunto, {
+          icon: L.divIcon({ 
+            className: 'custom-pin',
+            html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', 
+            iconSize: [30, 30] 
+          })
+        }).addTo(mapaPrincipalInstance).bindPopup('Tu Posición GPS Satelital');
+      }
+
+      if (centrar) {
+        mapaPrincipalInstance.setView(choferGpsPunto, 15);
+      }
+    }
+
+    function actualizarPinesMapaPrincipal() {
+      if (!mapaPrincipalInstance) return;
+
+      // Limpiar pines anteriores de pedidos
+      Object.values(marcadoresPedidosRefs).forEach(m => mapaPrincipalInstance.removeLayer(m));
+      marcadoresPedidosRefs = {};
+
+      const bounds = [];
+      bounds.push(choferGpsPunto);
+
+      Object.keys(todosLosPedidos).forEach(id => {
+        const p = todosLosPedidos[id];
+        // Mostrar tanto pendientes como carreras activas en el mapa principal
+        if (p.lat && p.lng && (p.estado === 'pendiente' || p.estado === 'aceptado' || p.estado === 'en_camino')) {
+          const lat = parseFloat(p.lat);
+          const lng = parseFloat(p.lng);
+          const nombreCli = p.cliente ? (p.cliente.nombre || p.cliente) : 'Cliente';
+          const numOrd = p.orden || `#PF-${id.substring(id.length - 4)}`;
+
+          const marker = L.marker([lat, lng], {
+            icon: L.divIcon({
+              className: 'custom-pin',
+              html: `<div class="pin-jewel-b" style="font-size:9px;">📦</div>`,
+              iconSize: [28, 28]
+            })
+          }).addTo(mapaPrincipalInstance)
+            .bindPopup(`<b>${numOrd}</b><br>Destino: ${nombreCli}<br><button onclick="verMapaYDetalle('${id}')" style="color:#3b82f6;font-weight:bold;margin-top:4px;">Ver Detalle / Ruta</button>`);
+
+          marcadoresPedidosRefs[id] = marker;
+          bounds.push([lat, lng]);
+        }
+      });
+
+      if (bounds.length > 1 && !primerGpsRecibido) {
+        try {
+          mapaPrincipalInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+        } catch(e) {}
+      }
+    }
+
+    function centrarGpsChoferEnMapaPrincipal() {
+      if (mapaPrincipalInstance && choferGpsPunto) {
+        mapaPrincipalInstance.setView(choferGpsPunto, 16);
+        if (marcadorChoferPrincipalRef) marcadorChoferPrincipalRef.openPopup();
+        mostrarToast("Mapa centrado en tu posición GPS actual.", "GPS", "info");
+      }
+    }
+
+    // ================= SEGUIMIENTO GPS DINÁMICO =================
+    function iniciarSeguimientoGps() {
+      if (!navigator.geolocation) return;
+      if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
+
+      gpsWatchId = navigator.geolocation.watchPosition((pos) => {
+        choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+        actualizarBadgeGps('granted');
+        
+        if (!primerGpsRecibido) {
+          primerGpsRecibido = true;
+          actualizarMapaPrincipalConGps(true);
+        } else {
+          actualizarMapaPrincipalConGps(false);
+        }
+
+        const ahora = Date.now();
+        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 15000)) {
+          ultimoEnvioGpsTimestamp = ahora;
+          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
+            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
+          });
+        }
+      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 10000 });
+    }
+
+    // ================= AUTH Y NAVEGACIÓN =================
     function cambiarModoAuth(modo) {
       const btnLogin = document.getElementById('btn-tab-login');
       const btnReg = document.getElementById('btn-tab-registro');
@@ -855,8 +950,7 @@
 
     function volverDesdeVerificacion() {
       if (listenerAprobacionRealTime && choferEnEspera) {
-        const tel = normalizarTelefono(choferEnEspera.telefono);
-        db.ref(`choferes/${tel}`).off('value', listenerAprobacionRealTime);
+        db.ref(`choferes/${normalizarTelefono(choferEnEspera.telefono)}`).off('value', listenerAprobacionRealTime);
       }
       choferEnEspera = null;
       cambiarModoAuth('login');
@@ -1084,7 +1178,7 @@
     }
 
     function contactarBaseAdminWhatsApp() {
-      const msg = encodeURIComponent(`Hola Central Nirgua, saludo desde el terminal conductor.`);
+      const msg = encodeURIComponent(`Hola Central, saludo desde el terminal conductor.`);
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msg}`, '_blank');
     }
 
@@ -1131,7 +1225,7 @@
 
       if (estaEnLinea) {
         if (txtRidery) txtRidery.innerText = "ESTÁS EN LÍNEA";
-        if (subRidery) subRidery.innerText = "GPS Nirgua Activo • Buscando carreras";
+        if (subRidery) subRidery.innerText = "GPS Activo • Buscando carreras";
         if (beaconRidery) beaconRidery.className = "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.35)]";
         if (iconoBeacon) iconoBeacon.className = "w-4 h-4 animate-pulse text-emerald-400";
         if (pingLuz) pingLuz.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-ping inline-block";
@@ -1153,31 +1247,6 @@
         if (bannerDesconectado) bannerDesconectado.classList.remove('hidden');
       }
       lucide.createIcons();
-    }
-
-    function iniciarSeguimientoGps() {
-      if (!navigator.geolocation) return;
-      if (gpsWatchId !== null) navigator.geolocation.clearWatch(gpsWatchId);
-
-      gpsWatchId = navigator.geolocation.watchPosition((pos) => {
-        choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
-        actualizarBadgeGps('granted');
-
-        const ahora = Date.now();
-        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 15000)) {
-          ultimoEnvioGpsTimestamp = ahora;
-          db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
-            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
-          });
-        }
-      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 10000 });
-    }
-
-    function centrarGpsChoferEnMapa() {
-      if (mapaInstance && choferGpsPunto) {
-        mapaInstance.setView(choferGpsPunto, 16);
-        if (marcadorChoferGpsRef) marcadorChoferGpsRef.openPopup();
-      }
     }
 
     function filtrarTab(tab) {
@@ -1283,7 +1352,7 @@
               <i data-lucide="package-search" class="w-5 h-5"></i>
             </div>
             <h4 class="text-xs font-bold text-white tracking-tight">No hay carreras en esta categoría</h4>
-            <p class="text-[10px] text-slate-400 font-medium">Mantén tu turno activo para recibir nuevas carreras en Nirgua.</p>
+            <p class="text-[10px] text-slate-400 font-medium">Mantén tu turno activo para recibir nuevas carreras.</p>
           </div>
         `;
         lucide.createIcons();
@@ -1476,7 +1545,7 @@
         mostrarToast("No hay número telefónico registrado.", "Aviso", "error");
         return;
       }
-      const mensaje = encodeURIComponent(`🛵 *Pedidos Flash Nirgua*\nHola *${nombreCliente}*, te saluda *${choferActual.nombre}* con respecto a tu orden.`);
+      const mensaje = encodeURIComponent(`🛵 *Pedidos Flash*\nHola *${nombreCliente}*, te saluda *${choferActual.nombre}* con respecto a tu orden.`);
       window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${mensaje}`, '_blank');
     }
 
@@ -1508,6 +1577,13 @@
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
       cerrarModalRetiro();
       mostrarToast("Solicitud enviada a la Administración.", "Retiro", "success");
+    }
+
+    function centrarGpsChoferEnMapaModal() {
+      if (mapaModalInstance && choferGpsPunto) {
+        mapaModalInstance.setView(choferGpsPunto, 16);
+        if (marcadorChoferModalRef) marcadorChoferModalRef.openPopup();
+      }
     }
 
     function verMapaYDetalle(id) {
@@ -1564,8 +1640,8 @@
         listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de traslado directo.</p>`;
       }
 
-      origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : 10.1500, p.origenLng ? parseFloat(p.origenLng) : -68.5667];
-      destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : 10.1700, p.lng ? parseFloat(p.lng) : -68.2200];
+      origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : choferGpsPunto[0], p.origenLng ? parseFloat(p.origenLng) : choferGpsPunto[1]];
+      destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : choferGpsPunto[0] + 0.01, p.lng ? parseFloat(p.lng) : choferGpsPunto[1] + 0.01];
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
       const contAccion = document.getElementById('accion-estado-contenedor');
@@ -1582,42 +1658,42 @@
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
 
       setTimeout(() => {
-        if (!mapaInstance) {
-          mapaInstance = L.map('mapa-cliente', { zoomControl: true, attributionControl: false }).setView(destinoPuntoMapa, 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaInstance);
+        if (!mapaModalInstance) {
+          mapaModalInstance = L.map('mapa-cliente', { zoomControl: true, attributionControl: false }).setView(destinoPuntoMapa, 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaModalInstance);
         } else {
-          mapaInstance.invalidateSize();
+          mapaModalInstance.invalidateSize();
         }
 
-        if (marcadorOrigRef) mapaInstance.removeLayer(marcadorOrigRef);
-        if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
-        if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
+        if (marcadorOrigRef) mapaModalInstance.removeLayer(marcadorOrigRef);
+        if (marcadorDestRef) mapaModalInstance.removeLayer(marcadorDestRef);
+        if (marcadorChoferModalRef) mapaModalInstance.removeLayer(marcadorChoferModalRef);
 
-        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Retiro: ${tiendaNombre}` : 'Salida');
-        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Entrega').openPopup();
+        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup(tiendaNombre ? `Retiro: ${tiendaNombre}` : 'Salida');
+        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup('Entrega').openPopup();
 
         if (choferGpsPunto) {
-          marcadorChoferGpsRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Tu GPS');
+          marcadorChoferModalRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaModalInstance).bindPopup('Tu GPS');
         }
 
-        mapaInstance.invalidateSize();
+        mapaModalInstance.invalidateSize();
         calcularRutaOSRMChofer();
       }, 200);
       lucide.createIcons();
     }
 
     function calcularRutaOSRMChofer() {
-      if (!mapaInstance) return;
-      if (lineaTrayecto) mapaInstance.removeLayer(lineaTrayecto);
+      if (!mapaModalInstance) return;
+      if (lineaTrayectoModal) mapaModalInstance.removeLayer(lineaTrayectoModal);
       fetch(`https://router.project-osrm.org/route/v1/driving/${origenPuntoMapa[1]},${origenPuntoMapa[0]};${destinoPuntoMapa[1]},${destinoPuntoMapa[0]}?overview=full&geometries=geojson`)
         .then(res => res.json())
         .then(data => {
           if (data.routes && data.routes.length > 0) {
             const latLngs = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-            lineaTrayecto = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaInstance);
-            mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
+            lineaTrayectoModal = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaModalInstance);
+            mapaModalInstance.fitBounds(lineaTrayectoModal.getBounds(), { padding: [35, 35] });
           } else {
-            lineaTrayecto = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#3b82f6', weight: 4, dashArray: '5, 5' }).addTo(mapaInstance);
+            lineaTrayectoModal = L.polyline([origenPuntoMapa, destinoPuntoMapa], { color: '#3b82f6', weight: 4, dashArray: '5, 5' }).addTo(mapaModalInstance);
           }
         }).catch(() => {});
     }
