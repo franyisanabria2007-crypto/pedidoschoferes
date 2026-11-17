@@ -323,7 +323,7 @@
         </div>
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
           <h4 class="font-bold text-white text-xs">3. Tarifa y Liquidación</h4>
-          <p class="text-[10px] text-slate-400">Cada entrega completada acredita $1.00 netos de delivery al conductor. El chofer va al comercio asignado, reporta el monto para que administración libere el dinero y luego sube obligatoriamente la factura.</p>
+          <p class="text-[10px] text-slate-400">Cada entrega completada acredita $1.00 netos de delivery al conductor. En compras de comercio, el chofer compra en tienda y adjunta foto de la factura oficial.</p>
         </div>
       </div>
 
@@ -427,34 +427,34 @@
       </button>
     </div>
 
-    <!-- MAPA SATELITAL EN VIVO (NIRGUA) - TAMAÑO COMPACTO -->
-    <div class="relative h-[160px] sm:h-[200px] w-full overflow-hidden bg-[#070b14] shrink-0">
-      <div id="mapa-principal" style="width: 100%; height: 100%; position: absolute; inset: 0;" class="z-0"></div>
+    <!-- MAPA SATELITAL EN VIVO (NIRGUA) -->
+    <div class="relative flex-1 min-h-[220px] sm:min-h-[280px] w-full overflow-hidden bg-[#070b14]">
+      <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 220px; position: absolute; inset: 0;" class="z-0"></div>
 
-      <div class="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
-        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-9 h-9 rounded-xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
-          <i data-lucide="crosshair" class="w-4 h-4"></i>
+      <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
+        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
+          <i data-lucide="crosshair" class="w-5 h-5"></i>
         </button>
-        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-9 h-9 rounded-xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
-          <i data-lucide="headset" class="w-4 h-4"></i>
+        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho">
+          <i data-lucide="headset" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="absolute top-2 left-2 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-2.5 py-1 rounded-xl flex items-center gap-1.5 shadow-specular">
+      <div class="absolute top-3 left-3 z-10 bg-[#090d18]/90 backdrop-blur-xl border border-white/15 px-3 py-1.5 rounded-2xl flex items-center gap-2 shadow-specular">
         <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f0ff] animate-pulse"></span>
-        <span class="text-[9px] font-mono font-bold text-white uppercase tracking-wider">Nirgua Radar GPS</span>
+        <span class="text-[10px] font-mono font-bold text-white uppercase tracking-wider">Nirgua Radar GPS</span>
       </div>
     </div>
 
     <!-- PANEL INFERIOR DE DESPACHO -->
-    <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 flex-1 flex flex-col min-h-0 relative z-20 shadow-dock-floating">
+    <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 shrink-0 flex flex-col max-h-[50vh] relative z-20 shadow-dock-floating">
       <div class="w-10 h-1 bg-white/20 rounded-full mx-auto my-2 shrink-0"></div>
 
       <!-- ALERTA SI HAY CARRERA ACTIVA -->
-      <div id="banner-carrera-activa-alerta" class="px-4 mb-2 hidden shrink-0"></div>
+      <div id="banner-carrera-activa-alerta" class="px-4 mb-2 hidden"></div>
 
       <!-- FILTRO DE PESTAÑAS (TABS) -->
-      <div class="px-4 mb-2.5 shrink-0">
+      <div class="px-4 mb-2.5">
         <div class="grid grid-cols-3 p-1 bg-[#111728] rounded-2xl border border-white/10">
           <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2.5 text-center rounded-xl text-xs font-extrabold bg-[#1a233b] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
             <span>Disponibles</span>
@@ -472,7 +472,7 @@
       </div>
 
       <!-- LISTA DE PEDIDOS -->
-      <div id="contenedor-pedidos" class="px-4 pb-24 overflow-y-auto flex-1 space-y-2.5 no-scrollbar"></div>
+      <div id="contenedor-pedidos" class="px-4 pb-20 overflow-y-auto max-h-[35vh] space-y-2.5 no-scrollbar"></div>
     </div>
 
     <!-- BARRA DOCK FLOTANTE -->
@@ -507,12 +507,12 @@
 
   </div>
 
-  <!-- MODAL DE RETIRO EXCLUSIVO PAGO MÓVIL -->
+  <!-- MODAL DE RETIRO -->
   <div id="modal-retiro" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-[#0c1222]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-specular sheet-spring">
       <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="banknote" class="w-5 h-5 text-emerald-400"></i> Liquidación por Pago Móvil
+          <i data-lucide="banknote" class="w-5 h-5 text-emerald-400"></i> Liquidación de Comisiones
         </h3>
         <button onclick="cerrarModalRetiro()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -526,15 +526,28 @@
       </div>
 
       <form onsubmit="enviarSolicitudRetiro(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Método de cobro</label>
-          <input type="text" value="📲 Pago Móvil (Bs a tasa oficial BCV)" disabled class="w-full bg-[#141b2d]/60 border border-white/10 rounded-2xl p-3 text-xs font-bold text-emerald-400 cursor-not-allowed">
-          <input type="hidden" id="retiro-metodo" value="Pago Móvil">
+        <div class="bg-blue-500/10 border border-blue-400/30 rounded-2xl p-2.5 flex items-center gap-2">
+          <i data-lucide="smartphone" class="w-4 h-4 text-blue-400 shrink-0"></i>
+          <div>
+            <span class="text-xs font-bold text-white block">Liquidación Exclusiva por Pago Móvil</span>
+            <span class="text-[10px] text-slate-400 block">Transferencia directa a tasa oficial BCV</span>
+          </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Tus datos de Pago Móvil</label>
-          <input type="text" id="retiro-datos" required placeholder="Banco, Cédula, Teléfono..." class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Banco Receptor</label>
+          <input type="text" id="retiro-banco" required placeholder="Ej: Banesco, Venezuela, Provincial, BNC..." class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-bold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Cédula</label>
+            <input type="text" id="retiro-cedula" required placeholder="V-12345678" class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-bold">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Teléfono Pago Móvil</label>
+            <input type="tel" id="retiro-telefono" required placeholder="0412..." class="w-full bg-[#141b2d] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-bold">
+          </div>
         </div>
 
         <button type="submit" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/20">
@@ -566,19 +579,19 @@
       <div id="mapa-alerta-comercio" class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl text-xs space-y-1 hidden">
         <div class="flex items-center gap-1.5 text-amber-300 font-extrabold font-mono">
           <i data-lucide="store" class="w-4 h-4"></i>
-          <span>COMERCIO ASIGNADO POR ADMIN: <span id="mapa-txt-tienda">Local Comercial</span></span>
+          <span>PUNTO DE RETIRO / COMPRA: <span id="mapa-txt-tienda">Local Comercial</span></span>
         </div>
-        <p class="text-[10px] text-slate-300">Ve a este comercio, verifica los precios y reporta el monto a administración para que te liberen los fondos.</p>
+        <p class="text-[10px] text-slate-300">Compra o retira los artículos en este local antes de dirigirte al cliente.</p>
       </div>
 
       <div class="space-y-1">
         <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
-          <span>A: Retiro / Tienda • B: Cliente</span>
+          <span>A: Retiro / Tienda • B: Cliente (GPS en vivo)</span>
           <button onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
             <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
           </button>
         </div>
-        <div id="mapa-cliente" style="height: 140px; min-height: 140px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
+        <div id="mapa-cliente" style="height: 210px; min-height: 210px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
       </div>
 
       <!-- BOTÓN DIRECTO GOOGLE MAPS GPS -->
@@ -603,26 +616,31 @@
             </button>
           </div>
         </div>
+        <div class="flex justify-between items-center border-t border-white/10 pt-1.5">
+          <span class="text-slate-400 font-medium">Forma de pago cliente:</span>
+          <span id="mapa-metodo-pago" class="font-extrabold font-mono"></span>
+        </div>
+        <div id="caja-detalle-pago-cliente" class="hidden text-[10px] text-amber-300 bg-amber-500/10 p-2 rounded-xl border border-amber-500/20 font-mono"></div>
         <div>
           <span class="text-slate-400 font-medium block mb-1">Punto de Entrega / Dirección:</span>
           <p id="mapa-direccion-cliente" class="text-slate-200 bg-[#0c1222] p-2.5 rounded-xl border border-white/10 text-[11px] font-semibold leading-relaxed"></p>
         </div>
       </div>
 
-      <!-- LISTA DE PRODUCTOS SOLICITADOS (SOLO CANTIDAD Y NOMBRE, SIN PRECIOS) -->
+      <!-- LISTA DE PRODUCTOS SOLICITADOS (SIN PRECIO SEGÚN REQUERIMIENTO) -->
       <div class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2">
         <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
           <h4 class="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
             <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-blue-400"></i>
-            <span>Artículos a Comprar en la Tienda Asignada:</span>
+            <span>Lista de Productos a Comprar:</span>
           </h4>
-          <span class="text-[9px] text-slate-400 font-mono">Sin precios</span>
+          <span class="text-[9px] text-slate-400 font-mono">Solo cantidades</span>
         </div>
         
         <div id="mapa-lista-items" class="space-y-1.5 text-xs text-slate-300 max-h-32 overflow-y-auto no-scrollbar pr-1 font-mono"></div>
       </div>
 
-      <!-- SECCIÓN PASO A PASO: REPORTE DE GASTO, WHATSAPP A ADMIN Y OBLIGATORIO SUBIR FACTURA -->
+      <!-- SECCIÓN OBLIGATORIA: COMPRA EN TIENDA & SUBIR FACTURA (DELIVERY) -->
       <div id="seccion-factura-tienda" class="bg-[#141b2d] p-3.5 rounded-2xl border border-amber-500/30 space-y-3">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2">
@@ -630,33 +648,24 @@
               <i data-lucide="receipt" class="w-4 h-4"></i>
             </div>
             <div>
-              <h4 class="text-xs font-bold text-white">Paso 1 y Paso 2: Gasto y Factura</h4>
-              <p class="text-[10px] text-slate-400">Reporta al admin y sube tu factura obligatoria</p>
+              <h4 class="text-xs font-bold text-white">Factura de Compra en Comercio</h4>
+              <p class="text-[10px] text-slate-400">Pide la cuenta en tienda y sube el comprobante</p>
             </div>
           </div>
-          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Flujo Chofer</span>
+          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">Paso Chofer</span>
         </div>
 
         <div class="space-y-2.5">
           <div>
-            <label class="block text-[11px] font-mono text-slate-300 mb-1">1. Monto que necesitas que el admin te envíe ($ USD):</label>
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">Monto exacto de la factura en la tienda ($ USD):</label>
             <div class="relative">
               <span class="absolute left-3 top-2.5 text-xs font-mono text-amber-400 font-bold">$</span>
-              <input type="number" step="0.01" min="0" id="input-monto-factura" placeholder="0.00" class="w-full bg-[#0c1222] border border-white/15 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-bold text-white focus:outline-none focus:border-amber-400">
+              <input type="number" step="0.01" min="0" id="input-monto-factura" oninput="actualizarCalculoFacturaTienda()" placeholder="0.00" class="w-full bg-[#0c1222] border border-white/15 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-bold text-white focus:outline-none focus:border-amber-400">
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 font-bold py-2 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1 shadow-sm">
-              <i data-lucide="save" class="w-3.5 h-3.5 text-blue-400"></i> Guardar Monto
-            </button>
-            <button type="button" onclick="enviarReembolsoWhatsAppAdmin()" class="btn-spring bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-2 px-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-glow-emerald">
-              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Pedir dinero a Admin
-            </button>
-          </div>
-
-          <div class="pt-1 border-t border-white/10">
-            <label class="block text-[11px] font-mono text-slate-300 mb-1">2. Subir foto de la factura (OBLIGATORIO tras comprar):</label>
+          <div>
+            <label class="block text-[11px] font-mono text-slate-300 mb-1">Foto del Ticket / Factura de Tienda:</label>
             <input type="file" id="input-foto-factura" accept="image/*" capture="environment" onchange="capturarFotoFactura(event)" class="hidden">
             <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#0c1222] hover:bg-[#18233c] border border-white/15 rounded-xl p-2.5 flex items-center justify-center gap-2 text-xs font-bold text-slate-200">
               <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
@@ -667,15 +676,42 @@
               <button type="button" onclick="eliminarFotoFactura()" class="absolute top-2 right-2 bg-rose-600 text-white rounded-full p-1 shadow hover:bg-rose-500">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
-              <span class="absolute bottom-2 left-2 bg-emerald-500/90 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md backdrop-blur-sm">Factura Subida ✓</span>
+              <span class="absolute bottom-2 left-2 bg-emerald-500/90 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md backdrop-blur-sm">Factura Adjunta ✓</span>
             </div>
+          </div>
+
+          <!-- DESGLOSE EN TIEMPO REAL -->
+          <div class="bg-[#080d19] p-3 rounded-xl border border-white/10 space-y-1.5 text-[11px] font-mono">
+            <div class="flex justify-between text-slate-300">
+              <span>Monto Factura Tienda:</span>
+              <span id="desglose-monto-tienda" class="font-bold text-white">$0.00</span>
+            </div>
+            <div class="flex justify-between text-slate-300">
+              <span>Tarifa Delivery Chofer:</span>
+              <span class="font-bold text-emerald-400">+$1.00</span>
+            </div>
+            <div class="flex justify-between text-white font-bold text-xs border-t border-white/10 pt-2">
+              <span class="text-amber-300">TOTAL A COBRAR AL CLIENTE:</span>
+              <span id="desglose-total-cliente" class="text-emerald-400 font-black text-sm tabular-nums">$1.00</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="solicitarPagoMovilAdminTiendaWA()" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:brightness-110 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-glow-emerald border border-white/20">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Pedir a Admin (WhatsApp)</span>
+            </button>
+            <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/40 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Guardar en Sistema</span>
+            </button>
           </div>
         </div>
       </div>
 
       <!-- COMISIÓN ACREDITADA AL CHOFER -->
       <div class="flex justify-between items-center bg-gradient-to-r from-emerald-500/20 to-teal-500/10 p-2.5 rounded-xl border border-emerald-500/30 text-xs font-mono">
-        <span class="text-emerald-300 font-bold">Comisión delivery chofer:</span>
+        <span class="text-emerald-300 font-bold">Ganancia acreditada al chofer:</span>
         <span class="text-emerald-400 font-black text-sm tabular-nums">+$1.00</span>
       </div>
 
@@ -699,6 +735,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // TARIFA FIJA CHOFER NIRGUA: $1.00 POR ENTREGA
     const TARIFA_CHOFER = 1.00; 
     const NUMERO_ADMIN_WHATSAPP = "584262566854";
 
@@ -816,6 +853,7 @@
       lucide.createIcons();
       actualizarEstadoVisualPermisos();
 
+      // Iniciar Mapa Principal Radar Nirgua
       try {
         const mapaDiv = document.getElementById('mapa-principal');
         if (mapaDiv) {
@@ -863,6 +901,7 @@
         document.getElementById('pantalla-auth').classList.remove('hidden');
       }
 
+      // Sincronización en tiempo real de pedidos
       db.ref('pedidos').on('value', (snapshot) => {
         const nuevosPedidos = snapshot.val() || {};
         detectarNuevosPedidosYAlertar(nuevosPedidos);
@@ -1106,12 +1145,14 @@
       lucide.createIcons();
     }
 
+    // Comprobar compatibilidad de vehículo (si pide Carro, chofer en Moto no lo ve)
     function esPedidoCompatibleConChofer(p) {
       if (!choferActual) return true;
       const vehiculoChofer = (choferActual.vehiculo || 'Moto').toLowerCase();
       const vehiculoReq = (p.vehiculoRequerido || '').toLowerCase();
       const esChoferMoto = vehiculoChofer.includes('moto') || vehiculoChofer.includes('bici');
 
+      // Si el cliente pide Carro y el chofer tiene Moto, NO es compatible
       if (vehiculoReq === 'carro' && esChoferMoto) {
         return false;
       }
@@ -1259,13 +1300,15 @@
         actualizarMarcadorChoferEnMapaPrincipal();
 
         const ahora = Date.now();
-        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 10000)) {
+        if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 3500)) {
           ultimoEnvioGpsTimestamp = ahora;
           db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/gps`).set({
-            lat: pos.coords.latitude, lng: pos.coords.longitude, actualizado: new Date().toISOString()
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            actualizado: new Date().toISOString()
           });
         }
-      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 5000 });
+      }, () => { actualizarBadgeGps('denied'); }, { enableHighAccuracy: true, maximumAge: 2500 });
     }
 
     function actualizarMarcadorChoferEnMapaPrincipal() {
@@ -1283,6 +1326,7 @@
       }
     }
 
+    // Actualiza los marcadores de todas las órdenes en el mapa principal de Nirgua
     function actualizarMarcadoresMapaPrincipal() {
       if (!mapaPrincipalInstance) return;
 
@@ -1293,6 +1337,7 @@
         const p = todosLosPedidos[id];
         if (!p) return;
 
+        // Si pide carro y este chofer tiene moto, no se muestra
         if (!esPedidoCompatibleConChofer(p)) return;
 
         const esPendiente = p.estado === 'pendiente';
@@ -1393,11 +1438,15 @@
       const keys = Object.keys(todosLosPedidos);
       let cantDisponibles = 0, cantActivos = 0, cantHistorial = 0;
 
+      // Conteo con filtrado por tipo de vehículo del chofer
       keys.forEach(id => {
         const p = todosLosPedidos[id];
         if (!p) return;
 
-        if (!esPedidoCompatibleConChofer(p)) return;
+        // FILTRADO ESTRICTO DE VEHÍCULO
+        if (!esPedidoCompatibleConChofer(p)) {
+          return;
+        }
 
         if (p.estado === 'pendiente') cantDisponibles++;
         if (choferActual && p.choferTelefono === choferActual.telefono) {
@@ -1443,6 +1492,7 @@
         const p = todosLosPedidos[id];
         if (!p) return false;
 
+        // Excluir si no es compatible con el vehículo del chofer
         if (!esPedidoCompatibleConChofer(p)) return false;
 
         if (tabActual === 'disponibles') return p.estado === 'pendiente';
@@ -1471,16 +1521,23 @@
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
         const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
+        const monto = p.total || p.montoTotal || p.monto || 0;
+        const metodoPago = p.metodoPago || p.pago || 'Efectivo';
+        const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
+        const badgePago = esPagoMovil 
+          ? `<span class="bg-blue-500/15 text-blue-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-blue-400/30">Pago Móvil</span>`
+          : `<span class="bg-emerald-500/15 text-emerald-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-emerald-400/30">Efectivo</span>`;
+
         const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
-        
         const badgeTienda = tiendaNombre 
-          ? `<span class="bg-amber-500/15 text-amber-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1 truncate max-w-[130px]"><i data-lucide="store" class="w-3 h-3 shrink-0"></i> ${tiendaNombre}</span>`
+          ? `<span class="bg-amber-500/15 text-amber-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-amber-400/30 flex items-center gap-1 truncate max-w-[130px]"><i data-lucide="store" class="w-3 h-3 shrink-0"></i> ${tiendaNombre}</span>`
           : `<span class="bg-white/5 text-slate-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-white/10">${p.tipoServicio === 'transporte' ? '🚗 Transporte' : '🛍️ Delivery'}</span>`;
 
         const badgeVehiculo = p.vehiculoRequerido && p.vehiculoRequerido !== 'Cualquiera'
           ? `<span class="bg-indigo-500/20 text-indigo-300 font-bold font-mono text-[9px] px-2 py-0.5 rounded-full border border-indigo-400/30 uppercase">${p.vehiculoRequerido}</span>`
           : '';
 
+        // Vista de Carrera Activa (En Ruta)
         if (p.estado === 'aceptado' || p.estado === 'en_camino') {
           contenedor.innerHTML += `
             <div class="bg-gradient-to-b from-[#141d36]/95 to-[#0b1020]/95 backdrop-blur-xl border-2 border-amber-500/50 rounded-[26px] p-4 space-y-3 shadow-card-luxury relative overflow-hidden">
@@ -1490,7 +1547,7 @@
                   <span class="text-[10px] font-mono font-black text-amber-300 uppercase tracking-wider">CARRERA EN CURSO</span>
                   ${badgeVehiculo}
                 </div>
-                <span class="text-[10px] font-black font-mono text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40">+$1.00 comisión</span>
+                <span class="text-[10px] font-black font-mono text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40">+$1.00 por entrega</span>
               </div>
 
               <div>
@@ -1500,8 +1557,8 @@
                     <h3 class="text-sm font-black text-white truncate tracking-tight">${nombreCliente}</h3>
                   </div>
                   <div class="text-right shrink-0">
-                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">Comisión</span>
-                    <span class="text-sm font-black font-mono text-emerald-400 tabular-nums">+$1.00</span>
+                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">${p.montoFacturaTienda ? 'Factura Tienda' : 'Estimado'}</span>
+                    <span class="text-sm font-black font-mono text-white tabular-nums">$${parseFloat(p.totalFinalCliente || monto).toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -1509,13 +1566,13 @@
                   ${tiendaNombre ? `
                     <div class="flex items-center gap-2 text-slate-300">
                       <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
-                      <span class="text-slate-400 font-medium">Comprar en Comercio:</span>
+                      <span class="text-slate-400 font-medium">Retiro:</span>
                       <span class="font-bold text-white truncate">${tiendaNombre}</span>
                     </div>
                   ` : ''}
                   <div class="flex items-center gap-2 text-slate-300">
                     <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
-                    <span class="text-amber-300 font-bold shrink-0">Llevar al Cliente:</span>
+                    <span class="text-amber-300 font-bold shrink-0">Llévala a:</span>
                     <span class="font-bold text-slate-100 truncate">${direccionCliente}</span>
                   </div>
                 </div>
@@ -1525,12 +1582,12 @@
                 ${p.estado === 'aceptado' ? `
                   <button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
                     <i data-lucide="navigation-2" class="w-4 h-4 animate-bounce"></i>
-                    <span class="tracking-wide uppercase">¡IR A COMPRAR AL COMERCIO!</span>
+                    <span class="tracking-wide uppercase">¡LLÉVALA YA! (Iniciar Trayecto)</span>
                   </button>
                 ` : `
                   <button onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
                     <i data-lucide="receipt" class="w-4 h-4"></i>
-                    <span class="tracking-wide uppercase">SUBIR FACTURA & ENTREGAR (+$1.00)</span>
+                    <span class="tracking-wide uppercase">SUBIR FACTURA & COMPLETAR (+$1.00)</span>
                   </button>
                 `}
 
@@ -1551,6 +1608,7 @@
           return;
         }
 
+        // Vista de Orden Pendiente o Historial
         contenedor.innerHTML += `
           <div class="bg-gradient-to-b from-[#10172b]/90 to-[#0b101e]/90 backdrop-blur-xl border border-white/10 rounded-[26px] p-3.5 space-y-2.5 shadow-card-luxury hover:border-blue-500/40 transition-all duration-200">
             <div class="flex items-start justify-between gap-2">
@@ -1561,6 +1619,7 @@
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 mb-0.5">
                     <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-tight">${numOrden}</span>
+                    ${badgePago}
                     ${badgeTienda}
                     ${badgeVehiculo}
                   </div>
@@ -1569,8 +1628,8 @@
               </div>
               
               <div class="text-right shrink-0">
-                <span class="text-[9px] font-mono text-slate-400 block leading-none">Comisión</span>
-                <span class="text-xs font-black font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40 tabular-nums shadow-[0_0_8px_rgba(16,185,129,0.25)]">+$1.00</span>
+                <span class="text-xs font-black font-mono text-white block leading-tight tabular-nums">$${parseFloat(p.totalFinalCliente || monto).toFixed(2)}</span>
+                <span class="text-[9px] font-black font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-400/40 tabular-nums shadow-[0_0_8px_rgba(16,185,129,0.25)]">+$1.00</span>
               </div>
             </div>
 
@@ -1578,13 +1637,13 @@
               ${tiendaNombre ? `
                 <div class="flex items-center gap-2 text-slate-300">
                   <span class="w-3.5 h-3.5 rounded-full bg-blue-500/30 text-blue-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">A</span>
-                  <span class="text-slate-400 font-medium">Comprar:</span>
+                  <span class="text-slate-400 font-medium">Retiro:</span>
                   <span class="font-bold text-slate-200 truncate">${tiendaNombre}</span>
                 </div>
               ` : ''}
               <div class="flex items-center gap-2 text-slate-300">
                 <span class="w-3.5 h-3.5 rounded-full bg-amber-500/30 text-amber-400 font-mono text-[9px] flex items-center justify-center font-bold shrink-0">B</span>
-                <span class="text-slate-400 font-medium">Cliente:</span>
+                <span class="text-slate-400 font-medium">Destino:</span>
                 <span class="font-bold text-slate-200 truncate">${direccionCliente}</span>
               </div>
             </div>
@@ -1631,12 +1690,27 @@
         fechaActualizacion: new Date().toISOString()
       };
 
+      // Si finaliza la entrega de un delivery, validar OBLIGATORIEDAD de foto de factura
       if (nuevoEstado === 'entregado' && pedido.tipoServicio !== 'transporte') {
         const inputMonto = document.getElementById('input-monto-factura');
-        if (inputMonto && inputMonto.value) {
-          datosUpdate.montoGastoChofer = parseFloat(inputMonto.value) || 0;
+        const mTienda = inputMonto ? (parseFloat(inputMonto.value) || parseFloat(pedido.montoFacturaTienda || pedido.montoGastoChofer || 0)) : (parseFloat(pedido.montoFacturaTienda || pedido.montoGastoChofer || 0));
+        const tieneFoto = fotoFacturaBase64 || pedido.fotoFacturaUrl || pedido.fotoFacturaReembolsoUrl;
+
+        if (!tieneFoto) {
+          mostrarToast("⚠️ Es obligatorio tomar o subir la foto de la factura antes de finalizar la entrega.", "Factura Requerida", "error");
+          verMapaYDetalle(id);
+          const elInput = document.getElementById('input-foto-factura');
+          if (elInput) elInput.scrollIntoView({ behavior: 'smooth' });
+          return;
         }
+
+        datosUpdate.montoFacturaTienda = mTienda;
+        datosUpdate.montoGastoChofer = mTienda;
+        datosUpdate.deliveryChofer = 1.00;
+        datosUpdate.totalFinalCliente = mTienda + 1.00;
+        datosUpdate.total = mTienda + 1.00;
         if (fotoFacturaBase64) {
+          datosUpdate.fotoFacturaUrl = fotoFacturaBase64;
           datosUpdate.fotoFacturaReembolsoUrl = fotoFacturaBase64;
         }
       }
@@ -1646,7 +1720,7 @@
         if (nuevoEstado === 'aceptado') {
           mostrarToast("¡Carrera aceptada! Pasa a la pestaña 'En Ruta'.", "Aceptado", "success");
         } else if (nuevoEstado === 'en_camino') {
-          mostrarToast("Dirigiéndote al comercio a comprar...", "En Camino", "info");
+          mostrarToast("Iniciando despacho. Notificando al cliente...", "En Camino", "info");
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
             const mensaje = encodeURIComponent(`🛵 *¡Tu pedido va en camino!* Te saluda ${choferActual.nombre} de Pedidos Flash Nirgua.`);
@@ -1655,9 +1729,20 @@
         } else if (nuevoEstado === 'entregado') {
           mostrarToast("¡Entrega finalizada con éxito! +$1.00 acreditado a tu balance.", "Completado", "success");
           
+          // Notificar resumen con factura al cliente
           const telefonoCliente = pedido.cliente ? (pedido.cliente.telefono || pedido.telefono) : (pedido.telefono || '');
           if (telefonoCliente) {
-            let msjFinal = `🛵 *Pedidos Flash Nirgua*\n¡Hola *${pedido.cliente ? (pedido.cliente.nombre || pedido.cliente) : (pedido.nombre || 'Cliente')}*! Tu orden ha sido entregada por *${choferActual.nombre}*.\n\n¡Gracias por elegirnos! ⭐`;
+            const mFact = datosUpdate.montoFacturaTienda || pedido.montoFacturaTienda || 0;
+            const tCobro = datosUpdate.totalFinalCliente || pedido.totalFinalCliente || (mFact + 1.00);
+            let msjFinal = `🛵 *Pedidos Flash Nirgua*\n¡Hola *${pedido.cliente ? (pedido.cliente.nombre || pedido.cliente) : (pedido.nombre || 'Cliente')}*! Tu orden ha sido entregada por *${choferActual.nombre}*.\n\n`;
+            if (mFact > 0) {
+              msjFinal += `🧾 *Factura en Tienda:* $${mFact.toFixed(2)}\n`;
+              msjFinal += `🛵 *Delivery Flash:* $1.00\n`;
+              msjFinal += `💰 *TOTAL A PAGAR:* $${tCobro.toFixed(2)}\n\n`;
+            } else {
+              msjFinal += `💵 *Tarifa:* $${parseFloat(pedido.total || 1.00).toFixed(2)}\n\n`;
+            }
+            msjFinal += `¡Gracias por elegir Pedidos Flash! ⭐`;
             window.open(`https://wa.me/${normalizarTelefono(telefonoCliente)}?text=${encodeURIComponent(msjFinal)}`, '_blank');
           }
         }
@@ -1688,19 +1773,63 @@
 
     function enviarSolicitudRetiro(e) {
       e.preventDefault();
-      const metodo = document.getElementById('retiro-metodo').value;
-      const datos = document.getElementById('retiro-datos').value;
+      const banco = document.getElementById('retiro-banco').value.trim();
+      const cedula = document.getElementById('retiro-cedula').value.trim();
+      const telefonoPago = document.getElementById('retiro-telefono').value.trim();
+
+      const datosCompletos = `Pago Móvil: ${banco} • CI: ${cedula} • Tel: ${telefonoPago}`;
 
       if (choferActual && choferActual.telefono) {
         db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/solicitudesRetiro`).push({
-          monto: totalGananciasAcumuladas, metodo, datos, estado: 'pendiente', fecha: new Date().toISOString()
+          monto: totalGananciasAcumuladas,
+          metodo: 'Pago Móvil',
+          banco,
+          cedula,
+          telefonoPago,
+          datos: datosCompletos,
+          estado: 'pendiente',
+          fecha: new Date().toISOString()
+        });
+
+        // Registrar en solicitudes_pagos_choferes global
+        db.ref('solicitudes_pagos_choferes').push({
+          tipo: 'retiro_comisiones_chofer',
+          chofer: choferActual.nombre,
+          choferTelefono: choferActual.telefono,
+          monto: totalGananciasAcumuladas,
+          metodo: 'Pago Móvil',
+          banco,
+          cedula,
+          telefonoPago,
+          datos: datosCompletos,
+          estado: 'pendiente',
+          fecha: new Date().toISOString()
         });
       }
 
-      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE PAGO MÓVIL (GANANCIAS CHOFER)* 💸\n👤 Chofer: ${choferActual.nombre}\n📱 Teléfono: ${choferActual.telefono}\n💰 Monto Comisión: $${totalGananciasAcumuladas.toFixed(2)}\n🏦 Datos Pago Móvil: ${datos}`);
+      const mensaje = encodeURIComponent(
+        `💸 *SOLICITUD DE RETIRO DE COMISIONES (PAGO MÓVIL)* 💸\n\n` +
+        `👤 *Chofer:* ${choferActual.nombre}\n` +
+        `📱 *Teléfono:* ${choferActual.telefono}\n` +
+        `💰 *Monto Acumulado:* $${totalGananciasAcumuladas.toFixed(2)} USD\n` +
+        `🏦 *Banco Receptor:* ${banco}\n` +
+        `🆔 *Cédula:* ${cedula}\n` +
+        `📲 *Teléfono Pago Móvil:* ${telefonoPago}\n\n` +
+        `Favor realizar la transferencia por Pago Móvil a tasa oficial BCV. ¡Gracias!`
+      );
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
       cerrarModalRetiro();
       mostrarToast("Solicitud de Pago Móvil enviada a Administración.", "Retiro", "success");
+    }
+
+    // Funciones para la Factura de la Tienda
+    function actualizarCalculoFacturaTienda() {
+      const input = document.getElementById('input-monto-factura');
+      const montoTienda = parseFloat(input.value) || 0;
+      const totalCliente = montoTienda + TARIFA_CHOFER;
+
+      document.getElementById('desglose-monto-tienda').innerText = `$${montoTienda.toFixed(2)}`;
+      document.getElementById('desglose-total-cliente').innerText = `$${totalCliente.toFixed(2)}`;
     }
 
     function capturarFotoFactura(event) {
@@ -1726,38 +1855,62 @@
       document.getElementById('btn-txt-foto-factura').innerText = "Tomar o Subir Foto de Factura";
     }
 
+    function solicitarPagoMovilAdminTiendaWA() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      const inputMonto = document.getElementById('input-monto-factura');
+      const montoTienda = parseFloat(inputMonto.value) || 0;
+      if (montoTienda <= 0) {
+        mostrarToast("Ingresa primero el monto exacto de la factura en la tienda.", "Monto Requerido", "error");
+        inputMonto.focus();
+        return;
+      }
+
+      // Guardar solicitud en Firebase
+      db.ref(`pedidos/${pedidoActivoModalId}`).update({
+        montoFacturaTienda: montoTienda,
+        montoGastoChofer: montoTienda,
+        solicitudReembolso: 'pendiente',
+        fechaSolicitudReembolso: new Date().toISOString()
+      });
+
+      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
+      const tNom = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio en Nirgua');
+      const msj = encodeURIComponent(
+        `🏪 *SOLICITUD DE TRANSFERENCIA PAGO MÓVIL EN TIENDA* 💳\n\n` +
+        `🛵 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
+        `📦 *Orden:* ${numOrden}\n` +
+        `🏢 *Comercio (Punto A):* ${tNom}\n` +
+        `💵 *Monto Exacto a Transferir:* $${montoTienda.toFixed(2)} USD\n\n` +
+        `Por favor realizar la transferencia por Pago Móvil a la tienda o a mi cuenta para poder comprar los productos del cliente. ¡Muchas gracias!`
+      );
+
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
+      mostrarToast("Solicitud enviada al WhatsApp del Administrador.", "Enviado", "success");
+    }
+
     function guardarDatosFacturaEnFirebase() {
       if (!pedidoActivoModalId) return;
       const inputMonto = document.getElementById('input-monto-factura');
-      const montoGasto = parseFloat(inputMonto.value) || 0;
+      const montoTienda = parseFloat(inputMonto.value) || 0;
 
       const updates = {
-        montoGastoChofer: montoGasto
+        montoFacturaTienda: montoTienda,
+        montoGastoChofer: montoTienda,
+        deliveryChofer: 1.00,
+        totalFinalCliente: montoTienda + 1.00,
+        total: montoTienda + 1.00
       };
       if (fotoFacturaBase64) {
+        updates.fotoFacturaUrl = fotoFacturaBase64;
         updates.fotoFacturaReembolsoUrl = fotoFacturaBase64;
       }
 
       db.ref(`pedidos/${pedidoActivoModalId}`).update(updates).then(() => {
-        mostrarToast("Monto guardado en la base de datos.", "Guardado", "success");
+        mostrarToast("Factura y monto guardados en el sistema.", "Guardado", "success");
       });
-    }
-
-    function enviarReembolsoWhatsAppAdmin() {
-      const inputMonto = document.getElementById('input-monto-factura');
-      const montoGasto = parseFloat(inputMonto.value) || 0;
-      if (montoGasto <= 0) {
-        mostrarToast("Ingresa el monto gastado en la tienda primero.", "Atención", "error");
-        return;
-      }
-
-      const numOrden = document.getElementById('modal-num-orden').innerText;
-      const nombreCliente = document.getElementById('mapa-nombre-cliente').innerText;
-      const tiendaNombre = document.getElementById('mapa-txt-tienda').innerText || 'Comercio';
-
-      const mensaje = encodeURIComponent(`💸 *SOLICITUD DE DINERO/REEMBOLSO - PEDIDOS FLASH* 💸\n👤 Chofer: ${choferActual ? choferActual.nombre : 'Conductor'}\n📱 Teléfono: ${choferActual ? choferActual.telefono : ''}\n📦 Orden: ${numOrden}\n🏪 Comercio Asignado: ${tiendaNombre}\n🛍️ Cliente: ${nombreCliente}\n💰 *Monto necesario: $${montoGasto.toFixed(2)}*\n\n_Por favor liberar fondos vía Pago Móvil._`);
-      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${mensaje}`, '_blank');
-      mostrarToast("Abriendo WhatsApp para pedir dinero a Admin...", "WhatsApp", "success");
     }
 
     function verMapaYDetalle(id) {
@@ -1769,6 +1922,8 @@
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
       const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
+      const metodoPago = p.metodoPago || p.pago || 'Efectivo';
+      const esPagoMovil = metodoPago.toLowerCase().includes('pago') || metodoPago.toLowerCase().includes('movil');
 
       document.getElementById('modal-num-orden').innerText = numOrden;
       document.getElementById('mapa-nombre-cliente').innerText = nombreCliente;
@@ -1776,6 +1931,21 @@
 
       document.getElementById('mapa-btn-llamar').href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
       document.getElementById('mapa-btn-wa').onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
+
+      const elMetodo = document.getElementById('mapa-metodo-pago');
+      elMetodo.innerText = esPagoMovil ? 'Pago Móvil' : 'Efectivo';
+      elMetodo.className = esPagoMovil ? 'font-bold text-blue-400 font-mono' : 'font-bold text-emerald-400 font-mono';
+
+      const cajaDetallePago = document.getElementById('caja-detalle-pago-cliente');
+      if (esPagoMovil && p.referenciaPago) {
+        cajaDetallePago.innerText = `Referencia Pago Móvil: ${p.referenciaPago}`;
+        cajaDetallePago.classList.remove('hidden');
+      } else if (!esPagoMovil && p.pagaCon) {
+        cajaDetallePago.innerText = `Paga con: ${p.pagaCon}`;
+        cajaDetallePago.classList.remove('hidden');
+      } else {
+        cajaDetallePago.classList.add('hidden');
+      }
 
       const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : '');
       const alertaTienda = document.getElementById('mapa-alerta-comercio');
@@ -1786,7 +1956,7 @@
         alertaTienda.classList.add('hidden');
       }
 
-      // LISTA DE ARTÍCULOS SIN PRECIOS (SOLO CANTIDAD Y NOMBRE)
+      // RENDERIZAR LISTA DE ARTÍCULOS SIN PRECIOS (REQUISITO ESTRICTO DEL CLIENTE)
       const listaItems = document.getElementById('mapa-lista-items');
       listaItems.innerHTML = "";
       if (p.items && Array.isArray(p.items)) {
@@ -1797,7 +1967,7 @@
                 <span class="bg-blue-500/20 text-blue-300 font-bold px-2 py-0.5 rounded text-[10px] font-mono">${it.cantidad || 1}x</span>
                 ${it.nombre}
               </span>
-              <span class="text-[9px] font-mono text-amber-300/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Comprar en tienda</span>
+              <span class="text-[9px] font-mono text-amber-300/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Por Comprar</span>
             </div>
           `;
         });
@@ -1805,15 +1975,17 @@
         listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de transporte o encomienda.</p>`;
       }
 
+      // Configurar sección de Factura de Tienda
       const secFactura = document.getElementById('seccion-factura-tienda');
       if (p.tipoServicio !== 'transporte') {
         secFactura.classList.remove('hidden');
         const inputMonto = document.getElementById('input-monto-factura');
-        inputMonto.value = p.montoGastoChofer || "";
+        inputMonto.value = p.montoFacturaTienda || "";
+        actualizarCalculoFacturaTienda();
 
-        if (p.fotoFacturaReembolsoUrl) {
-          fotoFacturaBase64 = p.fotoFacturaReembolsoUrl;
-          document.getElementById('img-preview-factura').src = p.fotoFacturaReembolsoUrl;
+        if (p.fotoFacturaUrl) {
+          fotoFacturaBase64 = p.fotoFacturaUrl;
+          document.getElementById('img-preview-factura').src = p.fotoFacturaUrl;
           document.getElementById('caja-preview-factura').classList.remove('hidden');
           document.getElementById('btn-txt-foto-factura').innerText = "Cambiar Foto de Factura";
         } else {
@@ -1823,18 +1995,20 @@
         secFactura.classList.add('hidden');
       }
 
+      // Coordenadas GPS exactas
       origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : 10.1506, p.origenLng ? parseFloat(p.origenLng) : -68.5668];
       destinoPuntoMapa = [p.lat ? parseFloat(p.lat) : (p.destinoLat ? parseFloat(p.destinoLat) : 10.1506), p.lng ? parseFloat(p.lng) : (p.destinoLng ? parseFloat(p.destinoLng) : -68.5668)];
       
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
+      // Botón de acción en el modal
       const contAccion = document.getElementById('accion-estado-contenedor');
       if (p.estado === 'pendiente') {
         contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'aceptado')" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2"><span>Aceptar carrera (+$1.00)</span><i data-lucide="arrow-right" class="w-4 h-4"></i></button>`;
       } else if (p.estado === 'aceptado') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto al Comercio Asignado</span></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'en_camino')" class="btn-spring w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2"><i data-lucide="navigation-2" class="w-4 h-4"></i><span>Iniciar Trayecto</span></button>`;
       } else if (p.estado === 'en_camino') {
-        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega (Cobrar Comisión $1.00)</span></button>`;
+        contAccion.innerHTML = `<button onclick="cambiarEstado('${id}', 'entregado')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><span>Confirmar Entrega (Cobrar $1.00)</span></button>`;
       } else {
         contAccion.innerHTML = `<div class="text-center text-xs text-emerald-400 font-extrabold font-mono py-2.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex items-center justify-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Entregado con éxito</div>`;
       }
@@ -1853,8 +2027,8 @@
         if (marcadorDestRef) mapaInstance.removeLayer(marcadorDestRef);
         if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
-        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Comercio Asignado: ${tiendaNombre}` : 'Salida');
-        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`📍 Cliente: ${direccionCliente}`).openPopup();
+        marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(tiendaNombre ? `Retiro: ${tiendaNombre}` : 'Salida');
+        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`📍 Destino / Cliente: ${direccionCliente}`).openPopup();
 
         if (choferGpsPunto) {
           marcadorChoferGpsRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Tu GPS');
@@ -1903,7 +2077,7 @@
         toastIcon.setAttribute('data-lucide', 'alert-circle');
       } else {
         toastBg.className = "w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-400/40 shadow-glow-solar";
-        toastIcon.setAttribute('data-lucide="bell"');
+        toastIcon.setAttribute('data-lucide', 'bell');
       }
       lucide.createIcons();
 
