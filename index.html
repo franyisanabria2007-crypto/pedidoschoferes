@@ -797,39 +797,43 @@
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2 text-emerald-300 font-extrabold font-mono text-xs">
             <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
-            <span>PASO 4: SUBIR FACTURA DEL COMERCIO (OBLIGATORIA)</span>
+            <span>PASO 4: FACTURA DEL COMERCIO (OBLIGATORIA)</span>
           </div>
           <span class="text-[9px] font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">Obligatorio *</span>
         </div>
 
         <p class="text-[10px] text-slate-300 leading-snug">
-          Toma o sube una foto clara de la factura oficial entregada por el comercio. <b>El Administrador la revisará de inmediato en su panel para verificar si es real.</b>
+          1. Sube la foto de la factura oficial.<br>
+          2. <b class="text-emerald-400">Envía la factura por WhatsApp al Administrador.</b> Es obligatorio: si no la envías por WhatsApp, la app no te permitirá continuar con el pedido.
         </p>
 
         <div>
           <input type="file" id="input-foto-factura" accept="image/*" capture="environment" onchange="capturarFotoComprimida(event, 'factura_paso4')" class="hidden">
           <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
             <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
-            <span id="btn-txt-foto-factura">Tomar o Subir Foto de la Factura *</span>
+            <span id="btn-txt-foto-factura">1. Tomar o Subir Foto de la Factura *</span>
           </button>
           <div id="caja-preview-factura" class="hidden mt-2 relative">
             <img id="img-preview-factura" src="" class="w-full h-36 object-cover rounded-xl border-2 border-emerald-500 shadow-md cursor-pointer" onclick="verFotoGrande(this.src)">
             <button type="button" onclick="eliminarFotoFactura()" class="absolute top-2 right-2 bg-rose-600 text-white rounded-full p-1 shadow hover:bg-rose-500">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
-            <span class="absolute bottom-2 left-2 bg-emerald-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md shadow">✓ FACTURA ENVIADA AL ADMIN (Toca para ampliar)</span>
+            <span class="absolute bottom-2 left-2 bg-emerald-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md shadow">✓ Foto Cargada en App (Toca para ampliar)</span>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="enviarFacturaWhatsAppAdmin()" class="btn-spring bg-[#0c1222] hover:bg-[#18233d] text-emerald-300 border border-emerald-500/30 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i>
-            <span>Avisar WS al Admin</span>
+        <!-- BOTÓN OBLIGATORIO DE ENVÍO POR WHATSAPP AL ADMIN -->
+        <div class="space-y-2 pt-1">
+          <button type="button" id="btn-enviar-factura-ws-obligatorio" onclick="enviarFacturaWhatsAppAdminObligatoria()" class="btn-spring w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 border border-white/20">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span id="txt-btn-enviar-factura-ws">2. ENVIAR FACTURA POR WHATSAPP AL ADMIN (OBLIGATORIO) 📲</span>
           </button>
-          <button type="button" onclick="guardarDatosFacturaEnFirebase()" class="btn-spring bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5">
-            <i data-lucide="check" class="w-3.5 h-3.5"></i>
-            <span>Confirmar en App</span>
-          </button>
+          
+          <div id="indicador-factura-ws-enviada" class="hidden text-center py-1 bg-emerald-950/40 rounded-xl border border-emerald-500/40">
+            <span class="text-[10px] font-black text-emerald-300 flex items-center justify-center gap-1.5">
+              <i data-lucide="check-check" class="w-3.5 h-3.5 text-accent-emerald"></i> ✓ Factura enviada por WhatsApp al Admin
+            </span>
+          </div>
         </div>
       </div>
 
@@ -883,7 +887,9 @@
       appId: "1:191012880689:web:a31697074c619b96a83010"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.database();
 
     // TARIFA FIJA CHOFER NIRGUA: $1.00 POR ENTREGA
@@ -2240,16 +2246,89 @@
       });
     }
 
+    let facturaEnviadaWhatsAppLocal = false;
+
+    function actualizarEstadoVisualFacturaWs(enviada) {
+      const ind = document.getElementById('indicador-factura-ws-enviada');
+      const btnTxt = document.getElementById('txt-btn-enviar-factura-ws');
+      const btnPaso4 = document.getElementById('btn-paso4-salir-cliente');
+      if (enviada) {
+        if (ind) ind.classList.remove('hidden');
+        if (btnTxt) btnTxt.innerText = "✓ Factura ya enviada a WS (Toca para reenviar)";
+      } else {
+        if (ind) ind.classList.add('hidden');
+        if (btnTxt) btnTxt.innerText = "2. ENVIAR FACTURA POR WHATSAPP AL ADMIN (OBLIGATORIO) 📲";
+      }
+    }
+
+    function enviarFacturaWhatsAppAdminObligatoria() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
+      if (!tieneFoto && p.tipoServicio !== 'transporte') {
+        mostrarToast("⚠️ Primero debes tomar o subir la foto de la factura.", "Foto Requerida", "error");
+        document.getElementById('input-foto-factura').click();
+        return;
+      }
+
+      facturaEnviadaWhatsAppLocal = true;
+      p.facturaEnviadaWhatsApp = true;
+
+      // Actualizar en Firebase para que el Admin lo vea al instante
+      db.ref(`pedidos/${pedidoActivoModalId}`).update({
+        facturaEnviadaWhatsApp: true,
+        fechaEnvioFacturaWhatsApp: new Date().toISOString(),
+        tieneFacturaSubida: tieneFoto,
+        fotoFacturaUrl: fotoFacturaBase64 || p.fotoFacturaUrl || '',
+        fotoFacturaReembolsoUrl: fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || ''
+      });
+
+      actualizarEstadoVisualFacturaWs(true);
+
+      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
+      const mTienda = parseFloat(p.montoFacturaTienda || 0).toFixed(2);
+      const tNom = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio en Nirgua');
+
+      const msj = encodeURIComponent(
+        `🚨 *FACTURA OFICIAL DEL COMERCIO - ORDEN ${numOrden}* 🧾\n\n` +
+        `Hola Administrador, soy el chofer *${choferActual ? choferActual.nombre : 'Chofer'}* (${choferActual ? choferActual.telefono : ''}).\n\n` +
+        `📦 *Orden:* ${numOrden}\n` +
+        `🏪 *Comercio:* ${tNom}\n` +
+        `💵 *Monto Factura:* *$${mTienda} USD*\n\n` +
+        `📸 *ADJUNTO A CONTINUACIÓN LA FOTO DE LA FACTURA OFICIAL PARA SU REVISIÓN Y VALIDACIÓN.*\n` +
+        `Por favor confirma en el panel si es real para proceder con la entrega.`
+      );
+
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
+      mostrarToast("✓ Factura enviada por WhatsApp al Administrador.", "Enviada a WhatsApp", "success");
+    }
+
+    function enviarFacturaWhatsAppAdmin() {
+      enviarFacturaWhatsAppAdminObligatoria();
+    }
+
     function iniciarEntregaClientePaso4() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
       if (!p) return;
 
-      const tieneFoto = fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl;
-      if (!tieneFoto && p.tipoServicio !== 'transporte') {
-        mostrarToast("⚠️ Es obligatorio tomar o subir la foto de la factura oficial en el Paso 4.", "Factura Obligatoria", "error");
-        document.getElementById('input-foto-factura').click();
-        return;
+      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
+      const enviadaWs = !!(p.facturaEnviadaWhatsApp || facturaEnviadaWhatsAppLocal);
+
+      if (p.tipoServicio !== 'transporte') {
+        if (!tieneFoto) {
+          mostrarToast("⚠️ OBLIGATORIO: Toma o sube la foto de la factura oficial en el Paso 4.", "Factura Obligatoria", "error");
+          document.getElementById('input-foto-factura').click();
+          return;
+        }
+
+        if (!enviadaWs) {
+          alert("⚠️ PASO OBLIGATORIO: Debes pulsar 'ENVIAR FACTURA POR WHATSAPP AL ADMIN' antes de continuar con la entrega. El Administrador debe verificar la factura por WhatsApp.");
+          enviarFacturaWhatsAppAdminObligatoria();
+          return;
+        }
       }
 
       const esReembolso = p.modalidadPagoTienda === 'chofer_paga';
@@ -2257,9 +2336,10 @@
       db.ref(`pedidos/${pedidoActivoModalId}`).update({
         estado: 'en_camino',
         pasoActual: 4,
-        fotoFacturaUrl: tieneFoto || '',
-        fotoFacturaReembolsoUrl: tieneFoto || '',
-        tieneFacturaSubida: !!tieneFoto,
+        fotoFacturaUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaUrl || '') : '',
+        fotoFacturaReembolsoUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || '') : '',
+        tieneFacturaSubida: tieneFoto,
+        facturaEnviadaWhatsApp: true,
         fechaFotoFactura: new Date().toISOString(),
         fechaInicioEntrega: new Date().toISOString(),
         fechaSalidaCliente: new Date().toISOString()
@@ -2290,7 +2370,7 @@
           }
         }
 
-        mostrarToast("🛵 ¡Factura lista! En camino a la dirección del cliente.", "En Camino", "success");
+        mostrarToast("🛵 ¡Factura lista y validada! En camino a la dirección del cliente.", "En Camino", "success");
         cerrarModalMapa();
       });
     }
@@ -2327,23 +2407,6 @@
         }
         cerrarModalMapa();
       });
-    }
-
-    function enviarFacturaWhatsAppAdmin() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
-      const mTienda = parseFloat(p.montoFacturaTienda || 0).toFixed(2);
-      const msj = encodeURIComponent(
-        `🧾 *FACTURA DE COMERCIO CARGADA EN APP - ORDEN ${numOrden}* 🏪\n\n` +
-        `Hola Administrador, la foto de la factura oficial ya fue subida a la app para su verificación.\n` +
-        `💵 *Monto Facturado:* $${mTienda} USD\n` +
-        `🛵 *Chofer:* ${choferActual.nombre}\n\n` +
-        `Por favor revisa la foto en el Panel Admin para confirmar que la factura es real.`
-      );
-      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
     }
 
     function capturarFotoFactura(event) {
@@ -2469,6 +2532,9 @@
       document.getElementById('btn-navegar-gps-tienda').href = `https://www.google.com/maps/dir/?api=1&destination=${origenPuntoMapa[0]},${origenPuntoMapa[1]}`;
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
+      facturaEnviadaWhatsAppLocal = !!p.facturaEnviadaWhatsApp;
+      actualizarEstadoVisualFacturaWs(facturaEnviadaWhatsAppLocal);
+
       refrescarVistaFlujoModal(p);
 
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
@@ -2516,6 +2582,8 @@
       const est = p.estado || 'pendiente';
       const pagoAdminListo = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado';
       const esChoferPaga = p.modalidadPagoTienda === 'chofer_paga';
+
+      actualizarEstadoVisualFacturaWs(!!p.facturaEnviadaWhatsApp || facturaEnviadaWhatsAppLocal);
 
       if (est === 'pendiente') {
         s1.className = "p-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 font-black animate-pulse";
