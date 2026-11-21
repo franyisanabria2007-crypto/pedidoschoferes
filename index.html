@@ -367,7 +367,7 @@
               <span id="txt-estado-permiso-gps">GPS: Bloqueado</span>
             </span>
             <span id="badge-vehiculo-header" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30 leading-none uppercase">
-              <i data-lucide="bike" class="w-3 h-3 text-amber-400 shrink-0"></i>
+              <i id="icono-vehiculo-header" data-lucide="bike" class="w-3 h-3 text-amber-400 shrink-0"></i>
               <span id="txt-vehiculo-badge-visible">Moto</span>
             </span>
           </div>
@@ -714,7 +714,7 @@
       <!-- MINI-MAPA DE RUTA (SE MANTIENE SIEMPRE VISIBLE PARA ORIENTACIÓN) -->
       <div class="space-y-1">
         <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
-          <span>A: Local Comercial • B: Destino Cliente</span>
+          <span id="txt-distancia-ruta-osrm">A: Local • B: Destino Cliente</span>
           <button type="button" onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
             <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
           </button>
@@ -893,7 +893,7 @@
         </p>
 
         <div>
-          <input type="file" id="input-foto-factura" accept="image/jpeg,image/png,image/webp" onchange="procesarFotoFacturaInput(event)" class="hidden">
+          <input type="file" id="input-foto-factura" accept="image/*" onchange="procesarFotoFacturaInput(event)" class="hidden">
           <button type="button" onclick="abrirCamaraFacturaSegura()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3.5 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
             <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
             <span id="btn-txt-foto-factura">Tomar o Subir Foto de la Factura *</span>
@@ -1103,8 +1103,43 @@
     let ultimoPedidoVistoId = null;
 
     // ================================================================
-    // UTILIDADES Y REGLA DE CARRERA ÚNICA
+    // UTILIDADES, WAKE LOCK, VEHÍCULO DINÁMICO Y REGLA DE CARRERA ÚNICA
     // ================================================================
+    let wakeLockSentinel = null;
+    async function activarWakeLockPantalla() {
+      try {
+        if ('wakeLock' in navigator && !wakeLockSentinel) {
+          wakeLockSentinel = await navigator.wakeLock.request('screen');
+          wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+        }
+      } catch (e) {}
+    }
+
+    function actualizarBadgeVehiculoHeader(vehiculo) {
+      const v = vehiculo || 'Moto';
+      const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+      const badgeHidden = document.getElementById('txt-vehiculo-badge');
+      const icono = document.getElementById('icono-vehiculo-header');
+      if (badgeVis) badgeVis.innerText = v;
+      if (badgeHidden) badgeHidden.innerText = v;
+      if (icono) {
+        const vLow = v.toLowerCase();
+        icono.setAttribute('data-lucide', vLow.includes('carro') || vLow.includes('auto') ? 'car' : 'bike');
+      }
+    }
+
+    function dispararNotificacionSistema(titulo, cuerpo) {
+      try {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(titulo, {
+            body: cuerpo,
+            icon: 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png',
+            tag: 'pedidos-flash-driver',
+            renotify: true
+          });
+        }
+      } catch (e) {}
+    }
     function normalizarTelefono(tel) {
       if (!tel) return '';
       let t = tel.toString().replace(/\D/g, '');
@@ -1201,8 +1236,7 @@
           document.getElementById('pantalla-auth').classList.add('hidden');
           document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
           document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-          const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-          if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
+          actualizarBadgeVehiculoHeader(choferActual.vehiculo);
         }
 
         const ordGuardada = localStorage.getItem('chofer_active_order_id');
@@ -1245,6 +1279,13 @@
 
       const adminWsGuardado = localStorage.getItem('admin_whatsapp_pedidosflash');
       if (adminWsGuardado) NUMERO_ADMIN_WHATSAPP = normalizarTelefono(adminWsGuardado);
+      db.ref('config/adminWhatsapp').on('value', (snap) => {
+        if (snap.exists() && snap.val()) {
+          NUMERO_ADMIN_WHATSAPP = normalizarTelefono(snap.val());
+          localStorage.setItem('admin_whatsapp_pedidosflash', NUMERO_ADMIN_WHATSAPP);
+        }
+      });
+      activarWakeLockPantalla();
       cargarDatosBancariosLocalesChofer();
 
       try {
@@ -1263,9 +1304,7 @@
         document.getElementById('pantalla-auth').classList.add('hidden');
         document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
         document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-        document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
-        const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-        if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
+        actualizarBadgeVehiculoHeader(choferActual.vehiculo);
         iniciarConexionChoferFirebase();
 
         db.ref(`choferes/${tel}`).once('value').then(snap => {
@@ -1323,7 +1362,10 @@
 
     window.addEventListener('pageshow', restaurarTodoAlFrente);
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') restaurarTodoAlFrente();
+      if (document.visibilityState === 'visible') {
+        restaurarTodoAlFrente();
+        activarWakeLockPantalla();
+      }
     });
 
     // ================================================================
@@ -1560,9 +1602,7 @@
       document.getElementById('pantalla-auth').classList.add('hidden');
       document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
       document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-      document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
-      const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-      if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
+      actualizarBadgeVehiculoHeader(choferActual.vehiculo);
 
       iniciarConexionChoferFirebase();
       iniciarSeguimientoGps();
@@ -1725,7 +1765,10 @@
       if (pendientes.length > 0) {
         const masRecienteId = pendientes[pendientes.length - 1];
         if (ultimoPedidoVistoId && ultimoPedidoVistoId !== masRecienteId) {
+          const pNuevo = nuevos[masRecienteId];
+          const tiendaN = pNuevo?.assignedStore?.name || pNuevo?.tiendaNombre || 'Comercio en Nirgua';
           emitirAlertaSonoraNuevoPedido();
+          dispararNotificacionSistema("🛵 ¡Nueva Carrera Pedidos Flash!", `Recoger en: ${tiendaN} (+$1.00 USD)`);
           mostrarToast("¡Nueva carrera disponible en Nirgua!", "Pedidos Flash", "success");
         }
         ultimoPedidoVistoId = masRecienteId;
@@ -1816,6 +1859,9 @@
         choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
         actualizarBadgeGps('granted');
         actualizarMarcadorChoferEnMapaPrincipal();
+        if (marcadorChoferGpsRef && mapaInstance) {
+          marcadorChoferGpsRef.setLatLng(choferGpsPunto);
+        }
 
         const ahora = Date.now();
         if (choferActual && choferActual.telefono && choferActual.enLinea !== false && (ahora - ultimoEnvioGpsTimestamp > 3500)) {
@@ -2223,17 +2269,34 @@
       const p = todosLosPedidos[pedidoActivoModalId];
       if (!p || p.estado !== 'aceptado') return;
 
-      const updates = {
+      const esSoloTransporte = p.tipoServicio === 'transporte';
+      const updates = esSoloTransporte ? {
+        estado: 'en_camino',
+        pasoActual: 5,
+        storeAccepted: true,
+        fechaLlegadaLocal: new Date().toISOString(),
+        fechaSalidaCliente: new Date().toISOString()
+      } : {
         estado: 'en_local',
         pasoActual: 3,
         storeAccepted: true,
         fechaLlegadaLocal: new Date().toISOString()
       };
+
       db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
       db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
-        p.estado = 'en_local';
+        p.estado = updates.estado;
+        p.pasoActual = updates.pasoActual;
         refrescarVistaFlujoModal(p);
-        mostrarToast("📍 Paso 2 Listo. Ahora gestiona el pago en comercio (Paso 3).", "En el Local", "info");
+        if (esSoloTransporte) {
+          if (mapaInstance) {
+            mapaInstance.invalidateSize();
+            calcularRutaOSRMChofer();
+          }
+          mostrarToast("🛵 Punto de recogida confirmado. Dirígete al destino final (Paso 5).", "En Camino", "success");
+        } else {
+          mostrarToast("📍 Paso 2 Listo. Ahora gestiona el pago en comercio (Paso 3).", "En el Local", "info");
+        }
       });
     }
 
@@ -3232,7 +3295,12 @@
         .then(res => res.json())
         .then(data => {
           if (data.routes && data.routes.length > 0) {
-            const latLngs = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            const ruta = data.routes[0];
+            const distKm = (ruta.distance / 1000).toFixed(1);
+            const minEst = Math.max(1, Math.round(ruta.duration / 60));
+            const elDist = document.getElementById('txt-distancia-ruta-osrm');
+            if (elDist) elDist.innerText = `Ruta A → B: ${distKm} km (~${minEst} min)`;
+            const latLngs = ruta.geometry.coordinates.map(coord => [coord[1], coord[0]]);
             lineaTrayecto = L.polyline(latLngs, { color: '#3b82f6', weight: 5, opacity: 0.95 }).addTo(mapaInstance);
             mapaInstance.fitBounds(lineaTrayecto.getBounds(), { padding: [35, 35] });
           } else {
