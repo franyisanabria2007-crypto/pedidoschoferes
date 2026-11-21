@@ -346,25 +346,35 @@
   <!-- ================================================================ -->
   <div class="w-full max-w-md h-[100dvh] sm:h-[840px] bg-[#090d18] sm:border border-white/10 sm:rounded-[36px] flex flex-col overflow-hidden shadow-2xl relative z-10">
 
-    <!-- CABECERA PRINCIPAL -->
-    <header class="bg-[#0b1020]/95 backdrop-blur-xl border-b border-white/10 px-4 py-3 shrink-0 flex items-center justify-between safe-top z-30">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-glow-blue border border-white/20">
+    <!-- CABECERA PRINCIPAL REDISEÑADA -->
+    <header class="bg-[#0b1020]/95 backdrop-blur-xl border-b border-white/10 px-4 py-3 shrink-0 flex items-center justify-between gap-2 safe-top z-30">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-glow-blue border border-white/20 shrink-0">
           <i data-lucide="zap" class="w-5 h-5 fill-white"></i>
         </div>
-        <div>
-          <h1 class="text-xs font-black text-white tracking-wider uppercase font-display flex items-center gap-1.5">
-            PEDIDOS FLASH <span class="bg-blue-500/20 text-blue-400 border border-blue-400/30 text-[8px] font-mono px-1.5 py-0.2 rounded-md font-bold">DRIVER</span>
-          </h1>
-          <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
-            <span id="txt-estado-permiso-gps" class="text-emerald-400 font-bold">GPS: Activo</span>
-            <span>•</span>
-            <span id="txt-vehiculo-badge-visible" class="text-amber-400 font-bold uppercase">Moto</span>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-xs font-black text-white tracking-wider uppercase font-display truncate">
+              PEDIDOS FLASH
+            </h1>
+            <span class="bg-blue-500/15 text-blue-300 border border-blue-400/30 text-[8px] font-mono px-1.5 py-0.5 rounded-md font-bold tracking-wide shrink-0">
+              DRIVER
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-1">
+            <span id="badge-estado-gps" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30 leading-none">
+              <span id="punto-estado-gps" class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              <span id="txt-estado-permiso-gps">GPS: Bloqueado</span>
+            </span>
+            <span id="badge-vehiculo-header" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-400/30 leading-none uppercase">
+              <i data-lucide="bike" class="w-3 h-3 text-amber-400 shrink-0"></i>
+              <span id="txt-vehiculo-badge-visible">Moto</span>
+            </span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 shrink-0">
         <button type="button" onclick="abrirModalDobleBalance('servicios')" title="Tus ganancias por entregas realizadas" class="btn-spring bg-[#111728] hover:bg-[#161f36] border border-emerald-500/50 rounded-xl px-2 py-1.5 flex items-center gap-1 shadow-sm text-left">
           <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse"></div>
           <div>
@@ -878,13 +888,13 @@
         </div>
 
         <p class="text-[10px] text-slate-300 leading-snug">
-          1. Sube la foto de la factura oficial dada por el comercio.<br>
+          1. Toma o sube la foto de la factura oficial dada por el comercio.<br>
           2. Pulsa el botón verde inferior para pasar al <b>Paso 5 (Camino al Cliente)</b>.
         </p>
 
         <div>
-          <input type="file" id="input-foto-factura" accept="image/*" onchange="procesarFotoFacturaInput(event)" class="hidden">
-          <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3.5 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
+          <input type="file" id="input-foto-factura" accept="image/jpeg,image/png,image/webp" onchange="procesarFotoFacturaInput(event)" class="hidden">
+          <button type="button" onclick="abrirCamaraFacturaSegura()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3.5 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
             <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
             <span id="btn-txt-foto-factura">Tomar o Subir Foto de la Factura *</span>
           </button>
@@ -1067,6 +1077,7 @@
     let opcionPagoSeleccionada = 'admin';
     let ultimoAssignedStoreVisto = null;
     let motivoSeleccionado = 'Comercio cerrado';
+    let restauracionEnProgreso = false;
 
     // MAPAS LEAFLET
     let mapaInstance = null;
@@ -1180,28 +1191,48 @@
     }
 
     function restaurarTodoAlFrente() {
-      const chGuardado = localStorage.getItem('chofer_pedidosflash_v2');
-      if (chGuardado) {
-        try {
+      if (restauracionEnProgreso) return;
+      restauracionEnProgreso = true;
+
+      try {
+        const chGuardado = localStorage.getItem('chofer_pedidosflash_v2');
+        if (chGuardado && !choferActual) {
           choferActual = JSON.parse(chGuardado);
           document.getElementById('pantalla-auth').classList.add('hidden');
           document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
           document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
           const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
           if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
-        } catch(e) {}
-      }
-
-      const ordGuardada = localStorage.getItem('chofer_active_order_id');
-      if (ordGuardada) pedidoActivoModalId = ordGuardada;
-
-      restaurarBorradoresLocales();
-
-      if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
-        const p = todosLosPedidos[pedidoActivoModalId];
-        if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') {
-          verMapaYDetalle(pedidoActivoModalId);
         }
+
+        const ordGuardada = localStorage.getItem('chofer_active_order_id');
+        if (ordGuardada) pedidoActivoModalId = ordGuardada;
+
+        restaurarBorradoresLocales();
+
+        const camPendingRaw = localStorage.getItem('chofer_camera_pending');
+        if (camPendingRaw) {
+          try {
+            const camData = JSON.parse(camPendingRaw);
+            if (Date.now() - camData.timestamp > 120000) {
+              localStorage.removeItem('chofer_camera_pending');
+            } else if (camData.orderId) {
+              pedidoActivoModalId = camData.orderId;
+            }
+          } catch (e) {
+            localStorage.removeItem('chofer_camera_pending');
+          }
+        }
+
+        const modal = document.getElementById('modal-detalle-pedido');
+        if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
+          const p = todosLosPedidos[pedidoActivoModalId];
+          if ((p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') && modal && modal.classList.contains('hidden')) {
+            verMapaYDetalle(pedidoActivoModalId);
+          }
+        }
+      } finally {
+        setTimeout(() => { restauracionEnProgreso = false; }, 400);
       }
     }
 
@@ -1229,6 +1260,14 @@
         choferActual = JSON.parse(choferGuardado);
         const tel = normalizarTelefono(choferActual.telefono);
 
+        document.getElementById('pantalla-auth').classList.add('hidden');
+        document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
+        document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
+        document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
+        const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+        if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
+        iniciarConexionChoferFirebase();
+
         db.ref(`choferes/${tel}`).once('value').then(snap => {
           if (snap.exists()) {
             const data = snap.val();
@@ -1236,22 +1275,9 @@
               localStorage.removeItem('chofer_pedidosflash_v2');
               choferActual = null;
               mostrarVistaVerificacion(data);
-            } else {
-              document.getElementById('pantalla-auth').classList.add('hidden');
-              document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
-              document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-              document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
-              const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-              if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
-              iniciarConexionChoferFirebase();
             }
-          } else {
-            cerrarSesionChofer();
           }
-        }).catch(() => {
-          document.getElementById('pantalla-auth').classList.add('hidden');
-          iniciarConexionChoferFirebase();
-        });
+        }).catch(() => {});
       } else {
         document.getElementById('pantalla-auth').classList.remove('hidden');
       }
@@ -1265,6 +1291,16 @@
         renderizarPedidos();
         actualizarMarcadoresMapaPrincipal();
         sincronizarCarreraActivaEnVivo();
+
+        // Si la app se reinició al volver de la cámara, reabrir el modal de carrera automáticamente
+        const savedOrderId = pedidoActivoModalId || localStorage.getItem('chofer_active_order_id');
+        const modal = document.getElementById('modal-detalle-pedido');
+        if (savedOrderId && todosLosPedidos[savedOrderId] && modal && modal.classList.contains('hidden')) {
+          const p = todosLosPedidos[savedOrderId];
+          if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') {
+            verMapaYDetalle(savedOrderId);
+          }
+        }
       });
 
       db.ref('orders').on('value', (snapshot) => {
@@ -1308,11 +1344,9 @@
         document.getElementById('txt-banner-carrera-resumen').innerText = `${numOrd} • ${pasoTexto} (${tNom})`;
         banner.classList.remove('hidden');
 
-        // Escucha en tiempo real del lugar de compra fijado
         const currentStore = p.assignedStore || p.tiendaNombre || null;
         verificarCambioLugarDeCompra(currentStore);
 
-        // Si el modal está abierto, actualizar su vista paso a paso en vivo
         const modal = document.getElementById('modal-detalle-pedido');
         if (!modal.classList.contains('hidden')) {
           refrescarVistaFlujoModal(p);
@@ -1384,6 +1418,7 @@
 
     function mostrarVistaVerificacion(dataChofer) {
       choferEnEspera = dataChofer;
+      document.getElementById('pantalla-auth').classList.remove('hidden');
       document.getElementById('auth-pestanas-nav').classList.add('hidden');
       document.getElementById('form-login').classList.add('hidden');
       document.getElementById('form-registro').classList.add('hidden');
@@ -1544,6 +1579,7 @@
         }
         localStorage.removeItem('chofer_pedidosflash_v2');
         localStorage.removeItem('chofer_active_order_id');
+        localStorage.removeItem('chofer_camera_pending');
         choferActual = null;
         pedidoActivoModalId = null;
         document.getElementById('pantalla-auth').classList.remove('hidden');
@@ -1573,16 +1609,25 @@
       const txtGps = document.getElementById('txt-estado-permiso-gps');
       const txtGpsModal = document.getElementById('txt-estado-permiso-gps-modal');
       const bannerGps = document.getElementById('banner-permiso-gps');
+      const badgeGps = document.getElementById('badge-estado-gps');
+      const puntoGps = document.getElementById('punto-estado-gps');
+
       if (estado === 'granted') {
-        if (txtGps) txtGps.innerText = "GPS: Activo";
+        if (txtGps) txtGps.innerText = "GPS Activo";
         if (txtGpsModal) txtGpsModal.innerText = "GPS: Activo";
         if (bannerGps) bannerGps.classList.add('hidden');
+        if (badgeGps) badgeGps.className = "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 leading-none";
+        if (puntoGps) puntoGps.className = "w-1.5 h-1.5 rounded-full bg-emerald-400";
       } else if (estado === 'denied') {
         if (txtGps) txtGps.innerText = "GPS: Bloqueado";
         if (txtGpsModal) txtGpsModal.innerText = "GPS: Bloqueado";
         if (bannerGps && choferActual) bannerGps.classList.remove('hidden');
+        if (badgeGps) badgeGps.className = "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30 leading-none";
+        if (puntoGps) puntoGps.className = "w-1.5 h-1.5 rounded-full bg-rose-400";
       } else {
         if (txtGps) txtGps.innerText = "Activar GPS";
+        if (badgeGps) badgeGps.className = "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9.5px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 leading-none";
+        if (puntoGps) puntoGps.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
       }
     }
 
@@ -2050,7 +2095,6 @@
           return;
         }
 
-        // TARJETA DE PEDIDO DISPONIBLE O HISTORIAL
         const bloqueadoPorCarreraActiva = (p.estado === 'pendiente' && carreraActiva !== null);
 
         contenedor.innerHTML += `
@@ -2125,7 +2169,6 @@
     // FLUJO ESTRICTO PASO A PASO (SIN SALTOS) + BLOQUEO CARRERA ÚNICA
     // ================================================================
 
-    // PASO 1: ACEPTAR CARRERA (CON VALIDACIÓN DE CARRERA ÚNICA)
     function tomarPaso1AceptarCarrera(id) {
       if (!choferActual) {
         document.getElementById('pantalla-auth').classList.remove('hidden');
@@ -2158,7 +2201,6 @@
       });
     }
 
-    // PASO 2: ACEPTAR LUGAR DE COMPRA
     function accionAceptarLugarCompra() {
       if (!pedidoActivoModalId) return;
       const updates = {
@@ -2176,7 +2218,6 @@
       });
     }
 
-    // PASO 2 -> PASO 3: MARCAR LLEGADA AL LOCAL
     function marcarLlegadaAlLocal() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2196,7 +2237,6 @@
       });
     }
 
-    // PASO 3: SELECCIÓN MODALIDAD DE PAGO
     function seleccionarOpcionPagoTienda(opcion) {
       opcionPagoSeleccionada = opcion;
       const btnAdmin = document.getElementById('btn-opcion-pago-admin');
@@ -2222,7 +2262,6 @@
       lucide.createIcons();
     }
 
-    // PASO 3 (OPCIÓN ADMIN): NOTIFICAR EN PANEL IN-APP
     function notificarMontoAlAdminPorPanel() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2268,7 +2307,6 @@
       });
     }
 
-    // PASO 3 (OPCIÓN ADMIN): ENVIAR POR WHATSAPP
     function comunicarMontoAlAdminPorWhatsApp() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2312,7 +2350,6 @@
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
     }
 
-    // PASO 3 -> PASO 4: CONFIRMAR TRANSFERENCIA RECIBIDA
     function accionConfirmarTransferencia() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2333,7 +2370,6 @@
       });
     }
 
-    // PASO 3 -> PASO 4 (OPCIÓN CHOFER PAGA Y PIDE REEMBOLSO)
     function registrarPagoChoferYAvanzarPaso4() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2379,13 +2415,68 @@
     }
 
     // ================================================================
-    // COMPRESIÓN DE IMAGEN ANTI-CRASH PARA WEBVIEW (PASO 4)
+    // CÁMARA SEGURA, COMPRESIÓN ANTI-OOM (createImageBitmap) Y RECUPERACIÓN
     // ================================================================
-    function procesarYComprimirImagen(file) {
-      return new Promise((resolve, reject) => {
-        if (!file || !file.type.startsWith('image/')) {
-          return reject(new Error("Selecciona un archivo de imagen válido."));
+    function abrirCamaraFacturaSegura() {
+      try {
+        guardarEstadoEnLocalStorage();
+        if (pedidoActivoModalId) {
+          localStorage.setItem('chofer_camera_pending', JSON.stringify({
+            orderId: pedidoActivoModalId,
+            timestamp: Date.now()
+          }));
         }
+
+        // Liberar memoria gráfica temporalmente mientras la cámara nativa está abierta
+        if (lineaTrayecto && mapaInstance) {
+          mapaInstance.removeLayer(lineaTrayecto);
+          lineaTrayecto = null;
+        }
+        marcadoresPedidosMapa.forEach(m => {
+          if (mapaPrincipalInstance) mapaPrincipalInstance.removeLayer(m);
+        });
+        marcadoresPedidosMapa = [];
+      } catch (e) {}
+
+      const input = document.getElementById('input-foto-factura');
+      if (input) {
+        input.value = '';
+        input.click();
+      }
+    }
+
+    async function procesarYComprimirImagen(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        throw new Error("Selecciona un archivo de imagen válido.");
+      }
+
+      const maxDim = 800;
+
+      if ('createImageBitmap' in window) {
+        try {
+          const bitmap = await createImageBitmap(file, {
+            resizeWidth: maxDim,
+            resizeQuality: 'medium'
+          });
+
+          const canvas = document.createElement('canvas');
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(bitmap, 0, 0);
+
+          const base64Data = canvas.toDataURL('image/jpeg', 0.62);
+
+          bitmap.close();
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.width = 0;
+          canvas.height = 0;
+
+          return base64Data;
+        } catch (bitmapErr) {}
+      }
+
+      return new Promise((resolve, reject) => {
         const objectUrl = URL.createObjectURL(file);
         const img = new Image();
 
@@ -2393,7 +2484,6 @@
           try {
             let width = img.width;
             let height = img.height;
-            const maxDim = 900;
 
             if (width > maxDim || height > maxDim) {
               if (width > height) {
@@ -2409,11 +2499,9 @@
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'medium';
             ctx.drawImage(img, 0, 0, width, height);
 
-            const base64Data = canvas.toDataURL('image/jpeg', 0.65);
+            const base64Data = canvas.toDataURL('image/jpeg', 0.62);
 
             URL.revokeObjectURL(objectUrl);
             ctx.clearRect(0, 0, width, height);
@@ -2432,7 +2520,7 @@
 
         img.onerror = () => {
           URL.revokeObjectURL(objectUrl);
-          reject(new Error("No se pudo leer la imagen en el WebView."));
+          reject(new Error("No se pudo leer la imagen desde la cámara."));
         };
 
         img.src = objectUrl;
@@ -2441,17 +2529,27 @@
 
     async function procesarFotoFacturaInput(event) {
       const file = event.target.files && event.target.files[0];
-      if (!file) return;
+      localStorage.removeItem('chofer_camera_pending');
+
+      if (!file) {
+        actualizarMarcadoresMapaPrincipal();
+        if (mapaInstance) calcularRutaOSRMChofer();
+        return;
+      }
 
       const estadoBox = document.getElementById('estado-compresion-foto');
       try {
         if (estadoBox) {
-          estadoBox.innerText = "Comprimiendo y enviando factura...";
+          estadoBox.innerText = "Optimizando factura (bajo consumo de memoria)...";
           estadoBox.classList.remove('hidden');
         }
 
         const base64Comprimida = await procesarYComprimirImagen(file);
         fotoFacturaBase64 = base64Comprimida;
+
+        try {
+          sessionStorage.setItem('chofer_last_invoice_preview', base64Comprimida);
+        } catch (e) {}
 
         const imgP = document.getElementById('img-preview-factura');
         const cajaP = document.getElementById('caja-preview-factura');
@@ -2460,7 +2558,9 @@
 
         document.getElementById('btn-txt-foto-factura').innerText = "✓ Factura Cargada (Toca para cambiar)";
 
-        if (pedidoActivoModalId) {
+        const targetOrderId = pedidoActivoModalId || localStorage.getItem('chofer_active_order_id');
+        if (targetOrderId) {
+          pedidoActivoModalId = targetOrderId;
           const montoTienda = parseFloat(document.getElementById('input-monto-factura')?.value) || 0;
           const updates = {
             fotoFacturaUrl: base64Comprimida,
@@ -2472,12 +2572,18 @@
             updates.montoFacturaTienda = montoTienda;
             updates.montoGastoChofer = montoTienda;
           }
-          db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
-          db.ref(`orders/${pedidoActivoModalId}`).update(updates);
+
+          await Promise.all([
+            db.ref(`pedidos/${targetOrderId}`).update(updates),
+            db.ref(`orders/${targetOrderId}`).update(updates)
+          ]);
+
+          sessionStorage.removeItem('chofer_last_invoice_preview');
           mostrarToast("✓ Factura sincronizada con el Administrador.", "Factura Lista", "success");
         }
 
         if (estadoBox) estadoBox.classList.add('hidden');
+        actualizarMarcadoresMapaPrincipal();
       } catch (err) {
         if (estadoBox) estadoBox.classList.add('hidden');
         mostrarToast("Error procesando imagen: " + err.message, "Aviso", "error");
@@ -2486,6 +2592,7 @@
 
     function eliminarFotoFactura() {
       fotoFacturaBase64 = null;
+      sessionStorage.removeItem('chofer_last_invoice_preview');
       const inP4 = document.getElementById('input-foto-factura');
       if (inP4) inP4.value = "";
       const cP4 = document.getElementById('caja-preview-factura');
@@ -2510,7 +2617,7 @@
       const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
       if (!tieneFoto && p.tipoServicio !== 'transporte') {
         mostrarToast("⚠️ Primero debes tomar o subir la foto de la factura.", "Foto Requerida", "error");
-        document.getElementById('input-foto-factura').click();
+        abrirCamaraFacturaSegura();
         return;
       }
 
@@ -2534,31 +2641,32 @@
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
     }
 
-    // PASO 4 -> PASO 5: TRANSICIÓN FLUIDA AL CAMINO DEL CLIENTE SIN CERRAR EL MODAL
     function iniciarEntregaClientePaso4() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
       if (!p) return;
 
-      // Validar que esté en el paso 3/4 (en_local) y pago listo
       const pagoAdminListo = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado' || p.transferAccepted || p.modalidadPagoTienda === 'chofer_paga';
       if (p.estado !== 'en_local' || !pagoAdminListo) {
         mostrarToast("⚠️ Completa primero el Pago en Comercio (Paso 3).", "Orden Secuencial", "error");
         return;
       }
 
-      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
+      const fotoRespaldo = sessionStorage.getItem('chofer_last_invoice_preview');
+      const tieneFoto = !!(fotoFacturaBase64 || fotoRespaldo || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
       if (!tieneFoto && p.tipoServicio !== 'transporte') {
         mostrarToast("⚠️ Sube la foto de la factura oficial antes de salir al cliente.", "Factura Obligatoria", "error");
-        document.getElementById('input-foto-factura').click();
+        abrirCamaraFacturaSegura();
         return;
       }
+
+      const fotoFinal = fotoFacturaBase64 || fotoRespaldo || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || '';
 
       const updates = {
         estado: 'en_camino',
         pasoActual: 5,
-        fotoFacturaUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaUrl || '') : '',
-        fotoFacturaReembolsoUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || '') : '',
+        fotoFacturaUrl: fotoFinal,
+        fotoFacturaReembolsoUrl: fotoFinal,
         tieneFacturaSubida: tieneFoto,
         fechaInicioEntrega: new Date().toISOString(),
         fechaSalidaCliente: new Date().toISOString()
@@ -2568,7 +2676,7 @@
       db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
         p.estado = 'en_camino';
         p.pasoActual = 5;
-        // NO SE CIERRA EL MODAL: Se actualiza directamente al Paso 5 (Ruta + Info del Cliente)
+        sessionStorage.removeItem('chofer_last_invoice_preview');
         refrescarVistaFlujoModal(p);
         if (mapaInstance) {
           mapaInstance.invalidateSize();
@@ -2578,7 +2686,6 @@
       });
     }
 
-    // PASO 5 -> FINALIZAR ENTREGA AL CLIENTE (LIBERA AL CHOFER PARA NUEVAS CARRERAS)
     function finalizarEntregaCompletada() {
       if (!pedidoActivoModalId) return;
       const p = todosLosPedidos[pedidoActivoModalId];
@@ -2607,9 +2714,11 @@
         pedidoActivoModalId = null;
         fotoFacturaBase64 = null;
         localStorage.removeItem('chofer_active_order_id');
+        localStorage.removeItem('chofer_camera_pending');
         localStorage.removeItem('chofer_monto_draft');
         localStorage.removeItem('chofer_pm_tienda_draft');
         localStorage.removeItem('chofer_issue_draft');
+        sessionStorage.removeItem('chofer_last_invoice_preview');
         cerrarModalMapa();
         filtrarTab('disponibles');
       });
@@ -2887,12 +2996,10 @@
       document.getElementById('mapa-txt-tienda').innerText = tiendaNombre;
       document.getElementById('mapa-txt-tienda-dir').innerText = tiendaDir;
 
-      // Preview Paso 1
       document.getElementById('preview-p1-tienda').innerText = tiendaNombre;
       document.getElementById('preview-p1-cliente').innerText = nombreCliente;
       document.getElementById('preview-p1-direccion').innerText = direccionCliente;
 
-      // Resumen Paso 5 (Camino al Cliente)
       document.getElementById('resumen-p5-tienda').innerText = tiendaNombre;
       document.getElementById('resumen-p5-monto-factura').innerText = `$${parseFloat(p.montoFacturaTienda || 0).toFixed(2)}`;
 
@@ -2916,7 +3023,6 @@
       document.getElementById('mapa-btn-llamar').href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
       document.getElementById('mapa-btn-wa').onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
 
-      // Lista de artículos (tanto en Paso 2 como en Paso 5)
       const listaItems = document.getElementById('mapa-lista-items');
       const resumenP5Items = document.getElementById('resumen-p5-items');
       listaItems.innerHTML = "";
@@ -2955,7 +3061,7 @@
         seleccionarOpcionPagoTienda('admin');
       }
 
-      const fotoExistente = p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl;
+      const fotoExistente = p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || sessionStorage.getItem('chofer_last_invoice_preview');
       if (fotoExistente) {
         fotoFacturaBase64 = fotoExistente;
         document.getElementById('img-preview-factura').src = fotoExistente;
@@ -3010,9 +3116,6 @@
       lucide.createIcons();
     }
 
-    // ================================================================
-    // RENDERIZADO SECUENCIAL SIN SALTOS (SOLO MUESTRA LA ETAPA ACTUAL)
-    // ================================================================
     function refrescarVistaFlujoModal(p) {
       const s1 = document.getElementById('chofer-step-1');
       const s2 = document.getElementById('chofer-step-2');
@@ -3032,7 +3135,6 @@
       const contAccion = document.getElementById('accion-estado-contenedor');
       const badgePaso = document.getElementById('txt-progreso-paso-badge');
 
-      // Ocultar todas las etapas primero para garantizar flujo 100% secuencial
       [bPaso1, bPaso2, bPaso3, bPaso4, bPaso5].forEach(b => b.classList.add('hidden'));
 
       const est = p.estado || 'pendiente';
@@ -3041,7 +3143,6 @@
       const carreraActiva = obtenerCarreraActivaDelChofer();
       const bloqueadoPorOtraCarrera = (est === 'pendiente' && carreraActiva !== null && carreraActiva.id !== pedidoActivoModalId);
 
-      // Actualizar resumen monto Paso 5
       document.getElementById('resumen-p5-monto-factura').innerText = `$${parseFloat(p.montoFacturaTienda || 0).toFixed(2)}`;
 
       if (est === 'pendiente') {
@@ -3074,14 +3175,12 @@
         s2.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
 
         if (esChoferPaga || pagoAdminListo) {
-          // ETAPA 4: SUBIDA OBLIGATORIA DE FACTURA
           badgePaso.innerText = "PASO 4 / 5";
           s3.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black";
           s4.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-black animate-pulse";
           bPaso4.classList.remove('hidden');
           contAccion.innerHTML = "";
         } else {
-          // ETAPA 3: PAGO EN COMERCIO
           badgePaso.innerText = "PASO 3 / 5";
           s3.className = "p-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-black animate-pulse";
           bPaso3.classList.remove('hidden');
@@ -3101,7 +3200,6 @@
           contAccion.innerHTML = "";
         }
       } else if (est === 'en_camino') {
-        // ETAPA 5: CAMINO AL CLIENTE (CON RUTA E INFORMACIÓN COMPLETA)
         badgePaso.innerText = "PASO 5 / 5";
         [s1, s2, s3, s4].forEach(el => {
           el.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
