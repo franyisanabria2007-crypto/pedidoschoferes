@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#05070c">
-  <title>Pedidos Flash — Driver Terminal Nirgua</title>
+  <title>Pedidos Flash — Terminal Chofer Nirgua</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -144,7 +144,7 @@
   <div class="fixed bottom-0 right-1/4 w-[350px] h-[300px] bg-gradient-to-t from-emerald-500/10 to-transparent blur-3xl pointer-events-none z-0"></div>
 
   <!-- TOAST FLOTANTE -->
-  <div id="toast-notificacion" class="fixed top-5 inset-x-0 mx-auto z-[130] transition-all duration-300 opacity-0 pointer-events-none -translate-y-3 max-w-sm w-[92%] px-2">
+  <div id="toast-notificacion" class="fixed top-5 inset-x-0 mx-auto z-[180] transition-all duration-300 opacity-0 pointer-events-none -translate-y-3 max-w-sm w-[92%] px-2">
     <div class="bg-[#0c111e]/95 backdrop-blur-2xl text-white shadow-specular rounded-2xl p-3.5 flex items-center gap-3.5 border border-white/10">
       <div id="toast-icono-bg" class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 border border-blue-400/30 shadow-[0_0_12px_rgba(59,130,246,0.3)]">
         <i id="toast-icono" data-lucide="bell" class="w-4 h-4"></i>
@@ -156,8 +156,10 @@
     </div>
   </div>
 
-  <!-- MODAL INGRESO / REGISTRO DE CHOFER -->
-  <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[100] flex items-center justify-center p-4">
+  <!-- ================================================================ -->
+  <!-- MODAL INGRESO / REGISTRO DE CHOFER (LOGIN + REGISTRO + CÓDIGO)   -->
+  <!-- ================================================================ -->
+  <div id="pantalla-auth" class="fixed inset-0 bg-[#05070c]/95 backdrop-blur-xl z-[140] flex items-center justify-center p-4">
     <div class="bg-[#0c1222]/95 border border-white/10 w-full max-w-sm rounded-[32px] p-6 space-y-4 shadow-specular sheet-spring relative overflow-hidden">
       
       <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -172,10 +174,10 @@
 
       <!-- PESTAÑAS LOGIN / REGISTRO -->
       <div id="auth-pestanas-nav" class="grid grid-cols-2 p-1 bg-[#141b2d] rounded-2xl border border-white/5 relative z-10">
-        <button onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md">
+        <button type="button" onclick="cambiarModoAuth('login')" id="btn-tab-login" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold bg-white text-slate-950 shadow-md">
           Iniciar Turno
         </button>
-        <button onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
+        <button type="button" onclick="cambiarModoAuth('registro')" id="btn-tab-registro" class="btn-spring py-2.5 text-center rounded-xl text-xs font-semibold text-slate-400 hover:text-white">
           Registrar Chofer
         </button>
       </div>
@@ -254,17 +256,17 @@
           <input type="text" id="input-codigo-verificacion" placeholder="000000" maxlength="10" class="w-full bg-[#141b2d] border-2 border-white/10 rounded-2xl p-3 text-center text-xl font-mono font-black tracking-widest text-emerald-400 focus:outline-none focus:border-blue-500 uppercase">
         </div>
 
-        <button onclick="validarCodigoAceptacion()" id="btn-validar-codigo" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
+        <button type="button" onclick="validarCodigoAceptacion()" id="btn-validar-codigo" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
           <i data-lucide="key" class="w-4 h-4"></i>
           <span>Activar e iniciar turno</span>
         </button>
 
-        <button onclick="solicitarCodigoWhatsAppAdmin()" class="btn-spring w-full bg-[#141b2d] hover:bg-[#1a233a] text-slate-200 border border-white/10 font-bold py-2.5 rounded-2xl text-[11px] flex items-center justify-center gap-2">
+        <button type="button" onclick="solicitarCodigoWhatsAppAdmin()" class="btn-spring w-full bg-[#141b2d] hover:bg-[#1a233a] text-slate-200 border border-white/10 font-bold py-2.5 rounded-2xl text-[11px] flex items-center justify-center gap-2">
           <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
           <span>Pedir código por WhatsApp</span>
         </button>
 
-        <button onclick="volverDesdeVerificacion()" class="w-full text-center text-[10px] text-slate-400 hover:text-white underline pt-1">
+        <button type="button" onclick="volverDesdeVerificacion()" class="w-full text-center text-[10px] text-slate-400 hover:text-white underline pt-1">
           Volver a iniciar con otro número
         </button>
       </div>
@@ -280,7 +282,7 @@
   </div>
 
   <!-- MODAL DE PRIVACIDAD -->
-  <div id="modal-privacidad" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[110] flex items-center justify-center p-3 sm:p-4 hidden">
+  <div id="modal-privacidad" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[150] flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-[#0c111e]/95 border border-white/10 w-full max-w-lg rounded-[32px] p-5 space-y-4 shadow-specular max-h-[90vh] flex flex-col sheet-spring">
       
       <div class="flex justify-between items-center border-b border-white/10 pb-3 shrink-0">
@@ -293,7 +295,7 @@
             <p class="text-[10px] text-slate-400 font-mono">Pedidos Flash Nirgua • Cumplimiento Normativo</p>
           </div>
         </div>
-        <button onclick="cerrarModalPrivacidad()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
+        <button type="button" onclick="cerrarModalPrivacidad()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -303,7 +305,7 @@
         <div class="grid grid-cols-2 gap-2">
           <button type="button" onclick="solicitarPermisoGpsManual()" id="btn-permiso-gps" class="btn-spring bg-[#0c111e] border border-white/10 p-2.5 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5 shadow-sm">
             <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i>
-            <span id="txt-estado-permiso-gps">Activar GPS</span>
+            <span id="txt-estado-permiso-gps-modal">Activar GPS</span>
           </button>
           <button type="button" onclick="solicitarPermisoNotificacionesManual()" id="btn-permiso-notif" class="btn-spring bg-[#0c111e] border border-white/10 p-2.5 rounded-xl text-[10px] font-bold text-slate-200 flex items-center justify-center gap-1.5 shadow-sm">
             <i data-lucide="bell" class="w-3.5 h-3.5 text-amber-400"></i>
@@ -314,12 +316,14 @@
 
       <div class="flex-1 overflow-y-auto pr-1 space-y-2.5 text-[11px] text-slate-300 leading-relaxed">
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
-          <h4 class="font-bold text-white text-xs">1. Flujo de Entrega en 4 Pasos Obligatorios</h4>
+          <h4 class="font-bold text-white text-xs">1. Regla de Carrera Única y Flujo Paso a Paso</h4>
           <p class="text-[10px] text-slate-400">
+            • <b>Carrera Única:</b> Solo puedes aceptar una carrera a la vez hasta completar su entrega al cliente.<br>
             • <b>Paso 1:</b> Aceptar la carrera.<br>
-            • <b>Paso 2:</b> Ir al local que indique el Administrador o el Cliente.<br>
-            • <b>Paso 3:</b> Comunicar al Administrador el monto exacto a pagar en tienda y esperar que el Admin confirme el pago por Pago Móvil.<br>
-            • <b>Paso 4:</b> Pasar/subir la foto de la factura oficial dada por el comercio y entregar la orden al cliente.
+            • <b>Paso 2:</b> Ir al local asignado y marcar llegada.<br>
+            • <b>Paso 3:</b> Comunicar monto y Pago Móvil al Administrador.<br>
+            • <b>Paso 4:</b> Subir foto de factura oficial y salir rumbo al cliente.<br>
+            • <b>Paso 5:</b> Navegar al cliente y confirmar entrega final.
           </p>
         </div>
         <div class="bg-[#141b2d] p-3 rounded-2xl border border-white/5 space-y-1">
@@ -329,7 +333,7 @@
       </div>
 
       <div class="border-t border-white/10 pt-3 shrink-0">
-        <button onclick="cerrarModalPrivacidad()" class="btn-spring w-full bg-white text-slate-950 font-extrabold py-3 rounded-2xl text-xs">
+        <button type="button" onclick="cerrarModalPrivacidad()" class="btn-spring w-full bg-white text-slate-950 font-extrabold py-3 rounded-2xl text-xs">
           Entendido y Conforme
         </button>
       </div>
@@ -337,7 +341,9 @@
     </div>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL DEL TERMINAL -->
+  <!-- ================================================================ -->
+  <!-- CONTENEDOR PRINCIPAL DEL TERMINAL                                -->
+  <!-- ================================================================ -->
   <div class="w-full max-w-md h-[100dvh] sm:h-[840px] bg-[#090d18] sm:border border-white/10 sm:rounded-[36px] flex flex-col overflow-hidden shadow-2xl relative z-10">
 
     <!-- CABECERA PRINCIPAL -->
@@ -359,7 +365,7 @@
       </div>
 
       <div class="flex items-center gap-1.5">
-        <button onclick="abrirModalDobleBalance('servicios')" title="Tus ganancias por entregas realizadas" class="btn-spring bg-[#111728] hover:bg-[#161f36] border border-emerald-500/50 rounded-xl px-2 py-1.5 flex items-center gap-1 shadow-sm text-left">
+        <button type="button" onclick="abrirModalDobleBalance('servicios')" title="Tus ganancias por entregas realizadas" class="btn-spring bg-[#111728] hover:bg-[#161f36] border border-emerald-500/50 rounded-xl px-2 py-1.5 flex items-center gap-1 shadow-sm text-left">
           <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse"></div>
           <div>
             <span class="text-[7.5px] font-mono text-slate-400 uppercase block leading-none font-bold">Servicios</span>
@@ -367,7 +373,7 @@
           </div>
         </button>
 
-        <button onclick="abrirModalDobleBalance('reembolsos')" title="Dinero de compras que pagaste y te deben reembolsar" class="btn-spring bg-[#181528] hover:bg-[#221c38] border border-purple-500/50 rounded-xl px-2 py-1.5 flex items-center gap-1 shadow-sm text-left">
+        <button type="button" onclick="abrirModalDobleBalance('reembolsos')" title="Dinero de compras que pagaste y te deben reembolsar" class="btn-spring bg-[#181528] hover:bg-[#221c38] border border-purple-500/50 rounded-xl px-2 py-1.5 flex items-center gap-1 shadow-sm text-left">
           <div class="w-1.5 h-1.5 rounded-full bg-purple-400 shadow-[0_0_6px_#c084fc] animate-pulse"></div>
           <div>
             <span class="text-[7.5px] font-mono text-purple-300 uppercase block leading-none font-bold">Reembolsos</span>
@@ -381,6 +387,10 @@
           </div>
           <span id="avatar-live-indicator" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#090d18] shadow-[0_0_8px_#10b981]"></span>
         </div>
+
+        <button type="button" onclick="cerrarSesionChofer()" class="btn-spring w-8 h-8 rounded-xl bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10" title="Cerrar sesión">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+        </button>
       </div>
 
       <span id="header-nombre-chofer" class="hidden">Chofer</span>
@@ -404,15 +414,32 @@
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
-        <button onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Audio Alertas" class="btn-spring w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center">
+        <button type="button" onclick="toggleAudioAlertas()" id="btn-toggle-audio" title="Audio Alertas" class="btn-spring w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 flex items-center justify-center">
           <i data-lucide="volume-2" id="icono-audio-header" class="w-4 h-4"></i>
         </button>
-        <button onclick="toggleEstadoEnLinea()" id="btn-switch-conexion" class="btn-spring relative w-[54px] h-[30px] bg-emerald-500/20 border-2 border-emerald-400/50 rounded-full p-0.5 cursor-pointer flex items-center transition-all select-none shadow-glow-emerald">
+        <button type="button" onclick="toggleEstadoEnLinea()" id="btn-switch-conexion" class="btn-spring relative w-[54px] h-[30px] bg-emerald-500/20 border-2 border-emerald-400/50 rounded-full p-0.5 cursor-pointer flex items-center transition-all select-none shadow-glow-emerald">
           <div id="switch-thumb" class="w-6 h-6 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399] flex items-center justify-center text-slate-950 font-black text-[9px] transition-transform duration-300 transform translate-x-6">
             <i data-lucide="check" id="icono-switch-thumb" class="w-3.5 h-3.5 stroke-[3]"></i>
           </div>
         </button>
       </div>
+    </div>
+
+    <!-- BANNER PERMANENTE DE CARRERA ACTIVA (CARRERA ÚNICA EN CURSO) -->
+    <div id="banner-carrera-activa" class="hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 p-2.5 px-4 shrink-0 flex items-center justify-between cursor-pointer shadow-lg z-20" onclick="restaurarModalPedidoActivo()">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-slate-950/30 text-slate-950 flex items-center justify-center shrink-0">
+          <i data-lucide="navigation" class="w-4 h-4 animate-bounce"></i>
+        </div>
+        <div class="min-w-0">
+          <span class="text-[9.5px] font-mono font-black uppercase text-slate-950 block leading-tight">CARRERA ÚNICA EN CURSO</span>
+          <span id="txt-banner-carrera-resumen" class="text-xs font-black text-slate-950 truncate block">Toca para abrir la hoja de ruta</span>
+        </div>
+      </div>
+      <span class="bg-slate-950 text-amber-300 font-black text-[10px] font-mono px-2.5 py-1 rounded-xl shadow shrink-0 flex items-center gap-1">
+        <span>CONTINUAR</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      </span>
     </div>
 
     <!-- BANNERS DE AVISO -->
@@ -421,7 +448,7 @@
         <i data-lucide="map-pin-off" class="w-4 h-4 text-rose-400 shrink-0"></i>
         <p class="text-[10px] text-rose-200 font-bold leading-tight">GPS desactivado. Actívalo para transmitir tu ubicación en vivo.</p>
       </div>
-      <button onclick="solicitarPermisoGpsManual()" class="btn-spring bg-rose-600 hover:bg-rose-500 text-white font-bold px-3 py-1 rounded-lg text-[9px] shadow-sm">
+      <button type="button" onclick="solicitarPermisoGpsManual()" class="btn-spring bg-rose-600 hover:bg-rose-500 text-white font-bold px-3 py-1 rounded-lg text-[9px] shadow-sm">
         Activar
       </button>
     </div>
@@ -431,20 +458,20 @@
         <i data-lucide="pause-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
         <p class="text-[10px] text-amber-200 font-bold">Turno pausado. Toca el switch para conectar.</p>
       </div>
-      <button onclick="toggleEstadoEnLinea()" class="btn-spring bg-amber-500 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-[10px] shadow-sm">
+      <button type="button" onclick="toggleEstadoEnLinea()" class="btn-spring bg-amber-500 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-[10px] shadow-sm">
         Conectar
       </button>
     </div>
 
     <!-- MAPA SATELITAL EN VIVO (NIRGUA) -->
-    <div class="relative flex-1 min-h-[220px] sm:min-h-[280px] w-full overflow-hidden bg-[#070b14]">
-      <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 220px; position: absolute; inset: 0;" class="z-0"></div>
+    <div class="relative flex-1 min-h-[200px] sm:min-h-[260px] w-full overflow-hidden bg-[#070b14]">
+      <div id="mapa-principal" style="width: 100%; height: 100%; min-height: 200px; position: absolute; inset: 0;" class="z-0"></div>
 
       <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
-        <button onclick="centrarGpsChoferEnMapa()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
+        <button type="button" onclick="centrarGpsChoferEnMapa()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-cyan-400 flex items-center justify-center shadow-specular" title="Centrar mi posición GPS">
           <i data-lucide="crosshair" class="w-5 h-5"></i>
         </button>
-        <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho / WhatsApp Admin">
+        <button type="button" onclick="contactarBaseAdminWhatsApp()" class="btn-spring w-10 h-10 rounded-2xl bg-[#090d18]/90 backdrop-blur-xl border border-white/20 text-emerald-400 flex items-center justify-center shadow-specular" title="Central de Despacho / WhatsApp Admin">
           <i data-lucide="headset" class="w-5 h-5"></i>
         </button>
       </div>
@@ -459,21 +486,18 @@
     <div id="panel-despacho-ridery" class="bg-[#090d18]/98 backdrop-blur-2xl border-t border-white/10 shrink-0 flex flex-col max-h-[52vh] relative z-20 shadow-dock-floating">
       <div class="w-10 h-1 bg-white/20 rounded-full mx-auto my-2 shrink-0"></div>
 
-      <!-- ALERTA SI HAY CARRERA ACTIVA -->
-      <div id="banner-carrera-activa-alerta" class="px-4 mb-2 hidden"></div>
-
       <!-- FILTRO DE PESTAÑAS (TABS) -->
       <div class="px-4 mb-2.5">
         <div class="grid grid-cols-3 p-1 bg-[#111728] rounded-2xl border border-white/10">
-          <button onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2.5 text-center rounded-xl text-xs font-extrabold bg-[#1a233b] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
+          <button type="button" onclick="filtrarTab('disponibles')" id="tab-disponibles" class="btn-spring py-2.5 text-center rounded-xl text-xs font-extrabold bg-[#1a233b] text-white shadow-md border border-white/15 flex items-center justify-center gap-1.5">
             <span>Disponibles</span>
             <span id="badge-disponibles" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-blue-500 text-white font-bold">0</span>
           </button>
-          <button onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+          <button type="button" onclick="filtrarTab('mis-pedidos')" id="tab-mis-pedidos" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
             <span>En Ruta</span>
             <span id="badge-activos" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-400 font-bold">0</span>
           </button>
-          <button onclick="filtrarTab('historial')" id="tab-historial" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
+          <button type="button" onclick="filtrarTab('historial')" id="tab-historial" class="btn-spring py-2.5 text-center rounded-xl text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
             <span>Historial</span>
             <span id="badge-historial" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-white/10 text-slate-300 font-bold">0</span>
           </button>
@@ -487,25 +511,25 @@
     <!-- BARRA DOCK FLOTANTE -->
     <div class="absolute bottom-2.5 inset-x-0 mx-auto w-[92%] max-w-sm z-30 pointer-events-auto">
       <nav class="bg-[#0b1020]/95 backdrop-blur-2xl border border-white/15 p-1 safe-bottom rounded-full shadow-dock-floating flex justify-around items-center">
-        <button onclick="filtrarTab('disponibles')" id="dock-btn-inicio" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white">
+        <button type="button" onclick="filtrarTab('disponibles')" id="dock-btn-inicio" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-white">
           <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.4)]">
             <i data-lucide="navigation-2" class="w-4 h-4"></i>
           </div>
           <span class="text-[9px] font-black text-cyan-300">Despacho</span>
         </button>
-        <button onclick="filtrarTab('mis-pedidos')" id="dock-btn-pedidos" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+        <button type="button" onclick="filtrarTab('mis-pedidos')" id="dock-btn-pedidos" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
           <div class="w-8 h-8 rounded-full flex items-center justify-center">
             <i data-lucide="package" class="w-4 h-4"></i>
           </div>
           <span class="text-[9px] font-medium">En Ruta</span>
         </button>
-        <button onclick="filtrarTab('historial')" id="dock-btn-historial" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+        <button type="button" onclick="filtrarTab('historial')" id="dock-btn-historial" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
           <div class="w-8 h-8 rounded-full flex items-center justify-center">
             <i data-lucide="check-circle-2" class="w-4 h-4"></i>
           </div>
           <span class="text-[9px] font-medium">Historial</span>
         </button>
-        <button onclick="abrirModalDobleBalance('servicios')" id="dock-btn-billetera" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
+        <button type="button" onclick="abrirModalDobleBalance('servicios')" id="dock-btn-billetera" class="btn-spring flex flex-col items-center gap-0.5 py-1 px-3 text-slate-400 hover:text-white">
           <div class="w-8 h-8 rounded-full flex items-center justify-center">
             <i data-lucide="wallet" class="w-4 h-4"></i>
           </div>
@@ -517,7 +541,7 @@
   </div>
 
   <!-- ================= MODAL: DOBLE BALANCE SEPARADO & RETIRO ================= -->
-  <div id="modal-doble-balance" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
+  <div id="modal-doble-balance" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[120] flex items-center justify-center p-4 hidden">
     <div class="bg-[#0c1222]/98 border border-white/10 w-full max-w-sm rounded-[32px] p-5 space-y-4 shadow-specular sheet-spring">
       
       <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
@@ -527,7 +551,7 @@
           </h3>
           <span class="text-[10px] text-slate-400">Finanzas organizadas • Pedidos Flash Nirgua</span>
         </div>
-        <button onclick="cerrarModalDobleBalance()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
+        <button type="button" onclick="cerrarModalDobleBalance()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -584,7 +608,7 @@
         </form>
       </div>
 
-      <!-- VISTA 2: REEMBOLSOS POR COMPRAS (PLATA DE COMPRAS) -->
+      <!-- VISTA 2: REEMBOLSOS POR COMPRAS -->
       <div id="vista-balance-reembolsos" class="space-y-3 hidden">
         <div class="bg-purple-950/40 border border-purple-500/40 p-4 rounded-2xl text-center">
           <span class="text-[10px] font-mono uppercase text-purple-300 font-bold block">Dinero a Reembolsar por Compras</span>
@@ -625,10 +649,13 @@
     </button>
   </div>
 
-  <!-- MODAL HOJA DE RUTA Y FLUJO DE LOS 4 PASOS DE LA CARRERA -->
-  <div id="modal-detalle-pedido" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-    <div class="bg-[#0c1222]/98 border-t sm:border border-white/10 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] overflow-y-auto no-scrollbar sheet-spring">
+  <!-- ================================================================ -->
+  <!-- MODAL HOJA DE CARRERA SECUENCIAL PASO POR PASO (SIN SALTOS)       -->
+  <!-- ================================================================ -->
+  <div id="modal-detalle-pedido" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+    <div class="bg-[#0c1222]/98 border-t sm:border border-white/10 w-full max-w-md rounded-t-[36px] sm:rounded-[36px] p-5 space-y-3.5 shadow-specular max-h-[92vh] overflow-y-auto no-scrollbar sheet-spring relative">
       
+      <!-- CABECERA DEL MODAL -->
       <div class="flex justify-between items-center border-b border-white/10 pb-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-400/30 flex items-center justify-center shadow-glow-blue">
@@ -639,56 +666,95 @@
             <span id="modal-num-orden" class="text-[10px] text-blue-400 font-mono font-bold">#PF-0000</span>
           </div>
         </div>
-        <button onclick="cerrarModalMapa()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <!-- STEPPER VISUAL DE LOS 4 PASOS OBLIGATORIOS -->
-      <div class="bg-[#111728] p-3 rounded-2xl border border-white/10 space-y-2">
-        <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">Flujo de la Carrera (4 Pasos):</span>
-        <div class="grid grid-cols-4 gap-1 text-[9px] font-mono font-black text-center">
-          <div id="chofer-step-1" class="p-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30">1. Aceptar</div>
-          <div id="chofer-step-2" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">2. Ir al Local</div>
-          <div id="chofer-step-3" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">3. Pago Admin</div>
-          <div id="chofer-step-4" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">4. Factura</div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="abrirModalReportarProblema()" class="btn-spring bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2.5 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-1" title="Reportar incidencia directa al Admin">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span>Problema</span>
+          </button>
+          <button type="button" onclick="cerrarModalMapa()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center border border-white/10">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
         </div>
       </div>
 
-      <!-- MINI-MAPA DE RUTA -->
+      <!-- STEPPER VISUAL DE PROGRESO SECUENCIAL (5 ETAPAS CLARAS) -->
+      <div class="bg-[#111728] p-3 rounded-2xl border border-white/10 space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Progreso Secuencial:</span>
+          <span id="txt-progreso-paso-badge" class="text-[10px] font-mono font-black text-blue-400">PASO 1 / 5</span>
+        </div>
+        <div class="grid grid-cols-5 gap-1 text-[8.5px] font-mono font-black text-center">
+          <div id="chofer-step-1" class="p-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30">1. Aceptar</div>
+          <div id="chofer-step-2" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">2. Local</div>
+          <div id="chofer-step-3" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">3. Pago</div>
+          <div id="chofer-step-4" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">4. Factura</div>
+          <div id="chofer-step-5" class="p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5">5. Cliente</div>
+        </div>
+      </div>
+
+      <!-- ALERTA SI HAY INCIDENCIA REGISTRADA -->
+      <div id="caja-alerta-incidencia-activa" class="hidden bg-rose-500/15 border-2 border-rose-500/40 p-3 rounded-2xl space-y-1">
+        <div class="flex items-center gap-2 text-rose-300 text-xs font-black">
+          <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400"></i>
+          <span id="txt-incidencia-tipo">Incidencia Notificada al Admin</span>
+        </div>
+        <p id="txt-incidencia-nota" class="text-[11px] text-slate-200"></p>
+      </div>
+
+      <!-- MINI-MAPA DE RUTA (SE MANTIENE SIEMPRE VISIBLE PARA ORIENTACIÓN) -->
       <div class="space-y-1">
         <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 font-mono font-bold">
           <span>A: Local Comercial • B: Destino Cliente</span>
-          <button onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
+          <button type="button" onclick="centrarGpsChoferEnMapa()" class="text-blue-400 hover:underline font-extrabold flex items-center gap-1">
             <i data-lucide="crosshair" class="w-3 h-3"></i> Mi posición GPS
           </button>
         </div>
-        <div id="mapa-cliente" style="height: 180px; min-height: 180px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
+        <div id="mapa-cliente" style="height: 170px; min-height: 170px; width: 100%; display: block;" class="border border-white/10 rounded-2xl overflow-hidden shadow-inner"></div>
       </div>
 
-      <!-- ================= PASO 2: IR AL LOCAL (INDICADO POR ADMIN O CLIENTE) ================= -->
-      <div id="bloque-paso-2-local" class="bg-gradient-to-br from-amber-500/15 via-[#141b2d] to-[#141b2d] border-2 border-amber-500/40 p-3.5 rounded-2xl text-xs space-y-2.5">
+      <!-- ================= ETAPA 1: VISTA PREVIA ANTES DE ACEPTAR ================= -->
+      <div id="bloque-paso-1-preview" class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2.5 text-xs hidden">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <span class="font-mono font-bold text-blue-300 flex items-center gap-1.5">
+            <i data-lucide="info" class="w-4 h-4"></i> Resumen de la Solicitud
+          </span>
+          <span class="text-[10px] font-mono text-emerald-400 font-bold">+$1.00 Delivery</span>
+        </div>
+        <div class="space-y-1.5 text-[11px]">
+          <p class="text-slate-300"><span class="text-slate-400 font-mono">Punto A (Local):</span> <b id="preview-p1-tienda" class="text-white">Comercio</b></p>
+          <p class="text-slate-300"><span class="text-slate-400 font-mono">Punto B (Cliente):</span> <b id="preview-p1-cliente" class="text-white">Cliente</b> — <span id="preview-p1-direccion" class="text-slate-200">Dirección</span></p>
+        </div>
+      </div>
+
+      <!-- ================= ETAPA 2: IR AL LOCAL COMERCIAL ================= -->
+      <div id="bloque-paso-2-local" class="bg-gradient-to-br from-amber-500/15 via-[#141b2d] to-[#141b2d] border-2 border-amber-500/40 p-3.5 rounded-2xl text-xs space-y-2.5 hidden">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2 text-amber-300 font-extrabold font-mono">
             <i data-lucide="store" class="w-4 h-4 text-amber-400"></i>
             <span>PASO 2: IR AL LOCAL COMERCIAL</span>
           </div>
-          <span id="badge-tipo-local-origen" class="text-[9px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/40 font-bold">Punto A</span>
+          <span class="text-[9px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/40 font-bold">Punto A</span>
         </div>
 
-        <div class="space-y-1">
-          <p class="text-[10px] text-slate-400 font-mono">Local a dirigirte (indicado por Admin o Cliente):</p>
+        <div id="tarjeta-lugar-compra" class="bg-[#080d19] p-3 rounded-xl border border-amber-400/30 space-y-1">
+          <p class="text-[10px] text-slate-400 font-mono">Local asignado por Administración / Cliente:</p>
           <h4 id="mapa-txt-tienda" class="text-sm font-black text-white">Local Comercial</h4>
           <p id="mapa-txt-tienda-dir" class="text-[11px] text-amber-200 font-medium">Nirgua Centro</p>
+          <p id="mapa-txt-tienda-instrucciones" class="text-[10px] text-slate-300 italic hidden"></p>
         </div>
 
-        <!-- BOTÓN RUTA GPS DIRECTO AL LOCAL -->
-        <a id="btn-navegar-gps-tienda" href="#" target="_blank" class="btn-spring w-full bg-[#0c1222] hover:bg-[#151e36] text-amber-300 border border-amber-400/40 font-bold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-2 shadow-sm">
-          <i data-lucide="navigation" class="w-3.5 h-3.5 text-amber-400"></i> 
-          <span>Navegar al Local con Google Maps</span>
-        </a>
+        <div class="grid grid-cols-2 gap-2">
+          <a id="btn-navegar-gps-tienda" href="#" target="_blank" class="btn-spring bg-[#0c1222] hover:bg-[#151e36] text-amber-300 border border-amber-400/40 font-bold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-sm">
+            <i data-lucide="navigation" class="w-3.5 h-3.5 text-amber-400"></i> 
+            <span>Maps al Local</span>
+          </a>
+          <button type="button" id="btn-aceptar-lugar-compra" onclick="accionAceptarLugarCompra()" class="btn-spring bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-md">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span id="txt-btn-aceptar-lugar">Aceptar Lugar</span>
+          </button>
+        </div>
 
-        <!-- LISTA DE PRODUCTOS A COMPRAR EN EL LOCAL (SIN PRECIOS) -->
+        <!-- LISTA DE PRODUCTOS A COMPRAR EN EL LOCAL -->
         <div class="bg-[#080d19] p-3 rounded-xl border border-white/10 space-y-1.5">
           <div class="flex items-center justify-between border-b border-white/10 pb-1">
             <span class="text-[10px] font-mono font-bold text-slate-300 flex items-center gap-1">
@@ -699,14 +765,14 @@
           <div id="mapa-lista-items" class="space-y-1 text-xs text-slate-200 max-h-28 overflow-y-auto no-scrollbar font-mono"></div>
         </div>
 
-        <button type="button" id="btn-marcar-llegue-al-local" onclick="marcarLlegadaAlLocal()" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
+        <button type="button" id="btn-marcar-llegue-al-local" onclick="marcarLlegadaAlLocal()" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
           <i data-lucide="map-pin" class="w-4 h-4"></i>
-          <span>📍 ¡YA ESTOY EN EL LOCAL! (Marcar en tienda)</span>
+          <span>📍 ¡YA ESTOY EN EL LOCAL! (Avanzar al Paso 3)</span>
         </button>
       </div>
 
-      <!-- ================= PASO 3: PAGO EN COMERCIO (ADMIN PAGA O REEMBOLSO CHOFER) ================= -->
-      <div id="bloque-paso-3-comunicar-pago" class="bg-gradient-to-br from-indigo-950/40 via-[#141b2d] to-[#141b2d] border-2 border-indigo-500/40 p-3.5 rounded-2xl space-y-3">
+      <!-- ================= ETAPA 3: PAGO EN COMERCIO (SOLO SE MUESTRA EN PASO 3) ================= -->
+      <div id="bloque-paso-3-comunicar-pago" class="bg-gradient-to-br from-indigo-950/40 via-[#141b2d] to-[#141b2d] border-2 border-indigo-500/40 p-3.5 rounded-2xl space-y-3 hidden">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2 text-indigo-300 font-extrabold font-mono text-xs">
             <i data-lucide="calculator" class="w-4 h-4 text-blue-400"></i>
@@ -719,7 +785,7 @@
           <label class="block text-[11px] font-mono text-slate-300 mb-1 font-bold">Monto exacto a pagar en el comercio ($ USD):</label>
           <div class="relative">
             <span class="absolute left-3 top-2.5 text-xs font-mono text-amber-400 font-bold">$</span>
-            <input type="number" step="0.01" min="0" id="input-monto-factura" oninput="actualizarCalculoFacturaTienda()" placeholder="0.00" class="w-full bg-[#080d19] border-2 border-white/15 focus:border-amber-400 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-black text-amber-400 focus:outline-none">
+            <input type="number" step="0.01" min="0" id="input-monto-factura" oninput="guardarBorradorMonto(this.value)" placeholder="0.00" class="w-full bg-[#080d19] border-2 border-white/15 focus:border-amber-400 rounded-xl pl-7 pr-3 py-2 text-sm font-mono font-black text-amber-400 focus:outline-none">
           </div>
         </div>
 
@@ -738,42 +804,51 @@
           </div>
         </div>
 
-        <!-- SECCIÓN ADMIN PAGA (SOLO DATOS DE PAGO MÓVIL AL LOCAL) -->
+        <!-- SECCIÓN ADMIN PAGA -->
         <div id="seccion-pago-admin" class="space-y-2.5">
           <div class="bg-[#080d19] p-3 rounded-xl border border-indigo-500/30 space-y-2">
             <span class="text-indigo-300 font-bold text-[10px] font-mono flex items-center gap-1">
               <i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Datos de Pago Móvil de la TIENDA:
             </span>
-            <input type="text" id="pm-tienda-banco" placeholder="Banco Receptor (Ej: Banesco)" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400">
+            <input type="text" id="pm-tienda-banco" oninput="guardarBorradorPM()" placeholder="Banco Receptor (Ej: Banesco)" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400">
             <div class="grid grid-cols-2 gap-2">
-              <input type="tel" id="pm-tienda-telefono" placeholder="Teléfono" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400">
-              <input type="text" id="pm-tienda-cedula" placeholder="Cédula / RIF" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs font-mono text-white placeholder-slate-500 uppercase focus:outline-none focus:border-indigo-400">
+              <input type="tel" id="pm-tienda-telefono" oninput="guardarBorradorPM()" placeholder="Teléfono" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400">
+              <input type="text" id="pm-tienda-cedula" oninput="guardarBorradorPM()" placeholder="Cédula / RIF" class="w-full bg-[#111728] border border-white/10 rounded-xl p-2.5 text-xs font-mono text-white placeholder-slate-500 uppercase focus:outline-none focus:border-indigo-400">
             </div>
           </div>
 
-          <button type="button" onclick="comunicarMontoAlAdminPorWhatsApp()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-emerald-500 to-teal-400 hover:brightness-110 text-slate-950 font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
-            <i data-lucide="message-circle" class="w-4 h-4"></i>
-            <span>ENVIAR DATOS AL ADMIN POR WHATSAPP</span>
-          </button>
+          <div class="grid grid-cols-1 gap-2">
+            <button type="button" onclick="notificarMontoAlAdminPorPanel()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/20">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>1. NOTIFICAR AL PANEL ADMIN (In-App)</span>
+            </button>
+            <button type="button" onclick="comunicarMontoAlAdminPorWhatsApp()" class="btn-spring w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 font-bold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>2. Enviar también por WhatsApp al Admin</span>
+            </button>
+          </div>
 
           <!-- BANNER DE ESPERA O CONFIRMACIÓN DE PAGO POR EL ADMIN -->
-          <div id="caja-estado-pago-admin" class="bg-[#080d19] p-3 rounded-xl border border-white/10 text-center space-y-1">
+          <div id="caja-estado-pago-admin" class="bg-[#080d19] p-3 rounded-xl border border-white/10 text-center space-y-2">
             <span id="txt-badge-status-pago-admin" class="inline-block px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
               ⏳ Esperando Pago Móvil del Administrador...
             </span>
             <p id="txt-desc-status-pago-admin" class="text-[10px] text-slate-400">
               Una vez enviados los datos, el administrador realizará la transferencia por Pago Móvil y confirmará.
             </p>
+            <button type="button" id="btn-confirmar-transferencia-recibida" onclick="accionConfirmarTransferencia()" class="btn-spring w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md hidden">
+              <i data-lucide="check-check" class="w-4 h-4"></i>
+              <span>Transferencia Recibida -> Avanzar al Paso 4</span>
+            </button>
           </div>
         </div>
 
-        <!-- SECCIÓN CHOFER PAGA (SOLO DATOS BANCARIOS PARA REEMBOLSO, SIN SUBIR FACTURA AQUÍ) -->
+        <!-- SECCIÓN CHOFER PAGA -->
         <div id="seccion-pago-chofer" class="space-y-2.5 hidden">
           <div class="bg-purple-950/30 p-2.5 rounded-xl border border-purple-500/40 text-[10px] text-purple-200 leading-snug">
             💡 Pagas tú en caja y la administración te transferirá el reembolso total por Pago Móvil (separado de tus ganancias de servicio). La factura obligatoria la subirás en el <b>Paso 4</b>.
           </div>
 
-          <!-- DATOS DE PAGO MÓVIL DEL CHOFER PARA SU REEMBOLSO -->
           <div class="bg-[#080d19] p-3 rounded-xl border border-purple-500/40 space-y-2">
             <span class="text-purple-300 font-bold text-[10px] font-mono flex items-center gap-1">
               <i data-lucide="landmark" class="w-3.5 h-3.5"></i> TU PAGO MÓVIL (Donde el Admin te reembolsará):
@@ -787,79 +862,108 @@
 
           <button type="button" onclick="registrarPagoChoferYAvanzarPaso4()" class="btn-spring w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg border border-white/20">
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            <span>GUARDAR DATOS Y CONTINUAR AL PASO 4 (FACTURA)</span>
+            <span>GUARDAR DATOS Y AVANZAR AL PASO 4 (FACTURA)</span>
           </button>
         </div>
       </div>
 
-      <!-- ================= PASO 4: ÚNICO LUGAR OBLIGATORIO PARA SUBIR FACTURA DEL COMERCIO ================= -->
-      <div id="bloque-paso-4-factura" class="bg-gradient-to-br from-emerald-950/30 via-[#141b2d] to-[#141b2d] border-2 border-emerald-500/40 p-3.5 rounded-2xl space-y-3">
+      <!-- ================= ETAPA 4: SUBIDA OBLIGATORIA DE FACTURA (SOLO EN PASO 4) ================= -->
+      <div id="bloque-paso-4-factura" class="bg-gradient-to-br from-emerald-950/30 via-[#141b2d] to-[#141b2d] border-2 border-emerald-500/40 p-3.5 rounded-2xl space-y-3 hidden">
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2 text-emerald-300 font-extrabold font-mono text-xs">
             <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
-            <span>PASO 4: FACTURA DEL COMERCIO (OBLIGATORIA)</span>
+            <span>PASO 4: FACTURA DEL COMERCIO</span>
           </div>
           <span class="text-[9px] font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">Obligatorio *</span>
         </div>
 
         <p class="text-[10px] text-slate-300 leading-snug">
-          1. Sube la foto de la factura oficial.<br>
-          2. <b class="text-emerald-400">Envía la factura por WhatsApp al Administrador.</b> Es obligatorio: si no la envías por WhatsApp, la app no te permitirá continuar con el pedido.
+          1. Sube la foto de la factura oficial dada por el comercio.<br>
+          2. Pulsa el botón verde inferior para pasar al <b>Paso 5 (Camino al Cliente)</b>.
         </p>
 
         <div>
-          <input type="file" id="input-foto-factura" accept="image/*" capture="environment" onchange="capturarFotoComprimida(event, 'factura_paso4')" class="hidden">
-          <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
+          <input type="file" id="input-foto-factura" accept="image/*" onchange="procesarFotoFacturaInput(event)" class="hidden">
+          <button type="button" onclick="document.getElementById('input-foto-factura').click()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] border-2 border-dashed border-emerald-500/50 rounded-xl p-3.5 flex items-center justify-center gap-2 text-xs font-bold text-emerald-300">
             <i data-lucide="camera" class="w-4 h-4 text-emerald-400"></i>
-            <span id="btn-txt-foto-factura">1. Tomar o Subir Foto de la Factura *</span>
+            <span id="btn-txt-foto-factura">Tomar o Subir Foto de la Factura *</span>
           </button>
+
+          <div id="estado-compresion-foto" class="hidden mt-2 p-2 bg-blue-500/10 border border-blue-500/30 rounded-xl text-center text-[10px] text-blue-300 font-mono">
+            Comprimiendo y enviando factura al panel...
+          </div>
+
           <div id="caja-preview-factura" class="hidden mt-2 relative">
             <img id="img-preview-factura" src="" class="w-full h-36 object-cover rounded-xl border-2 border-emerald-500 shadow-md cursor-pointer" onclick="verFotoGrande(this.src)">
             <button type="button" onclick="eliminarFotoFactura()" class="absolute top-2 right-2 bg-rose-600 text-white rounded-full p-1 shadow hover:bg-rose-500">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
-            <span class="absolute bottom-2 left-2 bg-emerald-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md shadow">✓ Foto Cargada en App (Toca para ampliar)</span>
+            <span class="absolute bottom-2 left-2 bg-emerald-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md shadow">✓ Factura Sincronizada (Toca para ampliar)</span>
           </div>
         </div>
 
-        <!-- BOTÓN OBLIGATORIO DE ENVÍO POR WHATSAPP AL ADMIN -->
-        <div class="space-y-2 pt-1">
-          <button type="button" id="btn-enviar-factura-ws-obligatorio" onclick="enviarFacturaWhatsAppAdminObligatoria()" class="btn-spring w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:brightness-110 text-slate-950 font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 border border-white/20">
-            <i data-lucide="message-circle" class="w-4 h-4"></i>
-            <span id="txt-btn-enviar-factura-ws">2. ENVIAR FACTURA POR WHATSAPP AL ADMIN (OBLIGATORIO) 📲</span>
-          </button>
-          
-          <div id="indicador-factura-ws-enviada" class="hidden text-center py-1 bg-emerald-950/40 rounded-xl border border-emerald-500/40">
-            <span class="text-[10px] font-black text-emerald-300 flex items-center justify-center gap-1.5">
-              <i data-lucide="check-check" class="w-3.5 h-3.5 text-accent-emerald"></i> ✓ Factura enviada por WhatsApp al Admin
-            </span>
-          </div>
-        </div>
+        <!-- BOTÓN OPCIONAL WHATSAPP -->
+        <button type="button" id="btn-enviar-factura-ws-obligatorio" onclick="enviarFacturaWhatsAppAdminObligatoria()" class="btn-spring w-full bg-[#080d19] hover:bg-[#151f38] text-emerald-300 border border-emerald-500/40 font-bold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span id="txt-btn-enviar-factura-ws">Notificar también por WhatsApp al Admin</span>
+        </button>
+
+        <!-- BOTÓN PRINCIPAL PARA PASAR AL PASO 5 (SIN CERRAR EL MODAL) -->
+        <button type="button" id="btn-iniciar-entrega-cliente" onclick="iniciarEntregaClientePaso4()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-emerald-500 to-teal-400 hover:brightness-110 text-slate-950 font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
+          <i data-lucide="navigation-2" class="w-4 h-4"></i>
+          <span>✓ FACTURA LISTA -> IR AL CLIENTE (PASO 5)</span>
+        </button>
       </div>
 
-      <!-- DATOS DE ENTREGA AL CLIENTE (PUNTO B) -->
-      <div id="bloque-cliente-entrega" class="bg-[#141b2d] p-3.5 rounded-2xl border border-white/10 space-y-2 text-xs">
-        <div class="flex justify-between items-center border-b border-white/10 pb-1.5">
-          <span class="font-mono font-bold text-amber-300 flex items-center gap-1">
-            <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Destino Cliente (Punto B):
+      <!-- ================= ETAPA 5: CAMINO AL CLIENTE & ENTREGA FINAL (SOLO EN EN_CAMINO) ================= -->
+      <div id="bloque-cliente-entrega" class="bg-gradient-to-br from-cyan-950/40 via-[#141b2d] to-[#141b2d] border-2 border-cyan-500/50 p-4 rounded-2xl space-y-3 text-xs hidden">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <span class="font-mono font-black text-cyan-300 flex items-center gap-1.5 text-xs">
+            <i data-lucide="navigation" class="w-4 h-4 text-cyan-400 animate-pulse"></i> PASO 5: EN CAMINO AL CLIENTE
           </span>
-          <span id="mapa-nombre-cliente" class="text-white font-extrabold">Cliente</span>
+          <span class="text-[9px] font-mono text-cyan-300 bg-cyan-500/20 px-2 py-0.5 rounded-full border border-cyan-400/40 font-bold">Punto B</span>
         </div>
 
-        <div>
-          <span class="text-slate-400 font-medium block mb-1">Dirección de Entrega:</span>
-          <p id="mapa-direccion-cliente" class="text-slate-200 bg-[#0c1222] p-2.5 rounded-xl border border-white/10 text-[11px] font-semibold leading-relaxed"></p>
+        <!-- TARJETA CON TODA LA INFORMACIÓN DEL CLIENTE -->
+        <div class="bg-[#080d19] p-3.5 rounded-xl border border-white/10 space-y-2">
+          <div class="flex justify-between items-center border-b border-white/10 pb-1.5">
+            <span class="text-slate-400 font-mono text-[10px]">Cliente a Entregar:</span>
+            <span id="mapa-nombre-cliente" class="text-white font-black text-sm">Cliente</span>
+          </div>
+
+          <div>
+            <span class="text-slate-400 font-mono text-[10px] block mb-0.5">Dirección Exacta de Entrega:</span>
+            <p id="mapa-direccion-cliente" class="text-amber-200 font-bold text-xs leading-relaxed"></p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1 border-t border-white/10 text-[11px] font-mono">
+            <div>
+              <span class="text-slate-400 text-[9.5px] block">Comercio de Compra:</span>
+              <span id="resumen-p5-tienda" class="text-white font-bold truncate block">Local</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 text-[9.5px] block">Monto Factura:</span>
+              <span id="resumen-p5-monto-factura" class="text-emerald-400 font-black">$0.00</span>
+            </div>
+          </div>
+
+          <!-- RESUMEN DE ARTÍCULOS QUE LLEVA -->
+          <div class="pt-1 border-t border-white/10">
+            <span class="text-slate-400 font-mono text-[9.5px] block mb-1">Contenido del Pedido:</span>
+            <div id="resumen-p5-items" class="text-[11px] text-slate-200 space-y-0.5 font-mono"></div>
+          </div>
         </div>
 
-        <div class="flex items-center gap-2 pt-1">
-          <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-spring flex-1 bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-sm">
-            <i data-lucide="navigation" class="w-3.5 h-3.5 fill-white"></i> Maps al Cliente
+        <!-- BOTONES DE NAVEGACIÓN Y CONTACTO CON EL CLIENTE -->
+        <div class="grid grid-cols-3 gap-2">
+          <a id="btn-abrir-waze-google" href="#" target="_blank" class="btn-spring col-span-1 bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1 shadow-sm">
+            <i data-lucide="navigation" class="w-3.5 h-3.5 fill-white"></i> Maps
           </a>
-          <a id="mapa-btn-llamar" href="#" class="btn-spring bg-[#0c1222] text-white font-bold p-2.5 rounded-xl border border-white/10" title="Llamar">
-            <i data-lucide="phone" class="w-4 h-4 text-blue-400"></i>
+          <a id="mapa-btn-llamar" href="#" class="btn-spring bg-[#0c1222] text-white font-bold py-2.5 rounded-xl border border-white/15 text-[11px] flex items-center justify-center gap-1" title="Llamar al cliente">
+            <i data-lucide="phone" class="w-3.5 h-3.5 text-blue-400"></i> Llamar
           </a>
-          <button id="mapa-btn-wa" class="btn-spring bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold p-2.5 rounded-xl" title="WhatsApp">
-            <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <button type="button" id="mapa-btn-wa" class="btn-spring bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1" title="WhatsApp al cliente">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Chat WS
           </button>
         </div>
       </div>
@@ -876,6 +980,63 @@
     </div>
   </div>
 
+  <!-- ================================================================ -->
+  <!-- MODAL: REPORTAR PROBLEMA (100% IN-APP CON CHIPS DE 1 TOQUE)       -->
+  <!-- ================================================================ -->
+  <div id="modal-reportar-problema" class="fixed inset-0 bg-[#05070c]/90 backdrop-blur-xl z-[160] flex items-center justify-center p-4 hidden">
+    <div class="bg-[#0c1222] border border-white/15 w-full max-w-sm rounded-[32px] p-5 space-y-3.5 shadow-specular sheet-spring">
+      
+      <div class="flex justify-between items-center border-b border-white/10 pb-2">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-sm font-black text-white">Reportar Problema</h3>
+        </div>
+        <button type="button" onclick="cerrarModalReportarProblema()" class="w-7 h-7 rounded-full bg-white/5 text-slate-400 flex items-center justify-center">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-300">
+        Selecciona un motivo rápido de 1 toque. Se notificará en tiempo real en el panel del administrador.
+      </p>
+
+      <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+        <button type="button" onclick="seleccionarMotivoRapido('Comercio cerrado')" class="btn-spring chip-motivo p-2.5 rounded-xl bg-rose-500/20 border-2 border-rose-500 text-left text-white font-black">
+          🏪 Comercio cerrado
+        </button>
+        <button type="button" onclick="seleccionarMotivoRapido('Sin stock')" class="btn-spring chip-motivo p-2.5 rounded-xl bg-[#141b2d] border border-white/10 hover:border-rose-400 text-left text-slate-200">
+          📦 Sin stock
+        </button>
+        <button type="button" onclick="seleccionarMotivoRapido('Cambio de precio')" class="btn-spring chip-motivo p-2.5 rounded-xl bg-[#141b2d] border border-white/10 hover:border-rose-400 text-left text-slate-200">
+          💲 Cambio de precio
+        </button>
+        <button type="button" onclick="seleccionarMotivoRapido('Falla de pago')" class="btn-spring chip-motivo p-2.5 rounded-xl bg-[#141b2d] border border-white/10 hover:border-rose-400 text-left text-slate-200">
+          💳 Falla de pago
+        </button>
+      </div>
+
+      <div>
+        <label class="block text-[10px] font-mono text-slate-400 mb-1">Nota breve o aclaratoria:</label>
+        <textarea id="txt-motivo-detalle" oninput="guardarBorradorIncidencia(this.value)" rows="2" placeholder="Detalle adicional opcional..." class="w-full bg-[#141b2d] border border-white/10 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-rose-400 resize-none"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button type="button" onclick="cerrarModalReportarProblema()" class="btn-spring py-2.5 rounded-xl text-xs font-bold text-slate-400 bg-white/5">
+          Cancelar
+        </button>
+        <button type="button" onclick="enviarReporteProblemaFirebase()" class="btn-spring py-2.5 rounded-xl text-xs font-black text-white bg-rose-600 hover:bg-rose-500 shadow-md">
+          Enviar Reporte
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SCRIPT PRINCIPAL UNIFICADO & ROBUSTO                             -->
+  <!-- ================================================================ -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB19B9jLHPpgKxVvMH97D5VafgTp0CfnOc", 
@@ -892,15 +1053,22 @@
     }
     const db = firebase.database();
 
-    // TARIFA FIJA CHOFER NIRGUA: $1.00 POR ENTREGA
-    const TARIFA_CHOFER = 1.00; 
+    const TARIFA_CHOFER = 1.00;
     let NUMERO_ADMIN_WHATSAPP = "584262566854";
 
+    // ESTADO GLOBAL
     let choferActual = null;
     let choferEnEspera = null;
     let listenerAprobacionRealTime = null;
     let todosLosPedidos = {};
     let tabActual = 'disponibles';
+    let pedidoActivoModalId = null;
+    let fotoFacturaBase64 = null;
+    let opcionPagoSeleccionada = 'admin';
+    let ultimoAssignedStoreVisto = null;
+    let motivoSeleccionado = 'Comercio cerrado';
+
+    // MAPAS LEAFLET
     let mapaInstance = null;
     let mapaPrincipalInstance = null;
     let marcadoresPedidosMapa = [];
@@ -914,20 +1082,21 @@
     let choferGpsPunto = [10.1506, -68.5668];
     let ultimoEnvioGpsTimestamp = 0;
     let gpsWatchId = null;
-    let totalGananciasAcumuladas = 0;
+
+    // BALANCES & AUDIO
     let totalGananciasServicios = 0;
     let totalReembolsosComprasPendientes = 0;
     let totalReembolsosComprasPagadas = 0;
     let audioHabilitado = true;
     let audioCtx = null;
     let ultimoPedidoVistoId = null;
-    let pedidoActivoModalId = null;
-    let fotoFacturaBase64 = null;
-    let opcionPagoSeleccionada = 'admin';
 
+    // ================================================================
+    // UTILIDADES Y REGLA DE CARRERA ÚNICA
+    // ================================================================
     function normalizarTelefono(tel) {
       if (!tel) return '';
-      let t = tel.replace(/\D/g, '');
+      let t = tel.toString().replace(/\D/g, '');
       if (t.startsWith('0')) t = '58' + t.substring(1);
       if (!t.startsWith('58') && t.length === 10) t = '58' + t;
       return t;
@@ -940,77 +1109,106 @@
       return partes[0].substring(0, 2).toUpperCase();
     }
 
-    function actualizarEstadoVisualPermisos() {
-      const txtNotif = document.getElementById('txt-estado-permiso-notif');
-      if ("Notification" in window && txtNotif) {
-        if (Notification.permission === "granted") txtNotif.innerText = "Alertas: Activas";
-        else if (Notification.permission === "denied") txtNotif.innerText = "Alertas: Bloqueadas";
-        else txtNotif.innerText = "Activar Alertas";
+    // VERIFICA SI EL CHOFER YA TIENE UNA CARRERA ACTIVA EN CURSO (BLOQUEO DE CARRERA ÚNICA)
+    function obtenerCarreraActivaDelChofer() {
+      if (!choferActual) return null;
+      const telNorm = normalizarTelefono(choferActual.telefono);
+      const ids = Object.keys(todosLosPedidos);
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        const p = todosLosPedidos[id];
+        if (p && p.choferTelefono && normalizarTelefono(p.choferTelefono) === telNorm) {
+          if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') {
+            return { id, pedido: p };
+          }
+        }
       }
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: 'geolocation' }).then(result => {
-          actualizarBadgeGps(result.state);
-          result.onchange = () => actualizarBadgeGps(result.state);
-        }).catch(() => {});
+      return null;
+    }
+
+    // ================================================================
+    // PERSISTENCIA LOCAL ANTE REINICIOS DE ANDROID / WEBVIEW
+    // ================================================================
+    function guardarEstadoEnLocalStorage() {
+      try {
+        if (choferActual) {
+          localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+        }
+        if (pedidoActivoModalId) {
+          localStorage.setItem('chofer_active_order_id', pedidoActivoModalId);
+        } else {
+          localStorage.removeItem('chofer_active_order_id');
+        }
+      } catch (e) {}
+    }
+
+    function guardarBorradorMonto(val) {
+      localStorage.setItem('chofer_monto_draft', val || '');
+    }
+
+    function guardarBorradorPM() {
+      const pm = {
+        banco: document.getElementById('pm-tienda-banco')?.value || '',
+        telefono: document.getElementById('pm-tienda-telefono')?.value || '',
+        cedula: document.getElementById('pm-tienda-cedula')?.value || ''
+      };
+      localStorage.setItem('chofer_pm_tienda_draft', JSON.stringify(pm));
+    }
+
+    function guardarBorradorIncidencia(val) {
+      localStorage.setItem('chofer_issue_draft', val || '');
+    }
+
+    function restaurarBorradoresLocales() {
+      const mDraft = localStorage.getItem('chofer_monto_draft');
+      if (mDraft && document.getElementById('input-monto-factura') && !document.getElementById('input-monto-factura').value) {
+        document.getElementById('input-monto-factura').value = mDraft;
+      }
+      const pmDraft = localStorage.getItem('chofer_pm_tienda_draft');
+      if (pmDraft) {
+        try {
+          const pm = JSON.parse(pmDraft);
+          if (document.getElementById('pm-tienda-banco') && !document.getElementById('pm-tienda-banco').value) document.getElementById('pm-tienda-banco').value = pm.banco || '';
+          if (document.getElementById('pm-tienda-telefono') && !document.getElementById('pm-tienda-telefono').value) document.getElementById('pm-tienda-telefono').value = pm.telefono || '';
+          if (document.getElementById('pm-tienda-cedula') && !document.getElementById('pm-tienda-cedula').value) document.getElementById('pm-tienda-cedula').value = pm.cedula || '';
+        } catch(e) {}
+      }
+      const issDraft = localStorage.getItem('chofer_issue_draft');
+      if (issDraft && document.getElementById('txt-motivo-detalle')) {
+        document.getElementById('txt-motivo-detalle').value = issDraft;
       }
     }
 
-    function actualizarBadgeGps(estado) {
-      const txtGps = document.getElementById('txt-estado-permiso-gps');
-      const bannerGps = document.getElementById('banner-permiso-gps');
-      if (estado === 'granted') {
-        if (txtGps) txtGps.innerText = "GPS: Activo";
-        if (bannerGps) bannerGps.classList.add('hidden');
-      } else if (estado === 'denied') {
-        if (txtGps) txtGps.innerText = "GPS: Bloqueado";
-        if (bannerGps && choferActual) bannerGps.classList.remove('hidden');
-      } else {
-        if (txtGps) txtGps.innerText = "Activar GPS";
+    function restaurarTodoAlFrente() {
+      const chGuardado = localStorage.getItem('chofer_pedidosflash_v2');
+      if (chGuardado) {
+        try {
+          choferActual = JSON.parse(chGuardado);
+          document.getElementById('pantalla-auth').classList.add('hidden');
+          document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
+          document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
+          const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
+          if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
+        } catch(e) {}
+      }
+
+      const ordGuardada = localStorage.getItem('chofer_active_order_id');
+      if (ordGuardada) pedidoActivoModalId = ordGuardada;
+
+      restaurarBorradoresLocales();
+
+      if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
+        const p = todosLosPedidos[pedidoActivoModalId];
+        if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') {
+          verMapaYDetalle(pedidoActivoModalId);
+        }
       }
     }
 
-    function solicitarPermisoGpsManual() {
-      if (!navigator.geolocation) {
-        mostrarToast("El terminal no soporta geolocalización.", "Error", "error");
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
-          actualizarBadgeGps('granted');
-          iniciarSeguimientoGps();
-          actualizarMarcadorChoferEnMapaPrincipal();
-          mostrarToast("Ubicación satelital confirmada.", "GPS Listo", "success");
-        },
-        () => {
-          actualizarBadgeGps('denied');
-          mostrarToast("Permite la ubicación en los ajustes del teléfono.", "Permiso Requerido", "error");
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    }
-
-    function solicitarPermisoNotificacionesManual() {
-      if (!("Notification" in window)) return;
-      Notification.requestPermission().then(perm => {
-        actualizarEstadoVisualPermisos();
-        if (perm === "granted") mostrarToast("Notificaciones activadas.", "Listo", "success");
-        else mostrarToast("Permiso de alertas bloqueado.", "Bloqueado", "error");
-      });
-    }
-
-    function abrirModalPrivacidad(e) {
-      if (e) e.preventDefault();
-      actualizarEstadoVisualPermisos();
-      document.getElementById('modal-privacidad').classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function cerrarModalPrivacidad() {
-      document.getElementById('modal-privacidad').classList.add('hidden');
-    }
-
-    window.onload = () => {
+    // ================================================================
+    // INICIALIZACIÓN Y CICLO DE VIDA
+    // ================================================================
+    window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       actualizarEstadoVisualPermisos();
 
@@ -1020,13 +1218,11 @@
 
       try {
         const mapaDiv = document.getElementById('mapa-principal');
-        if (mapaDiv) {
+        if (mapaDiv && !mapaPrincipalInstance) {
           mapaPrincipalInstance = L.map('mapa-principal', { zoomControl: false, attributionControl: false }).setView([10.1506, -68.5668], 15);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaPrincipalInstance);
         }
-      } catch(e) {
-        console.error("Error al iniciar mapa radar Nirgua:", e);
-      }
+      } catch(e) {}
 
       const choferGuardado = localStorage.getItem('chofer_pedidosflash_v2');
       if (choferGuardado) {
@@ -1042,11 +1238,11 @@
               mostrarVistaVerificacion(data);
             } else {
               document.getElementById('pantalla-auth').classList.add('hidden');
-              document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
+              document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
               document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-              document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
+              document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
               const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-              if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
+              if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
               iniciarConexionChoferFirebase();
             }
           } else {
@@ -1054,17 +1250,13 @@
           }
         }).catch(() => {
           document.getElementById('pantalla-auth').classList.add('hidden');
-          document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
-          document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-          document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
-          const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-          if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
           iniciarConexionChoferFirebase();
         });
       } else {
         document.getElementById('pantalla-auth').classList.remove('hidden');
       }
 
+      // ESCUCHA EN TIEMPO REAL DE PEDIDOS Y ÓRDENES
       db.ref('pedidos').on('value', (snapshot) => {
         const nuevosPedidos = snapshot.val() || {};
         detectarNuevosPedidosYAlertar(nuevosPedidos);
@@ -1072,12 +1264,60 @@
         calcularDobleBalance();
         renderizarPedidos();
         actualizarMarcadoresMapaPrincipal();
+        sincronizarCarreraActivaEnVivo();
+      });
 
-        if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
-          const pActivo = todosLosPedidos[pedidoActivoModalId];
-          refrescarVistaFlujoModal(pActivo);
-          if (pActivo.origenLat && pActivo.origenLng) {
-            const nuevaOrig = [parseFloat(pActivo.origenLat), parseFloat(pActivo.origenLng)];
+      db.ref('orders').on('value', (snapshot) => {
+        const ords = snapshot.val() || {};
+        let huboCambio = false;
+        Object.keys(ords).forEach(k => {
+          if (!todosLosPedidos[k]) {
+            todosLosPedidos[k] = ords[k];
+            huboCambio = true;
+          }
+        });
+        if (huboCambio) {
+          renderizarPedidos();
+          sincronizarCarreraActivaEnVivo();
+        }
+      });
+
+      iniciarSeguimientoGps();
+    });
+
+    window.addEventListener('pageshow', restaurarTodoAlFrente);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') restaurarTodoAlFrente();
+    });
+
+    // ================================================================
+    // SINCRONIZACIÓN DE CARRERA ACTIVA (BANNER + FLUJO EN VIVO)
+    // ================================================================
+    function sincronizarCarreraActivaEnVivo() {
+      const activa = obtenerCarreraActivaDelChofer();
+      const banner = document.getElementById('banner-carrera-activa');
+
+      if (activa) {
+        pedidoActivoModalId = activa.id;
+        guardarEstadoEnLocalStorage();
+
+        const p = activa.pedido;
+        const numOrd = p.orden || `#PF-${activa.id.substring(activa.id.length - 4)}`;
+        const tNom = p.assignedStore?.name || p.tiendaNombre || 'Comercio';
+        const pasoTexto = p.estado === 'aceptado' ? 'Paso 2: Ir al Local' : (p.estado === 'en_local' ? 'Paso 3/4: Pago y Factura' : 'Paso 5: En Camino al Cliente');
+        document.getElementById('txt-banner-carrera-resumen').innerText = `${numOrd} • ${pasoTexto} (${tNom})`;
+        banner.classList.remove('hidden');
+
+        // Escucha en tiempo real del lugar de compra fijado
+        const currentStore = p.assignedStore || p.tiendaNombre || null;
+        verificarCambioLugarDeCompra(currentStore);
+
+        // Si el modal está abierto, actualizar su vista paso a paso en vivo
+        const modal = document.getElementById('modal-detalle-pedido');
+        if (!modal.classList.contains('hidden')) {
+          refrescarVistaFlujoModal(p);
+          if (p.origenLat && p.origenLng) {
+            const nuevaOrig = [parseFloat(p.origenLat), parseFloat(p.origenLng)];
             if (!origenPuntoMapa || origenPuntoMapa[0] !== nuevaOrig[0] || origenPuntoMapa[1] !== nuevaOrig[1]) {
               origenPuntoMapa = nuevaOrig;
               if (marcadorOrigRef) marcadorOrigRef.setLatLng(origenPuntoMapa);
@@ -1085,18 +1325,38 @@
             }
           }
         }
-
-        const params = new URLSearchParams(window.location.search);
-        const idPedUrl = params.get('pedido');
-        if (idPedUrl && todosLosPedidos[idPedUrl] && !window.pedidoAbiertoPorUrl) {
-          window.pedidoAbiertoPorUrl = true;
-          setTimeout(() => verMapaYDetalle(idPedUrl), 400);
+      } else {
+        if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
+          const pActual = todosLosPedidos[pedidoActivoModalId];
+          if (pActual.estado === 'entregado' || pActual.estado === 'cancelado') {
+            pedidoActivoModalId = null;
+            guardarEstadoEnLocalStorage();
+          }
         }
-      });
+        banner.classList.add('hidden');
+      }
+    }
 
-      iniciarSeguimientoGps();
-    };
+    function verificarCambioLugarDeCompra(storeObj) {
+      if (!storeObj) return;
+      const storeStr = typeof storeObj === 'object' ? JSON.stringify(storeObj) : String(storeObj);
+      if (ultimoAssignedStoreVisto !== null && ultimoAssignedStoreVisto !== storeStr) {
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate([250, 100, 250]); } catch(e) {}
+        }
+        const tarjeta = document.getElementById('tarjeta-lugar-compra');
+        if (tarjeta) {
+          tarjeta.classList.add('btn-pulso-solar');
+          setTimeout(() => tarjeta.classList.remove('btn-pulso-solar'), 4000);
+        }
+        mostrarToast("📍 Lugar de compra actualizado por el Administrador.", "Lugar Fijado", "info");
+      }
+      ultimoAssignedStoreVisto = storeStr;
+    }
 
+    // ================================================================
+    // AUTENTICACIÓN: LOGIN, REGISTRO Y CÓDIGO DE ACTIVACIÓN
+    // ================================================================
     function cambiarModoAuth(modo) {
       const btnLogin = document.getElementById('btn-tab-login');
       const btnReg = document.getElementById('btn-tab-registro');
@@ -1180,7 +1440,7 @@
             }
             activarAccesoChofer(dataChofer);
           } else {
-            mostrarToast("Teléfono no registrado. Regístrate.", "No Encontrado", "error");
+            mostrarToast("Teléfono no registrado. Completa tu registro.", "No Encontrado", "error");
             cambiarModoAuth('registro');
             document.getElementById('reg-telefono').value = inputTel;
           }
@@ -1261,18 +1521,19 @@
         enLinea: true
       };
 
-      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+      guardarEstadoEnLocalStorage();
       document.getElementById('pantalla-auth').classList.add('hidden');
-      document.getElementById('header-nombre-chofer').innerText = `${choferActual.nombre}`;
+      document.getElementById('header-nombre-chofer').innerText = choferActual.nombre;
       document.getElementById('chofer-avatar-initials').innerText = obtenerIniciales(choferActual.nombre);
-      document.getElementById('txt-vehiculo-badge').innerText = `${choferActual.vehiculo || 'Moto'}`;
+      document.getElementById('txt-vehiculo-badge').innerText = choferActual.vehiculo || 'Moto';
       const badgeVis = document.getElementById('txt-vehiculo-badge-visible');
-      if (badgeVis) badgeVis.innerText = `${choferActual.vehiculo || 'Moto'}`;
+      if (badgeVis) badgeVis.innerText = choferActual.vehiculo || 'Moto';
 
       iniciarConexionChoferFirebase();
       iniciarSeguimientoGps();
       renderizarPedidos();
       actualizarMarcadoresMapaPrincipal();
+      sincronizarCarreraActivaEnVivo();
       mostrarToast(`Bienvenido, ${choferActual.nombre} (${choferActual.vehiculo})`, "Conectado", "success");
     }
 
@@ -1282,10 +1543,88 @@
           db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}`).update({ enLinea: false });
         }
         localStorage.removeItem('chofer_pedidosflash_v2');
+        localStorage.removeItem('chofer_active_order_id');
         choferActual = null;
+        pedidoActivoModalId = null;
         document.getElementById('pantalla-auth').classList.remove('hidden');
         cambiarModoAuth('login');
       }
+    }
+
+    // ================================================================
+    // PERMISOS, AUDIO, GPS Y CONEXIÓN
+    // ================================================================
+    function actualizarEstadoVisualPermisos() {
+      const txtNotif = document.getElementById('txt-estado-permiso-notif');
+      if ("Notification" in window && txtNotif) {
+        if (Notification.permission === "granted") txtNotif.innerText = "Alertas: Activas";
+        else if (Notification.permission === "denied") txtNotif.innerText = "Alertas: Bloqueadas";
+        else txtNotif.innerText = "Activar Alertas";
+      }
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' }).then(result => {
+          actualizarBadgeGps(result.state);
+          result.onchange = () => actualizarBadgeGps(result.state);
+        }).catch(() => {});
+      }
+    }
+
+    function actualizarBadgeGps(estado) {
+      const txtGps = document.getElementById('txt-estado-permiso-gps');
+      const txtGpsModal = document.getElementById('txt-estado-permiso-gps-modal');
+      const bannerGps = document.getElementById('banner-permiso-gps');
+      if (estado === 'granted') {
+        if (txtGps) txtGps.innerText = "GPS: Activo";
+        if (txtGpsModal) txtGpsModal.innerText = "GPS: Activo";
+        if (bannerGps) bannerGps.classList.add('hidden');
+      } else if (estado === 'denied') {
+        if (txtGps) txtGps.innerText = "GPS: Bloqueado";
+        if (txtGpsModal) txtGpsModal.innerText = "GPS: Bloqueado";
+        if (bannerGps && choferActual) bannerGps.classList.remove('hidden');
+      } else {
+        if (txtGps) txtGps.innerText = "Activar GPS";
+      }
+    }
+
+    function solicitarPermisoGpsManual() {
+      if (!navigator.geolocation) {
+        mostrarToast("El terminal no soporta geolocalización.", "Error", "error");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          choferGpsPunto = [pos.coords.latitude, pos.coords.longitude];
+          actualizarBadgeGps('granted');
+          iniciarSeguimientoGps();
+          actualizarMarcadorChoferEnMapaPrincipal();
+          mostrarToast("Ubicación satelital confirmada.", "GPS Listo", "success");
+        },
+        () => {
+          actualizarBadgeGps('denied');
+          mostrarToast("Permite la ubicación en los ajustes del teléfono.", "Permiso Requerido", "error");
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    function solicitarPermisoNotificacionesManual() {
+      if (!("Notification" in window)) return;
+      Notification.requestPermission().then(perm => {
+        actualizarEstadoVisualPermisos();
+        if (perm === "granted") mostrarToast("Notificaciones activadas.", "Listo", "success");
+        else mostrarToast("Permiso de alertas bloqueado.", "Bloqueado", "error");
+      });
+    }
+
+    function abrirModalPrivacidad(e) {
+      if (e) e.preventDefault();
+      actualizarEstadoVisualPermisos();
+      document.getElementById('modal-privacidad').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function cerrarModalPrivacidad() {
+      document.getElementById('modal-privacidad').classList.add('hidden');
     }
 
     function emitirAlertaSonoraNuevoPedido() {
@@ -1327,10 +1666,7 @@
       const vehiculoChofer = (choferActual.vehiculo || 'Moto').toLowerCase();
       const vehiculoReq = (p.vehiculoRequerido || '').toLowerCase();
       const esChoferMoto = vehiculoChofer.includes('moto') || vehiculoChofer.includes('bici');
-
-      if (vehiculoReq === 'carro' && esChoferMoto) {
-        return false;
-      }
+      if (vehiculoReq === 'carro' && esChoferMoto) return false;
       return true;
     }
 
@@ -1339,7 +1675,7 @@
       const keys = Object.keys(nuevos);
       const pendientes = keys.filter(k => {
         const p = nuevos[k];
-        return p.estado === 'pendiente' && esPedidoCompatibleConChofer(p);
+        return p && p.estado === 'pendiente' && esPedidoCompatibleConChofer(p);
       });
       if (pendientes.length > 0) {
         const masRecienteId = pendientes[pendientes.length - 1];
@@ -1378,7 +1714,7 @@
     function toggleEstadoEnLinea() {
       if (!choferActual) return;
       choferActual.enLinea = !choferActual.enLinea;
-      localStorage.setItem('chofer_pedidosflash_v2', JSON.stringify(choferActual));
+      guardarEstadoEnLocalStorage();
 
       db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}`).update({
         enLinea: choferActual.enLinea,
@@ -1469,13 +1805,15 @@
       marcadoresPedidosMapa.forEach(m => mapaPrincipalInstance.removeLayer(m));
       marcadoresPedidosMapa = [];
 
+      const telNorm = choferActual ? normalizarTelefono(choferActual.telefono) : '';
+
       Object.keys(todosLosPedidos).forEach(id => {
         const p = todosLosPedidos[id];
-        if (!p) return;
-        if (!esPedidoCompatibleConChofer(p)) return;
+        if (!p || !esPedidoCompatibleConChofer(p)) return;
 
         const esPendiente = p.estado === 'pendiente';
-        const esActivoMio = choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino');
+        const esActivoMio = choferActual && p.choferTelefono && normalizarTelefono(p.choferTelefono) === telNorm &&
+                            (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino');
 
         if (esPendiente || esActivoMio) {
           const lat = p.lat ? parseFloat(p.lat) : (p.destinoLat ? parseFloat(p.destinoLat) : null);
@@ -1497,7 +1835,7 @@
               <div class="p-1 font-sans text-xs">
                 <b class="text-blue-400 block">${etiqueta}</b>
                 <span class="text-white font-bold block">${p.cliente ? (p.cliente.nombre || p.cliente) : (p.nombre || 'Cliente')}</span>
-                <button onclick="verMapaYDetalle('${id}')" class="mt-1.5 w-full bg-blue-600 text-white font-black py-1 px-2 rounded-lg text-[10px]">Ver Detalle / Tomar</button>
+                <button type="button" onclick="verMapaYDetalle('${id}')" class="mt-1.5 w-full bg-blue-600 text-white font-black py-1 px-2 rounded-lg text-[10px]">Ver Hoja de Carrera</button>
               </div>
             `);
 
@@ -1522,6 +1860,9 @@
       }
     }
 
+    // ================================================================
+    // TABS & DOCK NAVEGACIÓN
+    // ================================================================
     function filtrarTab(tab) {
       tabActual = tab;
       ['disponibles', 'mis-pedidos', 'historial'].forEach(t => {
@@ -1561,68 +1902,41 @@
       lucide.createIcons();
     }
 
-    // ================= RENDERIZADO DE PEDIDOS (CON LOS 4 PASOS) =================
+    // ================================================================
+    // RENDERIZADO DE TARJETAS DE PEDIDOS (CON BLOQUEO DE CARRERA ÚNICA)
+    // ================================================================
     function renderizarPedidos() {
       const contenedor = document.getElementById('contenedor-pedidos');
       contenedor.innerHTML = "";
 
       const keys = Object.keys(todosLosPedidos);
       let cantDisponibles = 0, cantActivos = 0, cantHistorial = 0;
+      const telNorm = choferActual ? normalizarTelefono(choferActual.telefono) : '';
+      const carreraActiva = obtenerCarreraActivaDelChofer();
 
       keys.forEach(id => {
         const p = todosLosPedidos[id];
-        if (!p) return;
-        if (!esPedidoCompatibleConChofer(p)) return;
+        if (!p || !esPedidoCompatibleConChofer(p)) return;
 
         if (p.estado === 'pendiente') cantDisponibles++;
-        if (choferActual && p.choferTelefono === choferActual.telefono) {
+        if (choferActual && p.choferTelefono && normalizarTelefono(p.choferTelefono) === telNorm) {
           if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') cantActivos++;
           else if (p.estado === 'entregado') cantHistorial++;
         }
       });
 
-      totalGananciasAcumuladas = cantHistorial * TARIFA_CHOFER;
       document.getElementById('badge-disponibles').innerText = cantDisponibles;
       document.getElementById('badge-activos').innerText = cantActivos;
       document.getElementById('badge-historial').innerText = cantHistorial;
-      const elTot = document.getElementById('total-ganancias-chofer');
-      if (elTot) elTot.innerText = `$${totalGananciasServicios.toFixed(2)}`;
       calcularDobleBalance();
-
-      const bannerActiva = document.getElementById('banner-carrera-activa-alerta');
-      if (bannerActiva) {
-        if (cantActivos > 0 && tabActual === 'disponibles') {
-          bannerActiva.innerHTML = `
-            <div onclick="filtrarTab('mis-pedidos')" class="btn-spring cursor-pointer bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/15 border-2 border-amber-400/50 p-2.5 px-3.5 rounded-2xl flex items-center justify-between shadow-glow-solar btn-pulso-solar">
-              <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shrink-0">
-                  <i data-lucide="navigation-2" class="w-4 h-4 animate-bounce"></i>
-                </div>
-                <div>
-                  <span class="text-xs font-black text-amber-200 block leading-tight">Tienes ${cantActivos} carrera activa</span>
-                  <span class="text-[10px] text-slate-300 font-mono">¡Continúa los 4 pasos del despacho!</span>
-                </div>
-              </div>
-              <span class="text-[11px] font-black text-slate-950 bg-amber-400 px-3 py-1 rounded-xl shadow-md flex items-center gap-1 shrink-0">
-                <span>Ver Carrera</span> <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-              </span>
-            </div>
-          `;
-          bannerActiva.classList.remove('hidden');
-        } else {
-          bannerActiva.classList.add('hidden');
-          bannerActiva.innerHTML = "";
-        }
-      }
 
       const pedidosFiltrados = keys.filter(id => {
         const p = todosLosPedidos[id];
-        if (!p) return false;
-        if (!esPedidoCompatibleConChofer(p)) return false;
+        if (!p || !esPedidoCompatibleConChofer(p)) return false;
 
         if (tabActual === 'disponibles') return p.estado === 'pendiente';
-        if (tabActual === 'mis-pedidos') return choferActual && p.choferTelefono === choferActual.telefono && (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino');
-        if (tabActual === 'historial') return choferActual && p.choferTelefono === choferActual.telefono && p.estado === 'entregado';
+        if (tabActual === 'mis-pedidos') return choferActual && p.choferTelefono && normalizarTelefono(p.choferTelefono) === telNorm && (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino');
+        if (tabActual === 'historial') return choferActual && p.choferTelefono && normalizarTelefono(p.choferTelefono) === telNorm && p.estado === 'entregado';
         return false;
       }).reverse();
 
@@ -1646,7 +1960,7 @@
         const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
         const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
         const monto = p.total || p.montoTotal || p.monto || 0;
-        const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Local Comercial');
+        const tiendaNombre = p.assignedStore?.name || p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Local Comercial');
 
         if (p.estado === 'aceptado' || p.estado === 'en_local' || p.estado === 'en_camino') {
           let textoPaso = "Paso 2: Dirígete al local comercial";
@@ -1654,40 +1968,40 @@
           let botonAccionPaso = "";
 
           if (p.estado === 'aceptado') {
-            textoPaso = "Paso 2: Ve al local que diga el Admin o Cliente";
+            textoPaso = "Paso 2: Ve al local asignado";
             botonAccionPaso = `
-              <button onclick="verMapaYDetalle('${id}')" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
+              <button type="button" onclick="verMapaYDetalle('${id}')" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-solar border border-white/30">
                 <i data-lucide="store" class="w-4 h-4"></i>
-                <span class="tracking-wide uppercase">PASO 2: IR AL LOCAL (${tiendaNombre})</span>
+                <span class="tracking-wide uppercase">CONTINUAR PASO 2: IR AL LOCAL</span>
               </button>
             `;
           } else if (p.estado === 'en_local') {
-            const yaPagoAdmin = p.estadoPagoAdmin === 'pagado';
+            const yaPagoAdmin = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado' || p.transferAccepted || p.modalidadPagoTienda === 'chofer_paga';
             if (yaPagoAdmin) {
-              textoPaso = "Paso 4: Pago Confirmado por Admin ✓ Pasa la factura";
+              textoPaso = "Paso 4: Pago Listo ✓ Sube la Factura";
               badgePasoColor = "bg-emerald-500/20 text-emerald-300 border border-emerald-400/40";
               botonAccionPaso = `
-                <button onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
+                <button type="button" onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
                   <i data-lucide="camera" class="w-4 h-4"></i>
-                  <span class="tracking-wide uppercase">PASO 4: SUBIR FACTURA DADA POR LOCAL</span>
+                  <span class="tracking-wide uppercase">CONTINUAR PASO 4: SUBIR FACTURA</span>
                 </button>
               `;
             } else {
-              textoPaso = "Paso 3: Comunica al Admin cuánto pagar";
+              textoPaso = "Paso 3: Comunica el pago al Admin";
               botonAccionPaso = `
-                <button onclick="verMapaYDetalle('${id}')" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/30">
-                  <i data-lucide="message-circle" class="w-4 h-4"></i>
-                  <span class="tracking-wide uppercase">PASO 3: COMUNICAR MONTO AL ADMIN</span>
+                <button type="button" onclick="verMapaYDetalle('${id}')" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/30">
+                  <i data-lucide="calculator" class="w-4 h-4"></i>
+                  <span class="tracking-wide uppercase">CONTINUAR PASO 3: PAGO EN COMERCIO</span>
                 </button>
               `;
             }
           } else if (p.estado === 'en_camino') {
-            textoPaso = "Paso 4: Llevando la orden al Cliente";
+            textoPaso = "Paso 5: En Camino al Cliente";
             badgePasoColor = "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40";
             botonAccionPaso = `
-              <button onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-emerald border border-white/30">
-                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                <span class="tracking-wide uppercase">FINALIZAR ENTREGA AL CLIENTE (+$1.00)</span>
+              <button type="button" onclick="verMapaYDetalle('${id}')" class="btn-spring w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-glow-blue border border-white/30">
+                <i data-lucide="navigation-2" class="w-4 h-4"></i>
+                <span class="tracking-wide uppercase">VER RUTA AL CLIENTE & ENTREGAR</span>
               </button>
             `;
           }
@@ -1709,8 +2023,8 @@
                     <h3 class="text-sm font-black text-white truncate tracking-tight">${nombreCliente}</h3>
                   </div>
                   <div class="text-right shrink-0">
-                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">En Comercio</span>
-                    <span class="text-sm font-black font-mono text-amber-300 tabular-nums">${tiendaNombre}</span>
+                    <span class="text-[9px] font-mono uppercase text-slate-400 block leading-none mb-0.5">Comercio</span>
+                    <span class="text-xs font-black font-mono text-amber-300 tabular-nums">${tiendaNombre}</span>
                   </div>
                 </div>
 
@@ -1728,28 +2042,22 @@
                 </div>
               </div>
 
-              <div class="space-y-2 pt-0.5">
+              <div class="pt-0.5">
                 ${botonAccionPaso}
-
-                <div class="grid grid-cols-2 gap-1.5">
-                  <button onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/10 hover:bg-white/15 text-slate-200 font-bold py-2 rounded-xl text-[10px] flex items-center justify-center gap-1 border border-white/10 shadow-sm">
-                    <i data-lucide="map" class="w-3 h-3 text-blue-400"></i> Ver Hoja de Carrera
-                  </button>
-                  <button onclick="contactarBaseAdminWhatsApp()" class="btn-spring bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-400/40 font-bold py-2 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-sm">
-                    <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp Admin
-                  </button>
-                </div>
               </div>
             </div>
           `;
           return;
         }
 
+        // TARJETA DE PEDIDO DISPONIBLE O HISTORIAL
+        const bloqueadoPorCarreraActiva = (p.estado === 'pendiente' && carreraActiva !== null);
+
         contenedor.innerHTML += `
           <div class="bg-gradient-to-b from-[#10172b]/90 to-[#0b101e]/90 backdrop-blur-xl border border-white/10 rounded-[26px] p-3.5 space-y-2.5 shadow-card-luxury hover:border-blue-500/40 transition-all duration-200">
             <div class="flex items-start justify-between gap-2">
               <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.25)]">
+                <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30">
                   <i data-lucide="${p.estado === 'entregado' ? 'check-circle-2' : (p.tipoServicio === 'transporte' ? 'navigation-2' : 'box')}" class="w-4 h-4"></i>
                 </div>
                 <div class="min-w-0 flex-1">
@@ -1781,17 +2089,24 @@
             </div>
 
             <div class="flex gap-2 pt-0.5">
-              <button onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-1 border border-white/10 shadow-sm shrink-0">
+              <button type="button" onclick="verMapaYDetalle('${id}')" class="btn-spring bg-white/5 hover:bg-white/10 text-slate-200 font-bold py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-1 border border-white/10 shadow-sm shrink-0">
                 <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-400"></i>
                 <span>Ver Hoja</span>
               </button>
               
-              ${p.estado === 'pendiente' ? `
-                <button onclick="tomarPaso1AceptarCarrera('${id}')" class="btn-spring btn-pulso-activo flex-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-2.5 px-4 rounded-2xl text-xs shadow-glow-blue border border-white/20 whitespace-nowrap flex items-center justify-center gap-2">
-                  <span>PASO 1: ACEPTAR CARRERA (+$1.00)</span>
-                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-              ` : ''}
+              ${p.estado === 'pendiente' ? (
+                bloqueadoPorCarreraActiva ? `
+                  <button type="button" onclick="mostrarToast('⚠️ Termina tu carrera activa antes de tomar otra.', 'Carrera en Curso', 'error')" class="flex-1 bg-slate-800/80 text-slate-400 border border-white/10 font-bold py-2.5 px-3 rounded-2xl text-[11px] flex items-center justify-center gap-1.5 cursor-not-allowed">
+                    <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+                    <span>Finaliza tu carrera activa primero</span>
+                  </button>
+                ` : `
+                  <button type="button" onclick="tomarPaso1AceptarCarrera('${id}')" class="btn-spring btn-pulso-activo flex-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white font-black py-2.5 px-4 rounded-2xl text-xs shadow-glow-blue border border-white/20 whitespace-nowrap flex items-center justify-center gap-2">
+                    <span>PASO 1: ACEPTAR (+$1.00)</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                `
+              ) : ''}
 
               ${p.estado === 'entregado' ? `
                 <div class="flex-1 py-2 text-center text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center gap-1">
@@ -1806,113 +2121,503 @@
       lucide.createIcons();
     }
 
-    // ================= FUNCIONES DE LOS 4 PASOS =================
+    // ================================================================
+    // FLUJO ESTRICTO PASO A PASO (SIN SALTOS) + BLOQUEO CARRERA ÚNICA
+    // ================================================================
 
-    // PASO 1: Aceptar la carrera
+    // PASO 1: ACEPTAR CARRERA (CON VALIDACIÓN DE CARRERA ÚNICA)
     function tomarPaso1AceptarCarrera(id) {
       if (!choferActual) {
         document.getElementById('pantalla-auth').classList.remove('hidden');
         return;
       }
-      db.ref(`pedidos/${id}`).update({
+
+      const activa = obtenerCarreraActivaDelChofer();
+      if (activa && activa.id !== id) {
+        mostrarToast("⚠️ Ya tienes una carrera en curso. Debes llevarla al cliente antes de tomar otra.", "Carrera Única", "error");
+        verMapaYDetalle(activa.id);
+        return;
+      }
+
+      const updates = {
         estado: 'aceptado',
         pasoActual: 2,
         chofer: choferActual.nombre,
         choferTelefono: choferActual.telefono,
         gananciaChofer: TARIFA_CHOFER,
         fechaAceptacion: new Date().toISOString()
-      }).then(() => {
-        mostrarToast("✓ ¡Paso 1 Completado! Carrera aceptada. Ahora dirígete al local comercial.", "Paso 1 Listo", "success");
+      };
+
+      db.ref(`pedidos/${id}`).update(updates);
+      db.ref(`orders/${id}`).update(updates).then(() => {
+        pedidoActivoModalId = id;
+        guardarEstadoEnLocalStorage();
+        mostrarToast("✓ Paso 1 Listo. Ahora dirígete al local comercial (Paso 2).", "Carrera Aceptada", "success");
         filtrarTab('mis-pedidos');
         verMapaYDetalle(id);
       });
     }
 
-    // PASO 2: Marcar llegada al local
+    // PASO 2: ACEPTAR LUGAR DE COMPRA
+    function accionAceptarLugarCompra() {
+      if (!pedidoActivoModalId) return;
+      const updates = {
+        storeAccepted: true,
+        fechaAceptacionLugar: new Date().toISOString()
+      };
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        mostrarToast("✓ Lugar de compra confirmado.", "Confirmado", "success");
+        const btn = document.getElementById('btn-aceptar-lugar-compra');
+        if (btn) {
+          btn.className = "btn-spring bg-emerald-500 text-slate-950 font-black py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-md";
+          document.getElementById('txt-btn-aceptar-lugar').innerText = "✓ Lugar Aceptado";
+        }
+      });
+    }
+
+    // PASO 2 -> PASO 3: MARCAR LLEGADA AL LOCAL
     function marcarLlegadaAlLocal() {
       if (!pedidoActivoModalId) return;
-      db.ref(`pedidos/${pedidoActivoModalId}`).update({
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p || p.estado !== 'aceptado') return;
+
+      const updates = {
         estado: 'en_local',
         pasoActual: 3,
+        storeAccepted: true,
         fechaLlegadaLocal: new Date().toISOString()
-      }).then(() => {
-        mostrarToast("📍 Llegaste al local comercial. Ahora pide la cuenta y comunica el monto al Admin.", "Paso 2 Listo", "info");
-        const p = todosLosPedidos[pedidoActivoModalId];
-        if (p) {
-          p.estado = 'en_local';
-          refrescarVistaFlujoModal(p);
-        }
+      };
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        p.estado = 'en_local';
+        refrescarVistaFlujoModal(p);
+        mostrarToast("📍 Paso 2 Listo. Ahora gestiona el pago en comercio (Paso 3).", "En el Local", "info");
       });
     }
 
-    // ================= MOTOR DE COMPRESIÓN DE IMÁGENES ULTRA RÁPIDO & LIVIANO =================
-    function comprimirImagenCanvas(file, maxDim = 800, cal = 0.65) {
+    // PASO 3: SELECCIÓN MODALIDAD DE PAGO
+    function seleccionarOpcionPagoTienda(opcion) {
+      opcionPagoSeleccionada = opcion;
+      const btnAdmin = document.getElementById('btn-opcion-pago-admin');
+      const btnChofer = document.getElementById('btn-opcion-pago-chofer');
+      const secAdmin = document.getElementById('seccion-pago-admin');
+      const secChofer = document.getElementById('seccion-pago-chofer');
+      const badgeTipo = document.getElementById('badge-tipo-pago-paso3');
+
+      if (opcion === 'admin') {
+        btnAdmin.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-black text-[11px] bg-indigo-600 text-white shadow-md flex items-center justify-center gap-1";
+        btnChofer.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-bold text-[11px] text-slate-400 hover:text-white flex items-center justify-center gap-1";
+        secAdmin.classList.remove('hidden');
+        secChofer.classList.add('hidden');
+        if (badgeTipo) badgeTipo.innerText = "Pago Móvil Admin";
+      } else {
+        btnChofer.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-black text-[11px] bg-purple-600 text-white shadow-md flex items-center justify-center gap-1";
+        btnAdmin.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-bold text-[11px] text-slate-400 hover:text-white flex items-center justify-center gap-1";
+        secChofer.classList.remove('hidden');
+        secAdmin.classList.add('hidden');
+        if (badgeTipo) badgeTipo.innerText = "Reembolso Chofer";
+        cargarDatosBancariosLocalesChofer();
+      }
+      lucide.createIcons();
+    }
+
+    // PASO 3 (OPCIÓN ADMIN): NOTIFICAR EN PANEL IN-APP
+    function notificarMontoAlAdminPorPanel() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p || p.estado !== 'en_local') return;
+
+      const inputM = document.getElementById('input-monto-factura');
+      const monto = parseFloat(inputM.value) || 0;
+      if (monto <= 0) {
+        mostrarToast("Ingresa el monto exacto de la compra en la tienda.", "Monto Requerido", "error");
+        inputM.focus();
+        return;
+      }
+
+      const b = document.getElementById('pm-tienda-banco').value.trim();
+      const t = document.getElementById('pm-tienda-telefono').value.trim();
+      const c = document.getElementById('pm-tienda-cedula').value.trim().toUpperCase();
+
+      if (!b || !t || !c) {
+        mostrarToast("Completa Banco, Teléfono y Cédula/RIF de la tienda.", "Datos Incompletos", "error");
+        return;
+      }
+
+      const updates = {
+        montoFacturaTienda: monto,
+        montoGastoChofer: monto,
+        pagoMovilTienda: { banco: b, telefono: t, cedulaRif: c },
+        estadoPagoAdmin: 'pendiente',
+        modalidadPagoTienda: 'admin_paga',
+        solicitudReembolso: 'no_aplica',
+        pasoActual: 3,
+        fechaSolicitudPagoAdmin: new Date().toISOString()
+      };
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        guardarBorradorMonto(monto);
+        guardarBorradorPM();
+        p.estadoPagoAdmin = 'pendiente';
+        p.montoFacturaTienda = monto;
+        p.modalidadPagoTienda = 'admin_paga';
+        refrescarVistaFlujoModal(p);
+        mostrarToast("✓ Notificación enviada al Panel del Administrador.", "Notificado en App", "success");
+      });
+    }
+
+    // PASO 3 (OPCIÓN ADMIN): ENVIAR POR WHATSAPP
+    function comunicarMontoAlAdminPorWhatsApp() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      const inputMonto = document.getElementById('input-monto-factura');
+      const montoTienda = parseFloat(inputMonto.value) || 0;
+      if (montoTienda <= 0) {
+        mostrarToast("Ingresa primero el monto exacto de la cuenta en el comercio.", "Monto Requerido", "error");
+        inputMonto.focus();
+        return;
+      }
+
+      const b = document.getElementById('pm-tienda-banco').value.trim();
+      const t = document.getElementById('pm-tienda-telefono').value.trim();
+      const c = document.getElementById('pm-tienda-cedula').value.trim().toUpperCase();
+
+      if (!b || !t || !c) {
+        mostrarToast("Ingresa Banco, Teléfono y Cédula/RIF del Pago Móvil del comercio.", "Datos Incompletos", "error");
+        return;
+      }
+
+      notificarMontoAlAdminPorPanel();
+
+      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
+      const tNom = p.assignedStore?.name || p.tiendaNombre || 'Comercio en Nirgua';
+
+      const msj = encodeURIComponent(
+        `🚨 *PASO 3 CHOFER: PAGO EN TIENDA REQUERIDO* 💳\n\n` +
+        `🛵 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
+        `📦 *Orden:* ${numOrden}\n` +
+        `🏪 *Local:* ${tNom}\n` +
+        `💵 *Monto Exacto a Transferir:* *$${montoTienda.toFixed(2)} USD*\n\n` +
+        `📲 *DATOS PAGO MÓVIL DEL COMERCIO:*\n` +
+        `• Banco: ${b}\n` +
+        `• Teléfono: ${t}\n` +
+        `• Cédula/RIF: ${c}\n\n` +
+        `¡Quedo a la espera de tu confirmación para subir la factura en el Paso 4!`
+      );
+
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
+    }
+
+    // PASO 3 -> PASO 4: CONFIRMAR TRANSFERENCIA RECIBIDA
+    function accionConfirmarTransferencia() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      const updates = {
+        transferAccepted: true,
+        estadoPagoAdmin: 'aprobado',
+        pasoActual: 4,
+        fechaConfirmacionTransferenciaChofer: new Date().toISOString()
+      };
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        p.transferAccepted = true;
+        p.estadoPagoAdmin = 'aprobado';
+        refrescarVistaFlujoModal(p);
+        mostrarToast("✓ Transferencia confirmada. Ahora sube la foto de la factura (Paso 4).", "Paso 4 Desbloqueado", "success");
+      });
+    }
+
+    // PASO 3 -> PASO 4 (OPCIÓN CHOFER PAGA Y PIDE REEMBOLSO)
+    function registrarPagoChoferYAvanzarPaso4() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p || p.estado !== 'en_local') return;
+
+      const monto = parseFloat(document.getElementById('input-monto-factura').value) || 0;
+      if (monto <= 0) {
+        mostrarToast("Ingresa el monto exacto de la compra en el comercio.", "Monto Requerido", "error");
+        document.getElementById('input-monto-factura').focus();
+        return;
+      }
+
+      const bChofer = document.getElementById('pm-chofer-banco').value.trim();
+      const tChofer = document.getElementById('pm-chofer-telefono').value.trim();
+      const cChofer = document.getElementById('pm-chofer-cedula').value.trim().toUpperCase();
+
+      if (!bChofer || !tChofer || !cChofer) {
+        mostrarToast("Ingresa los datos de tu Pago Móvil personal para recibir el reembolso.", "Datos Requeridos", "error");
+        return;
+      }
+
+      guardarDatosBancariosLocalesChofer(bChofer, tChofer, cChofer);
+
+      const updates = {
+        montoFacturaTienda: monto,
+        montoGastoChofer: monto,
+        modalidadPagoTienda: 'chofer_paga',
+        estadoPagoAdmin: 'pendiente_reembolso',
+        solicitudReembolso: 'pendiente',
+        pasoActual: 4,
+        pagoMovilChofer: { banco: bChofer, telefono: tChofer, cedula: cChofer }
+      };
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        p.modalidadPagoTienda = 'chofer_paga';
+        p.montoFacturaTienda = monto;
+        p.pagoMovilChofer = { banco: bChofer, telefono: tChofer, cedula: cChofer };
+        calcularDobleBalance();
+        refrescarVistaFlujoModal(p);
+        mostrarToast("✓ Datos guardados. Ahora sube la foto obligatoria de la factura (Paso 4).", "Paso 4 Desbloqueado", "success");
+      });
+    }
+
+    // ================================================================
+    // COMPRESIÓN DE IMAGEN ANTI-CRASH PARA WEBVIEW (PASO 4)
+    // ================================================================
+    function procesarYComprimirImagen(file) {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onerror = reject;
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onerror = reject;
-          img.onload = () => {
-            let w = img.width, h = img.height;
-            if (w > maxDim || h > maxDim) {
-              if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-              else { w = Math.round((w * maxDim) / h); h = maxDim; }
+        if (!file || !file.type.startsWith('image/')) {
+          return reject(new Error("Selecciona un archivo de imagen válido."));
+        }
+        const objectUrl = URL.createObjectURL(file);
+        const img = new Image();
+
+        img.onload = () => {
+          try {
+            let width = img.width;
+            let height = img.height;
+            const maxDim = 900;
+
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
             }
+
             const canvas = document.createElement('canvas');
-            canvas.width = w; canvas.height = h;
+            canvas.width = width;
+            canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, w, h);
-            const dataUrl = canvas.toDataURL('image/jpeg', cal);
-            resolve(dataUrl);
-          };
-          img.src = e.target.result;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'medium';
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const base64Data = canvas.toDataURL('image/jpeg', 0.65);
+
+            URL.revokeObjectURL(objectUrl);
+            ctx.clearRect(0, 0, width, height);
+            canvas.width = 0;
+            canvas.height = 0;
+            img.onload = null;
+            img.onerror = null;
+            img.src = "";
+
+            resolve(base64Data);
+          } catch (err) {
+            URL.revokeObjectURL(objectUrl);
+            reject(err);
+          }
         };
-        reader.readAsDataURL(file);
+
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error("No se pudo leer la imagen en el WebView."));
+        };
+
+        img.src = objectUrl;
       });
     }
 
-    async function capturarFotoComprimida(e, destino) {
-      const file = e.target.files[0];
+    async function procesarFotoFacturaInput(event) {
+      const file = event.target.files && event.target.files[0];
       if (!file) return;
 
+      const estadoBox = document.getElementById('estado-compresion-foto');
       try {
-        mostrarToast("Optimizando y subiendo factura...", "Cargando", "info");
-        // maxDim = 800, cal = 0.65 produce una foto nítida de ~50KB que se sincroniza al instante con el Admin
-        const dataUrlComprimida = await comprimirImagenCanvas(file, 800, 0.65);
-        fotoFacturaBase64 = dataUrlComprimida;
-
-        const imgP4 = document.getElementById('img-preview-factura');
-        const cajaP4 = document.getElementById('caja-preview-factura');
-        if (imgP4) imgP4.src = dataUrlComprimida;
-        if (cajaP4) cajaP4.classList.remove('hidden');
-
-        const txtBtnP4 = document.getElementById('btn-txt-foto-factura');
-        if (txtBtnP4) txtBtnP4.innerText = "✓ Factura Cargada (Toca para cambiar)";
-
-        // Guardar inmediatamente en Firebase bajo el pedido activo para que el Admin la vea en vivo
-        if (pedidoActivoModalId) {
-          const inputMonto = document.getElementById('input-monto-factura');
-          const montoTienda = parseFloat(inputMonto.value) || 0;
-          
-          db.ref(`pedidos/${pedidoActivoModalId}`).update({
-            fotoFacturaUrl: dataUrlComprimida,
-            fotoFacturaReembolsoUrl: dataUrlComprimida,
-            tieneFacturaSubida: true,
-            montoFacturaTienda: montoTienda,
-            montoGastoChofer: montoTienda,
-            fechaFotoFactura: new Date().toISOString()
-          }).then(() => {
-            mostrarToast("✓ Factura enviada al Administrador con éxito.", "Factura Lista", "success");
-          });
-        } else {
-          mostrarToast("Foto de la factura lista.", "Factura Lista", "success");
+        if (estadoBox) {
+          estadoBox.innerText = "Comprimiendo y enviando factura...";
+          estadoBox.classList.remove('hidden');
         }
+
+        const base64Comprimida = await procesarYComprimirImagen(file);
+        fotoFacturaBase64 = base64Comprimida;
+
+        const imgP = document.getElementById('img-preview-factura');
+        const cajaP = document.getElementById('caja-preview-factura');
+        if (imgP) imgP.src = base64Comprimida;
+        if (cajaP) cajaP.classList.remove('hidden');
+
+        document.getElementById('btn-txt-foto-factura').innerText = "✓ Factura Cargada (Toca para cambiar)";
+
+        if (pedidoActivoModalId) {
+          const montoTienda = parseFloat(document.getElementById('input-monto-factura')?.value) || 0;
+          const updates = {
+            fotoFacturaUrl: base64Comprimida,
+            fotoFacturaReembolsoUrl: base64Comprimida,
+            tieneFacturaSubida: true,
+            fechaFotoFactura: new Date().toISOString()
+          };
+          if (montoTienda > 0) {
+            updates.montoFacturaTienda = montoTienda;
+            updates.montoGastoChofer = montoTienda;
+          }
+          db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+          db.ref(`orders/${pedidoActivoModalId}`).update(updates);
+          mostrarToast("✓ Factura sincronizada con el Administrador.", "Factura Lista", "success");
+        }
+
+        if (estadoBox) estadoBox.classList.add('hidden');
       } catch (err) {
-        mostrarToast("Error al procesar la foto: " + err.message, "Error", "error");
+        if (estadoBox) estadoBox.classList.add('hidden');
+        mostrarToast("Error procesando imagen: " + err.message, "Aviso", "error");
       }
     }
 
+    function eliminarFotoFactura() {
+      fotoFacturaBase64 = null;
+      const inP4 = document.getElementById('input-foto-factura');
+      if (inP4) inP4.value = "";
+      const cP4 = document.getElementById('caja-preview-factura');
+      if (cP4) cP4.classList.add('hidden');
+      const btnP4 = document.getElementById('btn-txt-foto-factura');
+      if (btnP4) btnP4.innerText = "Tomar o Subir Foto de la Factura *";
+
+      if (pedidoActivoModalId) {
+        db.ref(`pedidos/${pedidoActivoModalId}`).update({
+          fotoFacturaUrl: '',
+          fotoFacturaReembolsoUrl: '',
+          tieneFacturaSubida: false
+        });
+      }
+    }
+
+    function enviarFacturaWhatsAppAdminObligatoria() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
+      if (!tieneFoto && p.tipoServicio !== 'transporte') {
+        mostrarToast("⚠️ Primero debes tomar o subir la foto de la factura.", "Foto Requerida", "error");
+        document.getElementById('input-foto-factura').click();
+        return;
+      }
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update({
+        facturaEnviadaWhatsApp: true,
+        fechaEnvioFacturaWhatsApp: new Date().toISOString()
+      });
+
+      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
+      const mTienda = parseFloat(p.montoFacturaTienda || 0).toFixed(2);
+      const tNom = p.assignedStore?.name || p.tiendaNombre || 'Comercio en Nirgua';
+
+      const msj = encodeURIComponent(
+        `🚨 *FACTURA OFICIAL DEL COMERCIO - ORDEN ${numOrden}* 🧾\n\n` +
+        `Chofer: *${choferActual ? choferActual.nombre : 'Chofer'}*\n` +
+        `Comercio: *${tNom}*\n` +
+        `Monto Factura: *$${mTienda} USD*\n\n` +
+        `📸 Factura subida en el sistema.`
+      );
+
+      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
+    }
+
+    // PASO 4 -> PASO 5: TRANSICIÓN FLUIDA AL CAMINO DEL CLIENTE SIN CERRAR EL MODAL
+    function iniciarEntregaClientePaso4() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p) return;
+
+      // Validar que esté en el paso 3/4 (en_local) y pago listo
+      const pagoAdminListo = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado' || p.transferAccepted || p.modalidadPagoTienda === 'chofer_paga';
+      if (p.estado !== 'en_local' || !pagoAdminListo) {
+        mostrarToast("⚠️ Completa primero el Pago en Comercio (Paso 3).", "Orden Secuencial", "error");
+        return;
+      }
+
+      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
+      if (!tieneFoto && p.tipoServicio !== 'transporte') {
+        mostrarToast("⚠️ Sube la foto de la factura oficial antes de salir al cliente.", "Factura Obligatoria", "error");
+        document.getElementById('input-foto-factura').click();
+        return;
+      }
+
+      const updates = {
+        estado: 'en_camino',
+        pasoActual: 5,
+        fotoFacturaUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaUrl || '') : '',
+        fotoFacturaReembolsoUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || '') : '',
+        tieneFacturaSubida: tieneFoto,
+        fechaInicioEntrega: new Date().toISOString(),
+        fechaSalidaCliente: new Date().toISOString()
+      };
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        p.estado = 'en_camino';
+        p.pasoActual = 5;
+        // NO SE CIERRA EL MODAL: Se actualiza directamente al Paso 5 (Ruta + Info del Cliente)
+        refrescarVistaFlujoModal(p);
+        if (mapaInstance) {
+          mapaInstance.invalidateSize();
+          calcularRutaOSRMChofer();
+        }
+        mostrarToast("🛵 ¡Factura lista! Ahora sigue la ruta hacia el cliente.", "En Camino al Cliente", "success");
+      });
+    }
+
+    // PASO 5 -> FINALIZAR ENTREGA AL CLIENTE (LIBERA AL CHOFER PARA NUEVAS CARRERAS)
+    function finalizarEntregaCompletada() {
+      if (!pedidoActivoModalId) return;
+      const p = todosLosPedidos[pedidoActivoModalId];
+      if (!p || p.estado !== 'en_camino') {
+        mostrarToast("⚠️ Debes completar todos los pasos anteriores antes de finalizar.", "Paso Inválido", "error");
+        return;
+      }
+
+      const mTienda = parseFloat(p.montoFacturaTienda || 0);
+      const deliveryCobrado = p.deliveryGratis ? 0.00 : TARIFA_CHOFER;
+      const totalCliente = mTienda + deliveryCobrado;
+
+      const updates = {
+        estado: 'entregado',
+        pasoActual: 6,
+        gananciaChofer: TARIFA_CHOFER,
+        totalFinalCliente: totalCliente,
+        fechaEntregado: new Date().toISOString()
+      };
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        calcularDobleBalance();
+        mostrarToast("✓ ¡Entrega finalizada! +$1.00 acreditado. Ya puedes tomar otra carrera.", "Entrega Completada", "success");
+
+        pedidoActivoModalId = null;
+        fotoFacturaBase64 = null;
+        localStorage.removeItem('chofer_active_order_id');
+        localStorage.removeItem('chofer_monto_draft');
+        localStorage.removeItem('chofer_pm_tienda_draft');
+        localStorage.removeItem('chofer_issue_draft');
+        cerrarModalMapa();
+        filtrarTab('disponibles');
+      });
+    }
+
+    // ================================================================
+    // VISOR DE FOTO Y REPORTAR PROBLEMA IN-APP
+    // ================================================================
     function verFotoGrande(src) {
       if (!src) return;
       document.getElementById('img-lightbox-grande').src = src;
@@ -1924,7 +2629,55 @@
       document.getElementById('modal-foto-grande').classList.add('hidden');
     }
 
-    // ================= DATOS BANCARIOS & DOBLE BALANCE SEPARADO =================
+    function abrirModalReportarProblema() {
+      restaurarBorradoresLocales();
+      document.getElementById('modal-reportar-problema').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function cerrarModalReportarProblema() {
+      document.getElementById('modal-reportar-problema').classList.add('hidden');
+    }
+
+    function seleccionarMotivoRapido(motivo) {
+      motivoSeleccionado = motivo;
+      document.querySelectorAll('.chip-motivo').forEach(btn => {
+        if (btn.innerText.includes(motivo)) {
+          btn.className = "btn-spring chip-motivo p-2.5 rounded-xl bg-rose-500/20 border-2 border-rose-500 text-left text-white font-black";
+        } else {
+          btn.className = "btn-spring chip-motivo p-2.5 rounded-xl bg-[#141b2d] border border-white/10 hover:border-rose-400 text-left text-slate-200";
+        }
+      });
+    }
+
+    function enviarReporteProblemaFirebase() {
+      if (!pedidoActivoModalId) return;
+      const nota = document.getElementById('txt-motivo-detalle').value.trim();
+
+      const issueData = {
+        tipo: motivoSeleccionado,
+        nota: nota,
+        reportadoPor: choferActual ? choferActual.nombre : 'Chofer',
+        telefonoChofer: choferActual ? choferActual.telefono : '',
+        fecha: new Date().toISOString()
+      };
+
+      const updates = {
+        driverIssue: issueData,
+        tieneIncidencia: true
+      };
+
+      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates);
+      db.ref(`orders/${pedidoActivoModalId}`).update(updates).then(() => {
+        guardarBorradorIncidencia('');
+        cerrarModalReportarProblema();
+        mostrarToast("⚠️ Incidencia enviada en tiempo real al Administrador.", "Reporte Enviado", "error");
+      });
+    }
+
+    // ================================================================
+    // DOBLE BALANCE & RETIROS
+    // ================================================================
     function cargarDatosBancariosLocalesChofer() {
       const datos = localStorage.getItem('chofer_pm_datos');
       if (datos) {
@@ -1979,7 +2732,6 @@
       });
 
       totalGananciasServicios = gananciasServ;
-      totalGananciasAcumuladas = gananciasServ;
       totalReembolsosComprasPendientes = reembolsosPend;
       totalReembolsosComprasPagadas = reembolsosPag;
 
@@ -2054,9 +2806,7 @@
         db.ref(`choferes/${normalizarTelefono(choferActual.telefono)}/solicitudesRetiro`).push({
           monto: totalGananciasServicios,
           metodo: 'Pago Móvil',
-          banco: b,
-          cedula: c,
-          telefonoPago: t,
+          banco: b, cedula: c, telefonoPago: t,
           datos: datosCompletos,
           estado: 'pendiente',
           fecha: new Date().toISOString()
@@ -2068,9 +2818,7 @@
           choferTelefono: choferActual.telefono,
           monto: totalGananciasServicios,
           metodo: 'Pago Móvil',
-          banco: b,
-          cedula: c,
-          telefonoPago: t,
+          banco: b, cedula: c, telefonoPago: t,
           datos: datosCompletos,
           estado: 'pendiente',
           fecha: new Date().toISOString()
@@ -2080,16 +2828,12 @@
       const msj = encodeURIComponent(
         `💸 *SOLICITUD DE PAGO DE SERVICIOS (DELIVERY)* 🛵\n\n` +
         `👤 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
-        `💰 *Ganancia Acumulada de Entregas:* $${totalGananciasServicios.toFixed(2)} USD\n\n` +
-        `🏦 *DATOS PAGO MÓVIL:*\n` +
-        `• Banco: ${b}\n` +
-        `• Cédula: ${c}\n` +
-        `• Teléfono: ${t}\n\n` +
-        `Favor realizar la transferencia por Pago Móvil a tasa oficial BCV. ¡Gracias!`
+        `💰 *Ganancia Acumulada:* $${totalGananciasServicios.toFixed(2)} USD\n` +
+        `🏦 *Pago Móvil:* ${b} • ${c} • ${t}`
       );
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
       cerrarModalDobleBalance();
-      mostrarToast("Solicitud de cobro de servicios enviada.", "Solicitud Enviada", "success");
+      mostrarToast("Solicitud de cobro enviada.", "Solicitud Enviada", "success");
     }
 
     function recordarReembolsosAdminWhatsApp() {
@@ -2103,372 +2847,39 @@
       const t = (document.getElementById('pm-chofer-telefono')?.value || datosLocales.telefono || '').trim();
 
       const msj = encodeURIComponent(
-        `🧾 *RECORDATORIO DE REEMBOLSOS DE COMPRAS PENDIENTES* 💵\n\n` +
-        `🛵 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
-        `🛒 *Plata pendiente por compras en tiendas:* $${totalReembolsosComprasPendientes.toFixed(2)} USD\n\n` +
-        `🏦 *Mi Pago Móvil para el reembolso:*\n` +
-        `• Banco: ${b || 'Registrado en sistema'}\n` +
-        `• Cédula: ${c || 'Registrada en sistema'}\n` +
-        `• Teléfono: ${t || choferActual.telefono}\n\n` +
-        `Todas las facturas están subidas en la app. Por favor realizar el reembolso a esta cuenta.`
+        `🧾 *RECORDATORIO DE REEMBOLSO POR COMPRAS* 💵\n\n` +
+        `🛵 *Chofer:* ${choferActual.nombre}\n` +
+        `🛒 *Monto Pendiente:* $${totalReembolsosComprasPendientes.toFixed(2)} USD\n` +
+        `🏦 *Pago Móvil:* ${b || 'Registrado'} • ${c || 'Registrada'} • ${t || choferActual.telefono}`
       );
       window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
     }
 
-    // ================= PASO 3: SELECCIÓN DE PAGO EN EL COMERCIO =================
-    function seleccionarOpcionPagoTienda(opcion) {
-      opcionPagoSeleccionada = opcion;
-      const btnAdmin = document.getElementById('btn-opcion-pago-admin');
-      const btnChofer = document.getElementById('btn-opcion-pago-chofer');
-      const secAdmin = document.getElementById('seccion-pago-admin');
-      const secChofer = document.getElementById('seccion-pago-chofer');
-      const badgeTipo = document.getElementById('badge-tipo-pago-paso3');
-
-      if (opcion === 'admin') {
-        btnAdmin.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-black text-[11px] bg-indigo-600 text-white shadow-md flex items-center justify-center gap-1";
-        btnChofer.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-bold text-[11px] text-slate-400 hover:text-white flex items-center justify-center gap-1";
-        secAdmin.classList.remove('hidden');
-        secChofer.classList.add('hidden');
-        if (badgeTipo) badgeTipo.innerText = "Pago Móvil Admin";
-      } else {
-        btnChofer.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-black text-[11px] bg-purple-600 text-white shadow-md flex items-center justify-center gap-1";
-        btnAdmin.className = "btn-spring py-2 px-1.5 rounded-lg text-center font-bold text-[11px] text-slate-400 hover:text-white flex items-center justify-center gap-1";
-        secChofer.classList.remove('hidden');
-        secAdmin.classList.add('hidden');
-        if (badgeTipo) badgeTipo.innerText = "Reembolso Chofer";
-        cargarDatosBancariosLocalesChofer();
-      }
-      lucide.createIcons();
-    }
-
-    function comunicarMontoAlAdminPorWhatsApp() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const inputMonto = document.getElementById('input-monto-factura');
-      const montoTienda = parseFloat(inputMonto.value) || 0;
-      if (montoTienda <= 0) {
-        mostrarToast("Ingresa primero el monto exacto de la cuenta en el comercio.", "Monto Requerido", "error");
-        inputMonto.focus();
-        return;
-      }
-
-      const b = document.getElementById('pm-tienda-banco').value.trim();
-      const t = document.getElementById('pm-tienda-telefono').value.trim();
-      const c = document.getElementById('pm-tienda-cedula').value.trim().toUpperCase();
-
-      if (!b || !t || !c) {
-        mostrarToast("Ingresa Banco, Teléfono y Cédula/RIF del Pago Móvil del comercio.", "Datos Incompletos", "error");
-        return;
-      }
-
-      const updates = {
-        montoFacturaTienda: montoTienda,
-        montoGastoChofer: montoTienda,
-        modalidadPagoTienda: 'admin_paga',
-        pagoMovilTienda: { banco: b, telefono: t, cedulaRif: c },
-        estadoPagoAdmin: 'pendiente',
-        solicitudReembolso: 'no_aplica',
-        pasoActual: 3,
-        fechaSolicitudPagoAdmin: new Date().toISOString()
-      };
-
-      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates).then(() => {
-        p.estadoPagoAdmin = 'pendiente';
-        p.montoFacturaTienda = montoTienda;
-        p.modalidadPagoTienda = 'admin_paga';
-        refrescarVistaFlujoModal(p);
-      });
-
-      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
-      const tNom = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio en Nirgua');
-
-      const msj = encodeURIComponent(
-        `🚨 *PASO 3 CHOFER: PAGO EN TIENDA REQUERIDO* 💳\n\n` +
-        `🛵 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
-        `📦 *Orden:* ${numOrden}\n` +
-        `🏪 *Local:* ${tNom}\n` +
-        `💵 *Monto Exacto a Transferir:* *$${montoTienda.toFixed(2)} USD*\n\n` +
-        `📲 *DATOS PAGO MÓVIL DEL COMERCIO:*\n` +
-        `• Banco: ${b}\n` +
-        `• Teléfono: ${t}\n` +
-        `• Cédula/RIF: ${c}\n\n` +
-        `¡Quedo a la espera de tu confirmación para subir la factura en el Paso 4!`
-      );
-
-      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
-      mostrarToast("Datos de Pago Móvil enviados al Administrador.", "Comunicado", "success");
-    }
-
-    function registrarPagoChoferYAvanzarPaso4() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const monto = parseFloat(document.getElementById('input-monto-factura').value) || 0;
-      if (monto <= 0) {
-        mostrarToast("Ingresa el monto exacto de la compra en el comercio.", "Monto Requerido", "error");
-        document.getElementById('input-monto-factura').focus();
-        return;
-      }
-
-      const bChofer = document.getElementById('pm-chofer-banco').value.trim();
-      const tChofer = document.getElementById('pm-chofer-telefono').value.trim();
-      const cChofer = document.getElementById('pm-chofer-cedula').value.trim().toUpperCase();
-
-      if (!bChofer || !tChofer || !cChofer) {
-        mostrarToast("Ingresa los datos de tu Pago Móvil personal para recibir el reembolso.", "Datos Requeridos", "error");
-        return;
-      }
-
-      guardarDatosBancariosLocalesChofer(bChofer, tChofer, cChofer);
-
-      db.ref(`pedidos/${pedidoActivoModalId}`).update({
-        montoFacturaTienda: monto,
-        montoGastoChofer: monto,
-        modalidadPagoTienda: 'chofer_paga',
-        estadoPagoAdmin: 'pendiente_reembolso',
-        solicitudReembolso: 'pendiente',
-        pasoActual: 4,
-        pagoMovilChofer: {
-          banco: bChofer,
-          telefono: tChofer,
-          cedula: cChofer
-        }
-      }).then(() => {
-        p.modalidadPagoTienda = 'chofer_paga';
-        p.montoFacturaTienda = monto;
-        p.pagoMovilChofer = { banco: bChofer, telefono: tChofer, cedula: cChofer };
-        calcularDobleBalance();
-        refrescarVistaFlujoModal(p);
-        mostrarToast("✓ Datos guardados. Ahora sube la foto obligatoria de la factura en el Paso 4.", "Paso 4 Desbloqueado", "success");
-      });
-    }
-
-    let facturaEnviadaWhatsAppLocal = false;
-
-    function actualizarEstadoVisualFacturaWs(enviada) {
-      const ind = document.getElementById('indicador-factura-ws-enviada');
-      const btnTxt = document.getElementById('txt-btn-enviar-factura-ws');
-      const btnPaso4 = document.getElementById('btn-paso4-salir-cliente');
-      if (enviada) {
-        if (ind) ind.classList.remove('hidden');
-        if (btnTxt) btnTxt.innerText = "✓ Factura ya enviada a WS (Toca para reenviar)";
-      } else {
-        if (ind) ind.classList.add('hidden');
-        if (btnTxt) btnTxt.innerText = "2. ENVIAR FACTURA POR WHATSAPP AL ADMIN (OBLIGATORIO) 📲";
+    // ================================================================
+    // APERTURA Y ACTUALIZACIÓN SECUENCIAL DEL MODAL DE HOJA DE CARRERA
+    // ================================================================
+    function restaurarModalPedidoActivo() {
+      const activa = obtenerCarreraActivaDelChofer();
+      if (activa) {
+        verMapaYDetalle(activa.id);
+      } else if (pedidoActivoModalId && todosLosPedidos[pedidoActivoModalId]) {
+        verMapaYDetalle(pedidoActivoModalId);
       }
     }
 
-    function enviarFacturaWhatsAppAdminObligatoria() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
-      if (!tieneFoto && p.tipoServicio !== 'transporte') {
-        mostrarToast("⚠️ Primero debes tomar o subir la foto de la factura.", "Foto Requerida", "error");
-        document.getElementById('input-foto-factura').click();
-        return;
-      }
-
-      facturaEnviadaWhatsAppLocal = true;
-      p.facturaEnviadaWhatsApp = true;
-
-      // Actualizar en Firebase para que el Admin lo vea al instante
-      db.ref(`pedidos/${pedidoActivoModalId}`).update({
-        facturaEnviadaWhatsApp: true,
-        fechaEnvioFacturaWhatsApp: new Date().toISOString(),
-        tieneFacturaSubida: tieneFoto,
-        fotoFacturaUrl: fotoFacturaBase64 || p.fotoFacturaUrl || '',
-        fotoFacturaReembolsoUrl: fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || ''
-      });
-
-      actualizarEstadoVisualFacturaWs(true);
-
-      const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
-      const mTienda = parseFloat(p.montoFacturaTienda || 0).toFixed(2);
-      const tNom = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio en Nirgua');
-
-      const msj = encodeURIComponent(
-        `🚨 *FACTURA OFICIAL DEL COMERCIO - ORDEN ${numOrden}* 🧾\n\n` +
-        `Hola Administrador, soy el chofer *${choferActual ? choferActual.nombre : 'Chofer'}* (${choferActual ? choferActual.telefono : ''}).\n\n` +
-        `📦 *Orden:* ${numOrden}\n` +
-        `🏪 *Comercio:* ${tNom}\n` +
-        `💵 *Monto Factura:* *$${mTienda} USD*\n\n` +
-        `📸 *ADJUNTO A CONTINUACIÓN LA FOTO DE LA FACTURA OFICIAL PARA SU REVISIÓN Y VALIDACIÓN.*\n` +
-        `Por favor confirma en el panel si es real para proceder con la entrega.`
-      );
-
-      window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msj}`, '_blank');
-      mostrarToast("✓ Factura enviada por WhatsApp al Administrador.", "Enviada a WhatsApp", "success");
-    }
-
-    function enviarFacturaWhatsAppAdmin() {
-      enviarFacturaWhatsAppAdminObligatoria();
-    }
-
-    function iniciarEntregaClientePaso4() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const tieneFoto = !!(fotoFacturaBase64 || p.fotoFacturaUrl || p.fotoFacturaReembolsoUrl || p.tieneFacturaSubida);
-      const enviadaWs = !!(p.facturaEnviadaWhatsApp || facturaEnviadaWhatsAppLocal);
-
-      if (p.tipoServicio !== 'transporte') {
-        if (!tieneFoto) {
-          mostrarToast("⚠️ OBLIGATORIO: Toma o sube la foto de la factura oficial en el Paso 4.", "Factura Obligatoria", "error");
-          document.getElementById('input-foto-factura').click();
-          return;
-        }
-
-        if (!enviadaWs) {
-          alert("⚠️ PASO OBLIGATORIO: Debes pulsar 'ENVIAR FACTURA POR WHATSAPP AL ADMIN' antes de continuar con la entrega. El Administrador debe verificar la factura por WhatsApp.");
-          enviarFacturaWhatsAppAdminObligatoria();
-          return;
-        }
-      }
-
-      const esReembolso = p.modalidadPagoTienda === 'chofer_paga';
-
-      db.ref(`pedidos/${pedidoActivoModalId}`).update({
-        estado: 'en_camino',
-        pasoActual: 4,
-        fotoFacturaUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaUrl || '') : '',
-        fotoFacturaReembolsoUrl: tieneFoto ? (fotoFacturaBase64 || p.fotoFacturaReembolsoUrl || '') : '',
-        tieneFacturaSubida: tieneFoto,
-        facturaEnviadaWhatsApp: true,
-        fechaFotoFactura: new Date().toISOString(),
-        fechaInicioEntrega: new Date().toISOString(),
-        fechaSalidaCliente: new Date().toISOString()
-      }).then(() => {
-        if (esReembolso && p.pagoMovilChofer) {
-          const numOrden = p.orden || `#PF-${pedidoActivoModalId.substring(pedidoActivoModalId.length - 4)}`;
-          const tiendaNom = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio en Nirgua');
-          const monto = parseFloat(p.montoFacturaTienda || 0);
-
-          const msjAdmin = encodeURIComponent(
-            `🧾 *SOLICITUD DE REEMBOLSO POR COMPRA (PAGÓ CHOFER)* 💵\n\n` +
-            `🛵 *Chofer:* ${choferActual.nombre} (${choferActual.telefono})\n` +
-            `📦 *Orden:* ${numOrden}\n` +
-            `🏪 *Local:* ${tiendaNom}\n` +
-            `💵 *Monto Pagado a Reembolsar:* $${monto.toFixed(2)} USD\n\n` +
-            `📲 *MI PAGO MÓVIL PERSONAL PARA EL REEMBOLSO:*\n` +
-            `• Banco: ${p.pagoMovilChofer.banco}\n` +
-            `• Teléfono: ${p.pagoMovilChofer.telefono}\n` +
-            `• Cédula: ${p.pagoMovilChofer.cedula}\n\n` +
-            `📸 Factura oficial cargada en el Paso 4. Salgo en camino hacia el cliente.`
-          );
-          window.open(`https://wa.me/${NUMERO_ADMIN_WHATSAPP}?text=${msjAdmin}`, '_blank');
-        } else {
-          const telCli = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
-          if (telCli) {
-            const msj = encodeURIComponent(`🛵 *¡Tu pedido va en camino a tu dirección!* Te saluda ${choferActual.nombre} de Pedidos Flash Nirgua.`);
-            window.open(`https://wa.me/${normalizarTelefono(telCli)}?text=${msj}`, '_blank');
-          }
-        }
-
-        mostrarToast("🛵 ¡Factura lista y validada! En camino a la dirección del cliente.", "En Camino", "success");
-        cerrarModalMapa();
-      });
-    }
-
-    function finalizarEntregaCompletada() {
-      if (!pedidoActivoModalId) return;
-      const p = todosLosPedidos[pedidoActivoModalId];
-      if (!p) return;
-
-      const mTienda = parseFloat(p.montoFacturaTienda || 0);
-      const deliveryCobrado = p.deliveryGratis ? 0.00 : TARIFA_CHOFER;
-      const totalCliente = mTienda + deliveryCobrado;
-
-      db.ref(`pedidos/${pedidoActivoModalId}`).update({
-        estado: 'entregado',
-        pasoActual: 5,
-        gananciaChofer: TARIFA_CHOFER,
-        totalFinalCliente: totalCliente,
-        fechaEntregado: new Date().toISOString()
-      }).then(() => {
-        calcularDobleBalance();
-        mostrarToast("✓ ¡Entrega finalizada con éxito! +$1.00 acreditado a tu balance de servicios.", "Completado", "success");
-
-        const telCli = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
-        if (telCli) {
-          let msj = `🛵 *Pedidos Flash Nirgua*\n¡Hola *${p.cliente ? (p.cliente.nombre || p.cliente) : 'Cliente'}*! Tu orden ha sido entregada por *${choferActual.nombre}*.\n\n`;
-          if (mTienda > 0) {
-            msj += `🧾 *Factura en Comercio:* $${mTienda.toFixed(2)}\n`;
-            msj += `🛵 *Delivery Flash:* ${p.deliveryGratis ? '¡GRATIS! ($0.00)' : '$1.00'}\n`;
-            msj += `💰 *TOTAL A PAGAR:* $${totalCliente.toFixed(2)}\n\n`;
-          }
-          msj += `¡Gracias por tu preferencia! ⭐`;
-          window.open(`https://wa.me/${normalizarTelefono(telCli)}?text=${encodeURIComponent(msj)}`, '_blank');
-        }
-        cerrarModalMapa();
-      });
-    }
-
-    function capturarFotoFactura(event) {
-      capturarFotoComprimida(event, 'factura_paso4');
-    }
-
-    function eliminarFotoFactura() {
-      fotoFacturaBase64 = null;
-      const inP4 = document.getElementById('input-foto-factura');
-      if (inP4) inP4.value = "";
-      const cP4 = document.getElementById('caja-preview-factura');
-      if (cP4) cP4.classList.add('hidden');
-      const btnP4 = document.getElementById('btn-txt-foto-factura');
-      if (btnP4) btnP4.innerText = "Tomar o Subir Foto de la Factura *";
-
-      if (pedidoActivoModalId) {
-        db.ref(`pedidos/${pedidoActivoModalId}`).update({
-          fotoFacturaUrl: '',
-          fotoFacturaReembolsoUrl: '',
-          tieneFacturaSubida: false
-        });
-      }
-    }
-
-    function guardarDatosFacturaEnFirebase() {
-      if (!pedidoActivoModalId) return;
-      const inputMonto = document.getElementById('input-monto-factura');
-      const montoTienda = parseFloat(inputMonto.value) || 0;
-
-      const updates = {
-        montoFacturaTienda: montoTienda,
-        montoGastoChofer: montoTienda,
-        deliveryChofer: 1.00,
-        totalFinalCliente: montoTienda + 1.00
-      };
-      if (fotoFacturaBase64) {
-        updates.fotoFacturaUrl = fotoFacturaBase64;
-        updates.fotoFacturaReembolsoUrl = fotoFacturaBase64;
-        updates.tieneFacturaSubida = true;
-      }
-
-      db.ref(`pedidos/${pedidoActivoModalId}`).update(updates).then(() => {
-        mostrarToast("✓ Datos y factura sincronizados en tiempo real con el Administrador.", "Guardado", "success");
-      });
-    }
-
-    function actualizarCalculoFacturaTienda() {
-      // cálculo dinámico
-    }
-
-    // ================= DETALLE DE LA HOJA DE CARRERA =================
     function verMapaYDetalle(id) {
       const p = todosLosPedidos[id];
       if (!p) return;
       pedidoActivoModalId = id;
+      guardarEstadoEnLocalStorage();
 
       const numOrden = p.orden || `#PF-${id.substring(id.length - 4)}`;
       const nombreCliente = p.cliente ? (p.cliente.nombre || p.cliente.nombreCliente || p.cliente) : (p.nombre || 'Cliente');
       const telefonoCliente = p.cliente ? (p.cliente.telefono || p.telefono) : (p.telefono || '');
       const direccionCliente = p.cliente ? (p.cliente.direccion || p.direccion) : (p.direccion || 'Sin dirección');
-      const tiendaNombre = p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio Indicado por Cliente');
-      const tiendaDir = p.tiendaDireccion || p.origenDireccion || 'Nirgua Centro';
+      const tiendaNombre = p.assignedStore?.name || p.tiendaNombre || (p.items && p.items[0] && p.items[0].tiendaNombre ? p.items[0].tiendaNombre : 'Comercio Indicado');
+      const tiendaDir = p.assignedStore?.address || p.tiendaDireccion || p.origenDireccion || 'Nirgua Centro';
+      const tiendaInst = p.assignedStore?.instructions || p.instruccionesCompra || '';
 
       document.getElementById('modal-num-orden').innerText = numOrden;
       document.getElementById('mapa-nombre-cliente').innerText = nombreCliente;
@@ -2476,11 +2887,41 @@
       document.getElementById('mapa-txt-tienda').innerText = tiendaNombre;
       document.getElementById('mapa-txt-tienda-dir').innerText = tiendaDir;
 
+      // Preview Paso 1
+      document.getElementById('preview-p1-tienda').innerText = tiendaNombre;
+      document.getElementById('preview-p1-cliente').innerText = nombreCliente;
+      document.getElementById('preview-p1-direccion').innerText = direccionCliente;
+
+      // Resumen Paso 5 (Camino al Cliente)
+      document.getElementById('resumen-p5-tienda').innerText = tiendaNombre;
+      document.getElementById('resumen-p5-monto-factura').innerText = `$${parseFloat(p.montoFacturaTienda || 0).toFixed(2)}`;
+
+      const elInst = document.getElementById('mapa-txt-tienda-instrucciones');
+      if (tiendaInst) {
+        elInst.innerText = `Nota: ${tiendaInst}`;
+        elInst.classList.remove('hidden');
+      } else {
+        elInst.classList.add('hidden');
+      }
+
+      const btnAceptarLugar = document.getElementById('btn-aceptar-lugar-compra');
+      if (p.storeAccepted) {
+        btnAceptarLugar.className = "btn-spring bg-emerald-500 text-slate-950 font-black py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-md";
+        document.getElementById('txt-btn-aceptar-lugar').innerText = "✓ Lugar Aceptado";
+      } else {
+        btnAceptarLugar.className = "btn-spring bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-md";
+        document.getElementById('txt-btn-aceptar-lugar').innerText = "Aceptar Lugar";
+      }
+
       document.getElementById('mapa-btn-llamar').href = telefonoCliente ? `tel:${telefonoCliente}` : '#';
       document.getElementById('mapa-btn-wa').onclick = () => contactarClienteWhatsApp(telefonoCliente, nombreCliente);
 
+      // Lista de artículos (tanto en Paso 2 como en Paso 5)
       const listaItems = document.getElementById('mapa-lista-items');
+      const resumenP5Items = document.getElementById('resumen-p5-items');
       listaItems.innerHTML = "";
+      resumenP5Items.innerHTML = "";
+
       if (p.items && Array.isArray(p.items)) {
         p.items.forEach(it => {
           listaItems.innerHTML += `
@@ -2492,22 +2933,20 @@
               <span class="text-[9px] font-mono text-amber-300/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Por Pedir</span>
             </div>
           `;
+          resumenP5Items.innerHTML += `<div>• <b>${it.cantidad || 1}x</b> ${it.nombre}</div>`;
         });
       } else {
         listaItems.innerHTML = `<p class="text-slate-400 font-mono">Servicio de encomienda / transporte.</p>`;
+        resumenP5Items.innerHTML = `<p class="text-slate-400">${p.detalle || 'Encomienda Flash'}</p>`;
       }
 
       const inputMonto = document.getElementById('input-monto-factura');
-      inputMonto.value = p.montoFacturaTienda || "";
+      if (p.montoFacturaTienda) inputMonto.value = p.montoFacturaTienda;
 
       if (p.pagoMovilTienda) {
         document.getElementById('pm-tienda-banco').value = p.pagoMovilTienda.banco || '';
         document.getElementById('pm-tienda-telefono').value = p.pagoMovilTienda.telefono || '';
         document.getElementById('pm-tienda-cedula').value = p.pagoMovilTienda.cedulaRif || '';
-      } else {
-        document.getElementById('pm-tienda-banco').value = '';
-        document.getElementById('pm-tienda-telefono').value = '';
-        document.getElementById('pm-tienda-cedula').value = '';
       }
 
       if (p.modalidadPagoTienda === 'chofer_paga') {
@@ -2523,7 +2962,18 @@
         document.getElementById('caja-preview-factura').classList.remove('hidden');
         document.getElementById('btn-txt-foto-factura').innerText = "✓ Factura Cargada (Toca para cambiar)";
       } else {
-        eliminarFotoFactura();
+        fotoFacturaBase64 = null;
+        document.getElementById('caja-preview-factura').classList.add('hidden');
+        document.getElementById('btn-txt-foto-factura').innerText = "Tomar o Subir Foto de la Factura *";
+      }
+
+      const cajaIncidencia = document.getElementById('caja-alerta-incidencia-activa');
+      if (p.driverIssue) {
+        cajaIncidencia.classList.remove('hidden');
+        document.getElementById('txt-incidencia-tipo').innerText = `⚠️ Incidencia: ${p.driverIssue.tipo}`;
+        document.getElementById('txt-incidencia-nota').innerText = p.driverIssue.nota ? `"${p.driverIssue.nota}"` : 'En revisión por el Admin';
+      } else {
+        cajaIncidencia.classList.add('hidden');
       }
 
       origenPuntoMapa = [p.origenLat ? parseFloat(p.origenLat) : 10.1506, p.origenLng ? parseFloat(p.origenLng) : -68.5668];
@@ -2532,11 +2982,7 @@
       document.getElementById('btn-navegar-gps-tienda').href = `https://www.google.com/maps/dir/?api=1&destination=${origenPuntoMapa[0]},${origenPuntoMapa[1]}`;
       document.getElementById('btn-abrir-waze-google').href = `https://www.google.com/maps/dir/?api=1&destination=${destinoPuntoMapa[0]},${destinoPuntoMapa[1]}`;
 
-      facturaEnviadaWhatsAppLocal = !!p.facturaEnviadaWhatsApp;
-      actualizarEstadoVisualFacturaWs(facturaEnviadaWhatsAppLocal);
-
       refrescarVistaFlujoModal(p);
-
       document.getElementById('modal-detalle-pedido').classList.remove('hidden');
 
       setTimeout(() => {
@@ -2552,7 +2998,7 @@
         if (marcadorChoferGpsRef) mapaInstance.removeLayer(marcadorChoferGpsRef);
 
         marcadorOrigRef = L.marker(origenPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-a">A</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`Local: ${tiendaNombre}`);
-        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`Destino Cliente`).openPopup();
+        marcadorDestRef = L.marker(destinoPuntoMapa, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-b">B</div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup(`Destino Cliente`);
 
         if (choferGpsPunto) {
           marcadorChoferGpsRef = L.marker(choferGpsPunto, { icon: L.divIcon({ className: 'custom-pin', html: '<div class="pin-jewel-gps"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>', iconSize: [30, 30] }) }).addTo(mapaInstance).bindPopup('Tu GPS');
@@ -2564,133 +3010,118 @@
       lucide.createIcons();
     }
 
+    // ================================================================
+    // RENDERIZADO SECUENCIAL SIN SALTOS (SOLO MUESTRA LA ETAPA ACTUAL)
+    // ================================================================
     function refrescarVistaFlujoModal(p) {
       const s1 = document.getElementById('chofer-step-1');
       const s2 = document.getElementById('chofer-step-2');
       const s3 = document.getElementById('chofer-step-3');
       const s4 = document.getElementById('chofer-step-4');
+      const s5 = document.getElementById('chofer-step-5');
 
-      [s1, s2, s3, s4].forEach(el => {
+      [s1, s2, s3, s4, s5].forEach(el => {
         el.className = "p-1 rounded-lg bg-slate-800 text-slate-500 border border-white/5";
       });
 
+      const bPaso1 = document.getElementById('bloque-paso-1-preview');
       const bPaso2 = document.getElementById('bloque-paso-2-local');
       const bPaso3 = document.getElementById('bloque-paso-3-comunicar-pago');
       const bPaso4 = document.getElementById('bloque-paso-4-factura');
+      const bPaso5 = document.getElementById('bloque-cliente-entrega');
       const contAccion = document.getElementById('accion-estado-contenedor');
+      const badgePaso = document.getElementById('txt-progreso-paso-badge');
+
+      // Ocultar todas las etapas primero para garantizar flujo 100% secuencial
+      [bPaso1, bPaso2, bPaso3, bPaso4, bPaso5].forEach(b => b.classList.add('hidden'));
 
       const est = p.estado || 'pendiente';
-      const pagoAdminListo = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado';
+      const pagoAdminListo = p.estadoPagoAdmin === 'pagado' || p.estadoPagoAdmin === 'aprobado' || p.transferAccepted;
       const esChoferPaga = p.modalidadPagoTienda === 'chofer_paga';
+      const carreraActiva = obtenerCarreraActivaDelChofer();
+      const bloqueadoPorOtraCarrera = (est === 'pendiente' && carreraActiva !== null && carreraActiva.id !== pedidoActivoModalId);
 
-      actualizarEstadoVisualFacturaWs(!!p.facturaEnviadaWhatsApp || facturaEnviadaWhatsAppLocal);
+      // Actualizar resumen monto Paso 5
+      document.getElementById('resumen-p5-monto-factura').innerText = `$${parseFloat(p.montoFacturaTienda || 0).toFixed(2)}`;
 
       if (est === 'pendiente') {
+        badgePaso.innerText = "PASO 1 / 5";
         s1.className = "p-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-400/30 font-black animate-pulse";
-        bPaso2.classList.add('hidden');
-        bPaso3.classList.add('hidden');
-        bPaso4.classList.add('hidden');
+        bPaso1.classList.remove('hidden');
 
-        contAccion.innerHTML = `
-          <button onclick="tomarPaso1AceptarCarrera('${pedidoActivoModalId}')" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-black py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
-            <span>PASO 1: ACEPTAR CARRERA (+$1.00)</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        `;
-      } else if (est === 'aceptado') {
-        s1.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        s2.className = "p-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-400/30 font-black animate-pulse";
-        bPaso2.classList.remove('hidden');
-        document.getElementById('btn-marcar-llegue-al-local').classList.remove('hidden');
-        bPaso3.classList.add('hidden');
-        bPaso4.classList.add('hidden');
-
-        contAccion.innerHTML = `
-          <button onclick="marcarLlegadaAlLocal()" class="btn-spring btn-pulso-solar w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 font-black py-3.5 rounded-2xl text-xs shadow-glow-solar border border-white/30 flex items-center justify-center gap-2">
-            <i data-lucide="store" class="w-4 h-4"></i>
-            <span>PASO 2: ¡YA LLEGUÉ AL LOCAL! (En Tienda)</span>
-          </button>
-        `;
-      } else if (est === 'en_local') {
-        s1.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        s2.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        s3.className = "p-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-black";
-
-        bPaso2.classList.remove('hidden');
-        document.getElementById('btn-marcar-llegue-al-local').classList.add('hidden');
-        bPaso3.classList.remove('hidden');
-
-        const badgePago = document.getElementById('txt-badge-status-pago-admin');
-        const descPago = document.getElementById('txt-desc-status-pago-admin');
-
-        if (esChoferPaga) {
-          s3.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black";
-          s4.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-black animate-pulse";
-          bPaso4.classList.remove('hidden');
-
+        if (bloqueadoPorOtraCarrera) {
           contAccion.innerHTML = `
-            <button onclick="iniciarEntregaClientePaso4()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-purple-600 to-emerald-600 text-white font-black py-3.5 rounded-2xl text-xs shadow-lg border border-white/30 flex items-center justify-center gap-2">
-              <i data-lucide="navigation-2" class="w-4 h-4"></i>
-              <span>PASO 4: FACTURA LISTA -> SALIR AL CLIENTE</span>
-            </button>
-          `;
-        } else if (opcionPagoSeleccionada === 'chofer') {
-          bPaso4.classList.add('hidden');
-          contAccion.innerHTML = `
-            <button onclick="registrarPagoChoferYAvanzarPaso4()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black py-3.5 rounded-2xl text-xs shadow-lg border border-white/30 flex items-center justify-center gap-2">
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-              <span>GUARDAR DATOS Y CONTINUAR AL PASO 4</span>
-            </button>
-          `;
-        } else if (pagoAdminListo) {
-          s3.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black";
-          s4.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-black animate-pulse";
-          badgePago.className = "inline-block px-3 py-1 rounded-full font-mono text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-          badgePago.innerText = "✓ PAGO CONFIRMADO POR EL ADMINISTRADOR";
-          descPago.innerText = "El Administrador ya transfirió al comercio. Toma o sube la foto de la factura oficial.";
-
-          bPaso4.classList.remove('hidden');
-
-          contAccion.innerHTML = `
-            <button onclick="iniciarEntregaClientePaso4()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-black py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2">
-              <i data-lucide="navigation-2" class="w-4 h-4"></i>
-              <span>PASO 4: FACTURA LISTA -> SALIR AL CLIENTE</span>
-            </button>
+            <div class="bg-amber-500/15 border border-amber-400/40 p-3 rounded-2xl text-center text-xs text-amber-200 font-bold">
+              ⚠️ Tienes otra carrera activa en curso. Debes entregarla antes de aceptar esta.
+            </div>
           `;
         } else {
-          badgePago.className = "inline-block px-3 py-1 rounded-full font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse";
-          badgePago.innerText = "⏳ Esperando Pago Móvil del Administrador...";
-          descPago.innerText = "Datos enviados. En cuanto el Administrador pague al comercio, podrás subir la factura.";
-          bPaso4.classList.add('hidden');
-
           contAccion.innerHTML = `
-            <button onclick="comunicarMontoAlAdminPorWhatsApp()" class="btn-spring w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
-              <i data-lucide="message-circle" class="w-4 h-4"></i>
-              <span>Reenviar Pago Móvil al Administrador (WS)</span>
+            <button type="button" onclick="tomarPaso1AceptarCarrera('${pedidoActivoModalId}')" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 text-white font-black py-3.5 rounded-2xl text-xs shadow-glow-blue border border-white/20 flex items-center justify-center gap-2">
+              <span>PASO 1: ACEPTAR CARRERA (+$1.00)</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           `;
         }
-      } else if (est === 'en_camino') {
+      } else if (est === 'aceptado') {
+        badgePaso.innerText = "PASO 2 / 5";
+        s1.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        s2.className = "p-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-400/30 font-black animate-pulse";
+        bPaso2.classList.remove('hidden');
+        contAccion.innerHTML = "";
+      } else if (est === 'en_local') {
         s1.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
         s2.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        s3.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        s4.className = "p-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-black animate-pulse";
 
-        bPaso2.classList.remove('hidden');
-        document.getElementById('btn-marcar-llegue-al-local').classList.add('hidden');
-        bPaso3.classList.remove('hidden');
-        bPaso4.classList.remove('hidden');
+        if (esChoferPaga || pagoAdminListo) {
+          // ETAPA 4: SUBIDA OBLIGATORIA DE FACTURA
+          badgePaso.innerText = "PASO 4 / 5";
+          s3.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black";
+          s4.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-black animate-pulse";
+          bPaso4.classList.remove('hidden');
+          contAccion.innerHTML = "";
+        } else {
+          // ETAPA 3: PAGO EN COMERCIO
+          badgePaso.innerText = "PASO 3 / 5";
+          s3.className = "p-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-black animate-pulse";
+          bPaso3.classList.remove('hidden');
+
+          const badgePago = document.getElementById('txt-badge-status-pago-admin');
+          const descPago = document.getElementById('txt-desc-status-pago-admin');
+          const btnConfTransf = document.getElementById('btn-confirmar-transferencia-recibida');
+
+          if (p.estadoPagoAdmin === 'pendiente') {
+            badgePago.className = "inline-block px-3 py-1 rounded-full font-mono text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse";
+            badgePago.innerText = "⏳ Esperando Pago Móvil del Administrador...";
+            descPago.innerText = "Datos enviados. Cuando el Admin transfiera o te avise, confirma para pasar al Paso 4.";
+            if (btnConfTransf) btnConfTransf.classList.remove('hidden');
+          } else {
+            if (btnConfTransf) btnConfTransf.classList.add('hidden');
+          }
+          contAccion.innerHTML = "";
+        }
+      } else if (est === 'en_camino') {
+        // ETAPA 5: CAMINO AL CLIENTE (CON RUTA E INFORMACIÓN COMPLETA)
+        badgePaso.innerText = "PASO 5 / 5";
+        [s1, s2, s3, s4].forEach(el => {
+          el.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        });
+        s5.className = "p-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-black animate-pulse";
+
+        bPaso5.classList.remove('hidden');
 
         contAccion.innerHTML = `
-          <button onclick="finalizarEntregaCompletada()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-3.5 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <span>CONFIRMAR ENTREGA AL CLIENTE (Cobrar $1.00)</span>
+          <button type="button" onclick="finalizarEntregaCompletada()" class="btn-spring btn-pulso-activo w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black py-4 rounded-2xl text-xs shadow-glow-emerald border border-white/30 flex items-center justify-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span class="uppercase tracking-wide">CONFIRMAR ENTREGA AL CLIENTE (Cobrar $1.00)</span>
           </button>
         `;
       } else if (est === 'entregado') {
-        [s1, s2, s3, s4].forEach(el => {
+        badgePaso.innerText = "COMPLETADA";
+        [s1, s2, s3, s4, s5].forEach(el => {
           el.className = "p-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black";
         });
+        bPaso5.classList.remove('hidden');
         contAccion.innerHTML = `<div class="text-center text-xs text-emerald-400 font-extrabold font-mono py-2.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 flex items-center justify-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Entrega Finalizada con Éxito (+$1.00 acreditado)</div>`;
       }
       lucide.createIcons();
@@ -2723,7 +3154,6 @@
 
     function cerrarModalMapa() {
       document.getElementById('modal-detalle-pedido').classList.add('hidden');
-      pedidoActivoModalId = null;
     }
 
     let toastTimeout = null;
